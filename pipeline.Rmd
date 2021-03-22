@@ -1,0 +1,128 @@
+---
+title: "childes_weird"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r libraries}
+library(childesr)
+library(wordbankr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
+```
+
+
+```{r load annotations}
+
+
+#####TODOS first part is the descriptive section, to what extent the full range of populations is represented, what are some codes that are missing often, etc
+##### descriptive section and representation of the population
+##########systematic review of features
+##################confront eg proportion of child population versus proportion of data by eg continent
+#############second goal: point out strengths and limitations of the current CHILDES, explain what is missing
+#number of utterances length of utterance number of people/roles
+
+
+annotations<- read.csv("/Users/lscpuser/Desktop/Childes_corpora_Clara.csv")
+annotations<- rename(annotations, corpus_name = Corpus)
+annotations<- rename(annotations, lang = Language)
+
+
+
+
+```
+
+```{r load childes}
+d_transcripts <- get_transcripts()
+d_statistics <- get_speaker_statistics()
+```
+
+```{r join datasets}
+mergedChiAnnot <- annotations %>% left_join(d_transcripts)
+mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_d)
+mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_speaker)
+mergedChiAnnot<-mergedChiAnnot[!(is.na(mergedChiAnnot$n_utt) | mergedChiAnnot$n_utt=="" ), ]
+
+if ( length(unique(mergedChiAnnot$corpus_name)) < nrow(annotations) ) {
+#corpora_not_merged <- nrow(annotations) - length(unique(mergedChiAnnot$corpus_name))
+#print(corpora_not_merged)
+annotations$corpus_name[!annotations$corpus_name %in% mergedChiAnnot$corpus_name]
+  } #print non merged corpora
+```
+```{r group_by inclusion}
+
+inclu_data<- annotations %>%
+  group_by(Inclusion) %>%
+  count() 
+
+ggplot(inclu_data,aes(y=Inclusion, x=n)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  theme_minimal() + 
+  ggtitle("Corpus inclusion") 
+  
+```
+
+```{r group_by language}
+
+annotations <- annotations[!is.na(annotations$Number.of.participants), ]
+annotations <- annotations[!(annotations$Bilingualism.in.corpus..yes..no.==""), ]
+annotations <- annotations[!is.na(annotations$Bilingualism.in.corpus..yes..no.), ]
+annotations <- annotations[!is.na(annotations$Mean...sessions.per.child), ]
+annotations$Bilingualism.in.corpus..yes..no.[annotations$Bilingualism.in.corpus..yes..no. == "yes"] <- "Bilinguals"
+annotations$Bilingualism.in.corpus..yes..no.[annotations$Bilingualism.in.corpus..yes..no. == "no"] <- "Monolinguals"
+
+annotations <- annotations %>%
+  filter(Inclusion=="yes")
+ 
+byLang<- annotations %>%
+    group_by(lang, Bilingualism.in.corpus..yes..no.) %>%
+      summarise(numpar = sum(as.numeric(Number.of.participants)))
+
+
+require(scales)
+ggplot(byLang, mapping = aes(y = reorder(lang, numpar), numpar)) + geom_point() + ggtitle("Number of target children per language") + geom_col()+ facet_grid(cols = vars(Bilingualism.in.corpus..yes..no.))
+
+bySess<- annotations 
+bySess$Mean...sessions.per.child <- sub(",",".",bySess$Mean...sessions.per.child)
+bySess$Mean...sessions.per.child <- as.numeric(bySess$Mean...sessions.per.child)
+
+bySess<- bySess %>%
+  mutate(sessions = as.numeric(Number.of.participants) * Mean...sessions.per.child) %>%
+    group_by(lang, Bilingualism.in.corpus..yes..no.) %>%
+      summarise(numses = sum(as.numeric(sessions)))
+
+ggplot(bySess, mapping = aes(y = reorder(lang, numses), numses)) + geom_point() + ggtitle("Number of sessions per language") + geom_col()+ facet_grid(cols = vars(Bilingualism.in.corpus..yes..no.))
+
+
+
+```
+
+
+
+
+```{r group_by language}
+if (mergedChiAnnot$Inclusion=="yes"){
+mergedbyLang<- mergedChiAnnot %>% group_by(Language) %>% nest()}
+mergedbyLang<-mergedbyLang[!(is.na(mergedbyLang$Language) | mergedbyLang$Language=="" ), ]
+
+```
+
+```{r utts, children, corpora per language}
+mergedbyLang_ <- mergedbyLang %>% mutate (count_target_child = map(.x=data, .f=~length(unique(.x$target_child_id)), na.rm = T))
+
+
+```
+
+```{r plot}
+require(scales)
+ggplot(mergedbyLang_, aes(y=Language, x=count_target_child)) + geom_point() + ggtitle("Number of target children per language")+ scale_x_continuous(labels = comma)
+
+
+```
