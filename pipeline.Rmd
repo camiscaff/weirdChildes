@@ -207,7 +207,7 @@ ggplot(bySess, mapping = aes(y = reorder(lang, numses), numses)) + geom_point() 
 
 annotations$continent <-NA
 
-annotations$continent[grep("England|Sweden|Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Estonia|Tartu, Estonia ; Rapla, Estonia|Budapest, Hungary|West Coast, Ireland|Arfon area Gwynedd, North Wales|Netherlands|Belfast, Northern Ireland|Nottingham/Manchester, England|Sweden ; Portugal|Czech Republic|Bucharest, Romania|Postdam, Germany|Stuttgart, Germany|France|Alt penedes, region of catalonia|spain|Naples|Spain, Hungary, Lloret de mar|Spain, Salamanca|England, Brighton|France (Normandy, Marseille, + places visited)|Portugal|italy|Barcelona|Switzerland|Stockholm, Sweden|Iceland|Poznań, Poland|Romania|Antwerp, Belgium|Ireland|Hungary|Athens, Greece|Southern Estonia|Tartu, Estonia|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Moscow, Russia|Spain, Salamanca", annotations$Neighbour.village.city.province.state.country)]  <- "Europe"
+annotations$continent[grep("England|Sweden|Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Estonia|Tartu, Estonia ; Rapla, Estonia|Budapest, Hungary|West Coast, Ireland|Arfon area Gwynedd, North Wales|Netherlands|Belfast, Northern Ireland|Nottingham/Manchester, England|Sweden ; Portugal|Czech Republic|Bucharest, Romania|Postdam, Germany|Stuttgart, Germany|France|Alt penedes, region of catalonia|spain|Naples|Spain, Hungary, Lloret de mar|Spain, Salamanca|England, Brighton|France (Normandy, Marseille, + places visited)|Portugal|italy|Barcelona|Switzerland|Stockholm, Sweden|Iceland|Poznań, Poland|Romania|Antwerp, Belgium|Ireland|Hungary|Athens, Greece|Southern Estonia|Tartu, Estonia|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Moscow, Russia|Spain, Salamanca|Wales", annotations$Neighbour.village.city.province.state.country)]  <- "Europe"
 
 annotations$continent[grep("Rio Cuarto, Cordoba, Argentina|Sao Paulo|Patzcuaro, Michoacan, iMexico|Jamaica", annotations$Neighbour.village.city.province.state.country)]  <- "Central and South America"
 
@@ -219,7 +219,7 @@ annotations$continent[grep("Alexandria, Egypt|Mokhotlong, Lesotho", annotations$
 
 
 annotations$country <-NA
-annotations$country[grep("England|West Coast, Ireland|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Ireland", annotations$Neighbour.village.city.province.state.country)]  <- "UK/Ireland"
+annotations$country[grep("England|West Coast, Ireland|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Ireland|Wales", annotations$Neighbour.village.city.province.state.country)]  <- "UK/Ireland"
 annotations$country[grep("Sweden|Sweden ; Portugal|Stockholm, Sweden", annotations$Neighbour.village.city.province.state.country)]  <- "Sweden"
 annotations$country[grep("Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Alt penedes, region of catalonia|spain|Spain, Hungary, Lloret de mar|Spain, Salamanca|Barcelona|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Spain, Salamanca", annotations$Neighbour.village.city.province.state.country)]  <- "Spain"
 annotations$country[grep("Estonia|Tartu, Estonia ; Rapla, Estonia|Southern Estonia|Tartu, Estonia", annotations$Neighbour.village.city.province.state.country)]  <- "Estonia"
@@ -523,6 +523,7 @@ Overall, the mean number of target children per language is `r mean(byPart$numpa
 
 byPartCont <- annotations %>%
     group_by(continent) %>%
+      select(Number.of.participants, continent) %>%
       summarise(numpar = sum(as.numeric(Number.of.participants), na.rm=TRUE)) 
 
 byPartCont %>%      

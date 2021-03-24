@@ -192,6 +192,7 @@ summary {
 </div>
 
 
+<p><a href="https://rpubs.com/gloukatou/733656" class="uri">https://rpubs.com/gloukatou/733656</a></p>
 <div id="r-markdown" class="section level2">
 <h2>R Markdown</h2>
 <pre class="r"><code>library(childesr)
@@ -421,7 +422,7 @@ ggplot(bySess, mapping = aes(y = reorder(lang, numses), numses)) + geom_point() 
 <h3>For now only based on continents and countries. Lots of handcoding.</h3>
 <pre class="r"><code>annotations$continent &lt;-NA
 
-annotations$continent[grep(&quot;England|Sweden|Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Estonia|Tartu, Estonia ; Rapla, Estonia|Budapest, Hungary|West Coast, Ireland|Arfon area Gwynedd, North Wales|Netherlands|Belfast, Northern Ireland|Nottingham/Manchester, England|Sweden ; Portugal|Czech Republic|Bucharest, Romania|Postdam, Germany|Stuttgart, Germany|France|Alt penedes, region of catalonia|spain|Naples|Spain, Hungary, Lloret de mar|Spain, Salamanca|England, Brighton|France (Normandy, Marseille, + places visited)|Portugal|italy|Barcelona|Switzerland|Stockholm, Sweden|Iceland|Poznań, Poland|Romania|Antwerp, Belgium|Ireland|Hungary|Athens, Greece|Southern Estonia|Tartu, Estonia|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Moscow, Russia|Spain, Salamanca&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;Europe&quot;
+annotations$continent[grep(&quot;England|Sweden|Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Estonia|Tartu, Estonia ; Rapla, Estonia|Budapest, Hungary|West Coast, Ireland|Arfon area Gwynedd, North Wales|Netherlands|Belfast, Northern Ireland|Nottingham/Manchester, England|Sweden ; Portugal|Czech Republic|Bucharest, Romania|Postdam, Germany|Stuttgart, Germany|France|Alt penedes, region of catalonia|spain|Naples|Spain, Hungary, Lloret de mar|Spain, Salamanca|England, Brighton|France (Normandy, Marseille, + places visited)|Portugal|italy|Barcelona|Switzerland|Stockholm, Sweden|Iceland|Poznań, Poland|Romania|Antwerp, Belgium|Ireland|Hungary|Athens, Greece|Southern Estonia|Tartu, Estonia|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Moscow, Russia|Spain, Salamanca|Wales&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;Europe&quot;
 
 annotations$continent[grep(&quot;Rio Cuarto, Cordoba, Argentina|Sao Paulo|Patzcuaro, Michoacan, iMexico|Jamaica&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;Central and South America&quot;
 
@@ -433,7 +434,7 @@ annotations$continent[grep(&quot;Alexandria, Egypt|Mokhotlong, Lesotho&quot;, an
 
 
 annotations$country &lt;-NA
-annotations$country[grep(&quot;England|West Coast, Ireland|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Ireland&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;UK/Ireland&quot;
+annotations$country[grep(&quot;England|West Coast, Ireland|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Ireland|Wales&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;UK/Ireland&quot;
 annotations$country[grep(&quot;Sweden|Sweden ; Portugal|Stockholm, Sweden&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;Sweden&quot;
 annotations$country[grep(&quot;Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Alt penedes, region of catalonia|spain|Spain, Hungary, Lloret de mar|Spain, Salamanca|Barcelona|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Spain, Salamanca&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;Spain&quot;
 annotations$country[grep(&quot;Estonia|Tartu, Estonia ; Rapla, Estonia|Southern Estonia|Tartu, Estonia&quot;, annotations$Neighbour.village.city.province.state.country)]  &lt;- &quot;Estonia&quot;
@@ -913,6 +914,7 @@ head(byPart)</code></pre>
 <h3>Number of target children per continent</h3>
 <pre class="r"><code>byPartCont &lt;- annotations %&gt;%
     group_by(continent) %&gt;%
+      select(Number.of.participants, continent) %&gt;%
       summarise(numpar = sum(as.numeric(Number.of.participants), na.rm=TRUE)) </code></pre>
 <pre><code>## Warning in mask$eval_all_summarise(quo): NAs introduced by coercion</code></pre>
 <pre class="r"><code>byPartCont %&gt;%      
