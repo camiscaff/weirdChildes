@@ -34,9 +34,9 @@ myPalette <- brewer.pal(5, "Set2")
 #############second goal: point out strengths and limitations of the current CHILDES, explain what is missing
 
 
-annotations1<- read.csv("/Users/lscpuser/Downloads/Childes_corpora-Clara1.csv")
-annotations2<- read.csv("/Users/lscpuser/Downloads/Childes_corpora-Camila.csv")
-annotations3<- read.csv("/Users/lscpuser/Downloads/Childes_corpora-Lara.csv")
+annotations1<- read.csv("Childes_corpora-Clara1.csv")
+annotations2<- read.csv("Childes_corpora-Camila.csv")
+annotations3<- read.csv("Childes_corpora-Lara.csv")
 
 annotations <-rbind(annotations1, annotations2, annotations3) #merge annotations from 3 annotators
 
