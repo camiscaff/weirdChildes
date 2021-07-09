@@ -1,0 +1,271 @@
+Corpus,Inclusion,Reason for exclusion,Number of participants,Language,Neighbour/village/city/province/state/country,"Recording method (static, portable, both, diary, other) ",Presence of investigator (yes/no/parent is investigator/half half),Specific tasks (or toy if only toy mentioned),# of children with siblings,# of children with older siblings,Average number of older siblings,Average number of siblings,Mean child age at beginning of recordings,Mean child age at end of recordings,Mean # sessions per child,Range # sessions per child,Mean Duration of sessions,Range Duration of sessions,CDS annotation (yes/no),English translation: yes/no,Morphological annotation (yes/no),Fertility rate of community,Interbirth intervals,Access to schooling for children (yes/no/only elementary) ,Type of community (hunter/forager/herder/farmer/work-for-pay/industrial),Access to health for children  (yes/no),"Type of culture (minority, majority)",Bilingualism in corpus (yes/ no),Mortality rate of children in the community,Number of speakers of the language,"Household structure (nuclear, extended)","Where children spend their time (home, nursery, playing by the river...)",Only directed to child transcribed (i.e. speech between adults not transcribed): yes/no,Correction of speech errors (i.e. syntactic)/ transcriptions not exactly matching speech : yes/no,Parental education,Parental socioeconomic status,Parental profession,"Place of recordings: (home, nursery...)",Who checked column,Comment
+Aguirre,yes,,1,Spanish,Spain,NA,NA,NA,NA,NA,NA,NA,1;7,2;10,30,30,NA,NA,NA,NA,,NA,NA,NA,NA,NA,NA,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper not accessible
+BecaCESNo,,,40,Spanish,Spain,NA,NA,no,NA,NA,NA,NA,3;6,11;6,NA,NA,60min,60min,NA,NA,,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+ColMex,no,narrative,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+DiezItza,?,,20,Spanish,Spain,NA,NA,NA,NA,NA,NA,NA,3;0,3;11,1,1,45min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible
+FernAguado,yes,,50,Spanish,"Pamplona, Spain",static,NA,yes ,NA,NA,NA,NA,3;0,4;0,NA,NA,NA,NA,NA,NA,no,NA,NA,yes,NA,NA,NA,,NA,NA,NA,NA,no,,NA,NA,NA,school & house,clara,no paper
+GRERLI,no,narrative,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Hess,no,narrative,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+JacksonThal,no,lab environement,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Koine,yes,,66,Spanish,"A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN",audiovisual,yes,no,NA,NA,NA,NA,1;6,4;5,2.5,14-47,15-20min,5-30min,NA,no,no,NA,NA,yes,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,varied,NA,kindergarten,clara,
+Linaza,yes,,1,Spanish,Spain,tape,parent is investigator,no,1,0,0,1,2;0,4;0,25,25,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher,NA,clara,paper not accessible
+LlinasOjea,yes,,2,Spanish ; Spanish/English,Spain,NA,NA,no,NA,NA,NA,NA,1;4.5,2;11,36.5,24-49,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,one child is bilingual ; paper not accessible
+Marrero,yes,,6,Spanish,"Madrid, Spain ; Tenerife, Canary Islands",,,no,NA,NA,NA,NA,1;8,8;0,6,3-6,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,
+Montes,yes,,1,Spanish,"Patzcuaro, Michoacan, iMexico",tape,,no,1,0,0,1,1;7.20,2;11.14,13,13,30.7min,10-45min,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,university,middle-class,linguists researchers,home,clara,
+Nieva,yes,,1,Spanish,"Madrid, Spain ",audiovisual,? not always,no,0,0,0,0,1;8,2;3,13,13,43 '20'',16min49-1h03,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"crèche, home",NA,NA,higher education college degrees,middle-class,NA,home,clara,no paper
+OreaPine,yes,,2,Spanish,"Madrid, Spain",static (audiovisual),no,NA,2,0,NA,NA,2;0,2;6,69,66-72,30min,20-40min,NA,no,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,yes,higher degrees,NA,NA,home,clara,
+Ornat,yes,,1,Spanish,"Madrid, Spain",videotape,no,NA,0,0,0,0,1;07,4;0,30,30,30min,30min,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,
+PAIDUS Spanish,yes,,4,Spanish,"Madrid, Spain",portable,yes,no,1,1,0.25,0.25,0;9,2;1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,
+Remedi,yes,,1,Spanish,"Rio Cuarto, Cordoba, Argentina",videotape,no,no,NA,NA,NA,NA,1;10.29,2;11,14,14,NA,NA,no,no,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,
+Romero,yes,,1,Spanish,"Mexico City, Mexico",videotape,yes,no,1,1,1,2,2;0,NA,NA,NA,NA,NA,NA,no,yes,NA,NA,yes,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle-upper-class,father : biochemical engineer ; mother : speech and language therapist,home,clara,paper not accessible
+SerraSole,yes,,1,Spanish,Spain,videotape,? not always,no,NA,NA,NA,NA,1;4,3;10,11,11,37.5min,30-45,NA,no,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,no paper
+Shiro,no,narrative,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Vila,yes,,1,Spanish,Spain,audio,? not always,NA,NA,NA,NA,NA,0;11.09,4;08.15,35,35,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible
+KernArabic,no,only child speech,4,Tunisian Arabic,Tunisia,audiovisual,NA,NA,NA,NA,NA,NA,0;8,2;01,NA,NA,27h,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle to upper class,NA,home,clara,
+Kuwaiti,yes,,70,Kuwaiti,Kuwait,portable,no,no,NA,NA,NA,NA,1;4,3;7,1,1,30min,30min,NA,NA,NA,NA,NA,NA,NA,NA,minority,NA,NA,NA,NA,NA,NA,NA,NA,varied,NA,home or quiet room in kid center,clara,
+Luque,yes,,38,Basque,"Bizkaia, Autonomous Community of the Basque Country, Spain",videotape,yes,no,NA,NA,NA,NA,2;6,3;6,NA,NA,20min,20min,NA,no,NA,NA,NA,yes,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,school,clara,"papers not accessible or in Basque ; difficult to say number of session per kid because it’s a whole classroom recorded w/ not all the kids at each session + individual sessions per kid, could be done if deeper work on the transcripts (counting etc."
+Soto,yes,,8,Basque,"Navarra, Spain",portable,yes,no,6,6,0.875,0.875,3;4,4;4,17.625,3-22,30min,30min,NA,no,NA,NA,NA,yes,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,"Fathers : primary education ; technical engineer ; university orientation course / Mothers : primary education, professional vocation",medium,"Fathers : industrial operator (x3) ; watchman, plumber ; administrative operator ; vocational trainer ; carrier / Mothers at home",home,clara,
+Lahrouchi,no,only child speech,2,Berber,Morocco,portable,NA,no,NA,NA,NA,NA,0;8.16,1;11,28.5,26-31,60min,60min,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+CCLAS,yes,,1,Cree,Canada,static,yes,no,1,,,,2;01.14,3;08.24,10,10,,,NA,NA,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Argus,yes,,1,Estonian,Estonia,NA,NA,NA,1,NA,NA,NA,1;8,2;5,17,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper in estonian
+Beek,yes,,1,Estonian,Estonia,NA,no,NA,NA,NA,NA,NA,0;9,2;5,20,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+Kapanen,yes,,1,Estonian,Estonia,NA,no,NA,1,1,1,1,1;3,2;3,13,13,59min01,35min10-1h13min3sec,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,no paper
+Kohler,yes,,8,Estonian,"Tartu, Estonia",NA,yes,no,NA,NA,NA,NA,1;06,2;0,7.625,3-10,30min,20-40min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper in german
+Korgesaar,yes,,12,Estonian,Estonia,NA,NA,NA,NA,NA,NA,NA,,,3.8,1-21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+Kuett,yes,,7,Estonian,"Tartu, Estonia ; Rapla, Estonia",NA,yes,NA,8,0,0,1,6;06,6;06,1,1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4 mothers w/ higher education and 4 w/ secondary education,NA,NA,NA,clara,no paper
+MAIN,no,narratives,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Vija,yes,,1,Estonian,"Tartu, Estonia",NA,NA,no,NA,NA,NA,NA,1;07,3;01.13,74,74,52.5min,45-60min,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,nursery school,NA,NA,NA,NA,Father in construction materials supply and mother student of linguistics,home,clara,no paper
+Zupping,yes,,1,Estonian,Southern Estonia,digital audio recording,NA,no,1,NA,NA,1,1;03,4;02,50,50,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,no paper
+Family,yes,,2,Farsi,Iran,NA,no,NA,NA,NA,NA,NA,2;11,4;0,67,31-103,NA,NA,NA,no,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible
+Samadi,?,,3,Farsi,NA,NA,NA,NA,NA,NA,NA,NA,2;0,2;08,5.3,2-9,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,AN,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+Doukas,yes,,2,Greek,"Athens, Greece",tape,yes,no,NA,NA,NA,NA,1;09,2;09,10.5,8-13,37.5min,30-45min,NA,no,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+PaidoGreek,no,not naturalistic,80,Greek,Greece,static,yes,elicitation task,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Stephany,yes,,4,Greek,"Athens, Greece",tape,yes,no,NA,NA,NA,NA,1;10,2;04,5,2-11,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home or kindergarten,clara,paper not accessible
+BatEl,yes,,3,Hebrew,Israel,NA,NA,NA,NA,NA,NA,NA,0;8,2;9,8,7-10,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+BermanLong,yes,,4,Hebrew,Israel,audio,no,no,2,1,0.5,0.75,1;06,2;10,67,17-134,NA,NA,NA,no,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,high education,NA,NA,home,clara,
+BSF,yes,,102,Hebrew,Israel,NA,yes most of the time,yes sometimes,NA,NA,NA,NA,,,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle to upper-middle-class,,NA,clara,some narratives
+Levy,yes,,11,Hebrew,Israel,NA,yes,NA,NA,NA,NA,NA,2;08,3;0,7,2-29,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,no paper
+Naama,yes,,1,Hebrew,Israel,NA,yes,NA,1,0,0,NA,1;07.8,2;06.4,17,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,well-educated,middle-class,NA,home,clara,no paper
+Ravid,yes,,1,Hebrew,"Yahud, Israel",NA,parent is investigator,NA,1,0,0,1,1;11.2,6;11.4,37,37,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,well-educated,middle-class,Mother : linguist ,home,clara,no paper
+Bodor,yes,,1,Hungarian,"Budapest, Hungary",NA,parent is investigator,NA,NA,NA,NA,NA,2;0,2;10,63,63,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle-class,Father:researcher,home,clara,papers not accessible or in hungarian
+MacWhinney,yes,,6,Hungarian,Hungary,portable,yes,NA,NA,NA,NA,NA,2;05,2;10,9.6,3-22,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,nursery school,clara,
+Reger,yes,,1,Hungarian,Hungary,NA,NA,NA,NA,NA,NA,NA,1;11,2;11,34,34,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+DeLisser,yes,,2,Jamaican,Jamaica,portable,yes,no,2,NA,NA,1.5,1;10,3;03,31,31,60min,60min,NA,no,yes,NA,NA,NA,rural,yes,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,Mother : housewife (TYA)/unemployed/store clerk (SHU) ; father : taxi driver (TYA) ,"home (TYA) ; home of mother, of paternal grandparents or maternal grandmother",clara,
+Sarvasy,yes,,5,Nungon,Papua-New Guinea,portable,yes,no,4,3,NA,NA,3;01,4;05,NA,NA,60min,60min,NA,yes,NA,NA,NA,NA,farmer,NA,NA,NA,NA,~1000,NA,NA,NA,NA,NA,NA,father : oil palm plantations (Niumen),home,clara,paper not entirely accessible
+Gelman,no,picture descriptions,38,Quechua,Peru,NA,yes,yes,NA,NA,NA,NA,NA,NA,NA,NA,15min,10-20min,NA,yes,NA,NA,NA,NA,farmer,NA,NA,NA,NA,NA,NA,NA,NA,NA,5th grade education,,NA,home,clara,
+Gildersleeve,no,only child speech,7,Quechua,"Michacala, Cotopaxi, Ecuador",portable,yes,no,NA,NA,NA,NA,1;01,1;06,7.5,7-8,60min,60min,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Demuth,yes,,4,Sesotho,"Mokhotlong, Lesotho",portable,yes,no,NA,NA,NA,NA,2;06,3;03,23,23,3.5h,3-4h,NA,yes,yes,NA,NA,NA,NA,NA,NA,NA,NA,4 million,extended,NA,NA,NA,NA,NA,NA,home,clara,
+Narasimhan,yes,,1,Tamil,"Bombay, India",audiotape,NA,no,NA,NA,NA,NA,0;09,2;09,25,25,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+Aksu,yes,,NA,Turkish,Turkey,NA,yes,no,NA,NA,NA,NA,2;0,4;08,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,college education,NA,professional,home or preschools,clara,paper not entirely accessible
+Altinkamis,yes,,1,Turkish,Turkey,NA,NA,NA,NA,NA,NA,NA,1;04,2;04,15,15,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+GRERLI,no,narratives,80,Spanish & Catalan,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+MacBates1,no,picture description,120,"English, Italian & Hungarian",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+MacBates2,no,movie description,120,English & Hungarian,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+MDT,no,movie description through gesture,240,"English, Japanese & Turkish",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Gaeltacht,yes,,1,Irish,"West Coast, Ireland",static,no,no,1,1,1,1,1;05,2;05,23,23,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Guilfoyle,yes,,6,Irish,Ireland,audio & videotape,yes,no,NA,NA,NA,NA,2;04,2;04,1,1,45min,45min,NA,yes,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+CIG1,yes,,7,Welsh,"Arfon area Gwynedd, North Wales",audiotape,yes,toy,4,2,"0,5",NA,1;06,2;06,"23,25",11-29,40min,30-45min,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,70% of population,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper not accessible
+CIG2,yes,,468,Welsh,Wales,NA,NA,NA,NA,NA,NA,NA,5;03,5;03,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,varied,NA,schools,clara,no paper
+Asymmetries,no,structured storytelling/not naturalistic,31/38,Dutch,Netherlands,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Dutch-AarssenBos,no,frog stories,176,Dutch,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+BolKuiken,404 Not Found,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+CLPF,REDIRECTS TO UTRECHT CORPUS - SEE BELOW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+DeHouwer,yes,,4,Dutch,"Antwerp, Belgium",tape recorder w/ multidirectional microphone,no,no,4,2,"0,5",1,4;09,4;09,"3,75",3-4,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,no,NA,NA,nuclear,nursery,NA,NA,NA,lower-middle to middle-middle class,NA,home,clara,
+DeHouwer/Bornstein,404 Not Found,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Gillis,yes,,1,Dutch,Netherlands,videotape,NA,no,,,,,1;09.21,1;11.15,19,19,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Groningen,yes,,7,Dutch,Netherlands,NA,yes,no,6,0,0,1,1;08,3;03,,,"53,8min",30-75,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"daycare center, play group",NA,NA,university education,NA,"students, system manager, artist, orthopedagogical therapist, musician, lawyer, veterinarian",home,clara,
+Schaerlaekens,yes,,6,Dutch,Netherlands,portable,NA,NA,6,0,0,2,1;09,2;09,"12,5",12-13,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible
+Utrecht,yes,,2,Dutch,Netherlands,static,no,no but there is a specific picture book used for both kids,NA,NA,NA,NA,2;03,3;10,"77,5",77-78,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+VanKampen,yes,,2,Dutch,Netherlands,portable ?,parent is the investigator,no,2,NA,NA,1,1;07,5;11,61,50-72,45min,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher,home,clara,
+VanOosten,no,storytelling/not naturalistic,20,Dutch/Italian,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,paper in italian
+Wijnen,yes,,1,Dutch,Netherlands,NA,parent is the investigator,NA,NA,NA,NA,NA,2;07,3;1,46,46,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher,home,clara,no paper
+Zink,no,only child speech,4,Dutch,Netherlands,portable ? ,yes,no,NA,NA,NA,NA,0;08,2;01,38,37-39,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,middle to upper-class,NA,home,clara,
+Stellenbosch,yes,,2,Afrikaan,South Africa,static,yes,no,1,1,1,1,1;06,2;11,32,32,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home or daycare,clara,no paper
+SouthwoodWhite,no,elicitation task,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Barriere,no,frog,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,randomized tasks + frog + unability to see transcripts 
+DELV,?,,72,AAE,US,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper + data not available for public use
+DSLT,?,,NA,AAE,US,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper + data not available for public use
+Edwards,?,,70,AAE,US,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper + data not available for public use
+Belfast,yes,,8,English,"Belfast, Northern Ireland",portable,yes,no,NA,NA,NA,NA,2;10,4;01,"11,25",7-14,60min,NA,NA,-,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,upper working class,NA,home,clara,
+Conti-Ramsden 1,no,clinical,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Conti-Ramsden 4,no,clinical,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Cruttenden,no,only child speech,2,English,England,notation,yes,no,1,NA,NA,1,1;5,3;7,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Fletcher,no,elicitation task,72,English,England,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Forrester,yes,,1,English,England,static,parent is the investigator,no,NA,NA,NA,NA,1;0,3;06,35,35,NA,NA,NA,-,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,researcher,home,clara,
+Gathercole,?,,12,English,Scotland,videotape,no,yes,NA,NA,NA,NA,4;01,4;01,NA,NA,NA,NA,NA,-,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Nursery of the Department of Psychology at the University of Edinburgh,clara,
+Howe,,,16,English,"Glasgow, Scotland",videotape,yes,toy,11,7,"1,2","1,8",1;07,2;0,2,NA,40min,NA,NA,-,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class & working class,"professional, managerial, skilled or semiskilled manual ocupations",home,clara,
+KellyQuigley,no,lab environment,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Korman,no,only adult speech,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,no paper
+Lara,?,audio rec + diary,1,English,"Nottingham, England",static ,no,no,1,0,0,1,1;09.13,3;03.25,121,NA,NA,NA,NA,- ,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,"nursery, playgroup",NA,NA,university graduates,NA,NA,home,clara,
+Manchester,yes,,12,English,"Nottingham/Manchester, England",audiotape,yes,no,NA,NA,NA,NA,2;0,3;0,"34,6",32-40,60min,NA,NA,- ,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,predominantly middle-class,NA,home,clara,
+MPI-EVA-Manchester,?,part of the recordings done in lab,4,English,England,static & portable,yes,no,NA,NA,NA,NA,2;06,3;11,178,118-216,60min,NA,NA,- ,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home or lab,clara,only 2 of the 4 children's transcriptions are available
+Nuffield,?,"only CDS, no speech from kids",76,English,England,static,no,no,NA,NA,NA,NA,0;11,0;11,1,NA,30min,NA,yes?,- ,yes,NA,NA,NA,NA,NA,NA,no,NA,NA,NA,NA,yes,NA,NA,varied,NA,home,clara,
+QuigleyMcNally,404 Not Found,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Smith,no,diary study,1,English,England,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Thomas,?,part of the recordings done in lab,1,English,England,static,yes,no,NA,NA,NA,NA,2;0,4;11,379,NA,60min,NA,NA,-,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home or lab,clara,
+Tommerdahl,no,lab environment,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Wells,yes,,32,English,England,portable,no,no,NA,NA,NA,NA,1;06,4;01,"9,3",8-10,24*90sec,NA,NA,-,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper is a book
+Leo,yes,,1,Mandarin-English-Cantonese,Hong-Kong,video-tape,yes,no,NA,NA,NA,NA,1;06,2;11,54,NA,NA,NA,NA,no,yes,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,playgroups & nursery school,NA,NA,NA,NA,NA,NA,clara,length of session is in each transcript ; paper not available
+LlinasOjea,yes,,1,Spanish/English,Spain,NA,NA,no,NA,NA,NA,NA,1;10.19,2;9.5,49,NA,NA,NA,NA,no,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,
+MCF,yes,,3,Portuguese-Swedish-English,Sweden ; Portugal,audio & videotape,no,no,3,2,"0,6",2,0;1,5;7,"10,6",7-16,NA,NA,NA,yes,NA,NA,NA,yes,NA,NA,NA,yes,NA,NA,nuclear,kindergarten,NA,NA,NA,upper middle-class,mother : researcher & trained phonetician,home,clara,some information were gathered as a diary
+Navracsics,yes,,2,Farsi-Hungarian-English,,audio & videotape,yes most of the time,no,2,1,"0,5",1,2;6,4;9,30,NA,"42,7min",10-120,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Paradis,no,elicitation task,25,English-Various,"Edmonton, Canada",videotape,yes,yes,NA,NA,NA,NA,5;6,NA,5,NA,45min,NA,NA,-,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,"""24 minority-language children"""
+Perez,yes,,6,Spanish-English,"Michigan, USA",NA,NA,no,NA,NA,NA,NA,2;1,3;1,"8,6",2-21,90min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible
+PhonBLA,yes,,9,German-Spanish,Germany,audio & videotape,yes,no,NA,NA,NA,NA,1;01,4;10 (german span) | 5;02 (spanish span),NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,transcripts not available
+ProjectS,no,part of the recordings done in lab,1,English-Italian-Scottish-Gaelic,UK,audio & videotape,yes,no,1,0,0,1,2;3,4;9,60,NA,45min,30-60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,upper middle-class,university lecturers,lab & home,clara,
+Reyes/Ervin-Tripp,yes,,20,Spanish-English,"California, USA",portable,yes,yes,NA,NA,NA,NA,10;8 (fifth graders) | 7;9 (second graders),10;8 (fifth graders) | 7;9 (second graders),1,NA,30min,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,school,clara,info only in paper
+Roggero,?,,1,Italian-Japanese,Italy,NA,NA,NA,NA,NA,NA,NA,NA,NA,33,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no information on childes page"
+Seba,no,frog story retellings,1,Arabic-English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Serra,yes,,4,Spanish-Catalan,Spain,videotape,NA,no,NA,NA,NA,NA,1;0,3;11,"22,25",18-24,"37,5min",30-45min,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,no paper
+SilvaCorvalan,no,narrative,8,Spanish-English,USA,tape,yes,yes,NA,NA,NA,NA,5;5,6;11,4,NA,30min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper not accessible
+Singapore,yes,,55,English-Mandarin,Singapore,audio & videotape,yes,no,NA,NA,NA,NA,6;0,6;0,NA,NA,NA,NA,NA,NA,yes,NA,NA,yes,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,college degree,middle-class,NA,school,clara,
+Ticio,?,,1,Spanish-English,"Houston, Texas, USA",NA,NA,NA,NA,NA,NA,NA,1;6,2;4,37,NA,20min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+vanOosten,no,storytelling & not naturalistic,20,Italian-Dutch,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Vila,?,,1,Spanish-Catalan,Spain,NA,NA,NA,NA,NA,NA,NA,1;9,5;4,44,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper
+Watkins,yes,,7,French-English,"Paris, France",NA,NA,NA,NA,NA,NA,NA,1;9,7;2,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible/various ages
+YipMatthews,yes,,9,Cantonese-English,China,audio & videotape,yes,no,6,5,"1,4","1,5",1;10,3;10,"55,6",34-84,30min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,varied,home,clara,some recordings have diary data to supplement them
+ZAS,no,storytelling,80,Russian-German,Germany,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+HKU,?,elicited number of utterance,70,Cantonese,China,audio,yes,yes,NA,NA,NA,NA,2;6,5;6,1,NA,20min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,preschool,clara,paper not accessible
+LeeWongLeung,yes,,8,Cantonese,China,,yes,no,4,3,"1,3","1,25",2;0,3;0,"21,375",16-27,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,working class,"varied (mass transport company, piano teacher, technician in electronic company, housewife, census & survey officer, secondary school teacher…)",NA,clara,paper not accessible ; number of files does not correspond to number of transcripts ; parents professions available on the childes page
+PaidoCantonese,no,not naturalistic + elicitation prompts,80,Cantonese,Hong Kong,static,yes,elicitation task,NA,NA,NA,NA,3;6,NA,,,,,,,,,,,,,,,,,,,,,,,,,clara,"2, 3, 4 & 5-y.o"
+AcadLang,?,,15,Mandarin,China,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper & no info on childes page
+Chang1,no,toy narratives,24,Mandarin,Taiwan,audio & videotape,yes,yes,NA,NA,NA,NA,4;1 & 6;0,NA,,,,,,,,,,,,,,,,,,,,,,,,school library,clara,paper not accessible ; 2 groups of children w/ different ages
+Chang2,?,mention of personal experience narratives,16,Mandarin,Taiwan,audiotape,yes,yes,NA,NA,NA,NA,3;6,4;3,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,college or graduate school,middle-class,NA,home,clara,
+ChangPlay,no,toy narratives,21,Mandarin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+ChangPN,no,personal narratives,181,Mandarin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Erbaugh,yes,,4,Mandarin,"Beijing, China",portable,yes,NA,NA,NA,NA,NA,2;3,2;10,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,one billion,NA,NA,NA,NA,NA,NA,"teachers, police officer, business",home,clara,p.394-395 for info on the family
+LiReading,no,narrative,214,Mandarin,China,videotape,yes,yes:book reading had instructions,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,,,,,,,,,,,,,,,,,home,clara,no paper
+LiZhou,yes,,80,Mandarin,China,videotape,yes,toy,NA,NA,NA,NA,4;6,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,college education or higher,NA,NA,kindergarten's activity room,clara,"paper not accessible ; children aged 3, 4, 5 & 6 y.o"
+NSCtoys,NOT YET OPEN TO PUBLIC,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+TCCM-reading,?,,20,Mandarin,Taiwan,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no information on childes page"
+TCCM,?,,10,Mandarin,Taiwan,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no information on childes page"
+Tong,yes,,1,Mandarin,China,audio & videotape,NA,no,NA,NA,NA,NA,1;7,3;4,22,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Xinjiang,?,,60,Mandarin,China,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no information on childes page"
+Zhou1,no,lab environment,15,Mandarin,China,videotape,yes,yes,NA,NA,NA,NA,1;2 / 1;8 / 2;2 / 2;8,NA,NA,NA,20min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,university/technical secondary school,middle-class,most mothers are white-collar workers',lab,clara,
+Zhou2,?,,15,Mandarin,China,videotape,yes,yes,NA,NA,NA,NA,4;6,NA,NA,NA,20min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high & low ses,NA,kindergarten classroom,clara,"paper not accessible, picture book w/ stories provided"
+Zhou3,?,,1,Mandarin,China,NA,NA,NA,NA,NA,NA,NA,0;8,4;5,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no information on childes page"
+ZhouAssessment,?,,334,Mandarin,China,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no information on childes page"
+ZhouDinner,yes,,71,Mandarin,China,videotape,NA,NA,NA,NA,NA,NA,5;6,NA,NA,NA,"18,5min",NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high & low ses,NA,home,clara,paper not accessible
+ZhouNarratives,no,narrative,200,Mandarin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Tsay,yes,,4,Taiwanese,Taiwan,portable,yes,no,NA,NA,NA,NA,2;4,3;9,"30,78",2-51,50min,40-60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Jakarta,yes,,8,Indonesian,Indonesia,camcorder,yes,no,NA,NA,NA,NA,2;5,6;0,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,lower/middle/upper middle,NA,home,clara,some children speak another language at home ; paper not ccessible
+Jiwon,yes,,1,Korean,South Korea,NA,no,NA,NA,NA,NA,NA,2;0.13,2;03.9,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no info in childes page"
+Ko,?,(adult elicited speech + mock apartment lab?),35,Korean,"Seoul, South Korea",audio,no,yes,NA,NA,NA,NA,0;8/1;1/2;3,NA,1,1,50min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high school degree/college degree/advanced degre,NA,NA,mock apartment lab,clara,"recorded in mock apartment (foyer, living room, deroom, kitchen) ; there is 10min of elicited adult-directed speech "
+Ryu,yes,,3,Korean,Korea,video,,yes:book reading,1,1,1,1,1;9,3;8,NA,NA,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+CRSLP-MARCS,yes,,18,Thai,"Bangkok, Thailand",video,no,no,NA,NA,NA,NA,0;6,1;11,"6,7",4-7,20min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper not accessible 
+Zlatev,404 Not Found,,3,Thai,,video,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Avram,yes,,2,Romanian,Romania,NA,yes,NA,2,0,0,NA,1;7,3;2,23.5,16-31,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,varied,NA,home,clara,
+Goga,? no,seriated nesting cup task,7,Romanian,Romania,video,yes,seriated nesting cup task,NA,NA,NA,NA,2;4,NA,1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,office in kindergarten,clara,
+Kern-Romanian,yes,,4,Romanian,"Bucharest, Romania",audio & video,no,object manipulation categorization task every two months,NA,NA,NA,NA,0;7,1;09,25.75,10-34,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Salama,yes,,10,Arabic,"Alexandria, Egypt",audio,yes,no,NA,NA,NA,NA,2;7,NA,1,NA,30min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"6 in nursery, 3 at home",clara,
+Croatian MAIN,no,"picture description, elicitation narrative material, adult testing",90,Croatian & Italian,Croatia & Italy,audio,yes,yes,NA,NA,NA,NA,6;1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"medium, medium-low, medium high SES",NA,NA,clara,
+Estonian MAIN,no,narrative,15,Estonian,Estonia,audio,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,papers in estonian
+LabLing,?,5 longitudinal ; 50 narratives,5 ; 50,Bulgarian,Bulgaria,audio,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NN,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,secondary or higher university education,NA,NA,home,clara,no papers ; info filled in this doc for longitudinal
+Kovacevic,yes,,3,Croatian,Croatia,audio,no,no,1,0,0,1,1;03,2;11,NA,NA,45min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle class,university teacher ; engineer ; assistant professor ; actor ; teacher ; electro engineer ,home,clara,paper not accessible
+MAIN,no,narratives,,Croatian,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,same CHILDES page as Croatian MAIN
+Chromà,yes,,6,Czech,Czech Republic,NA,no,no,5,2,1,1,1;11,3;2,28.6,11-38,20min,7-29:23 min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,daycare ; grandparents/aunt ,NA,NA,high school ; university ,NA,university scientist ; cultural manager ; lawyers ; It-specialist ; photographer ; office job ; elementary school teacher ; musical isntruments ; graduate student ,home,clara,no papers ; website provided in Czech
+CDS,?,,many,Polish,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no papers ; compilation of corpora, but only 1 seems available (Szuman)"
+Szuman,no,diary,10,Polish,Poland,diary,NA,NA,NA,NA,NA,NA,2;0,5;3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper not accessible
+WeistJarosz,yes,,4,Polish,"Poznań, Poland",tape recorder,yes,no,NA,NA,NA,NA,1;10,2;4,"9,75",6-20,45min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,highly-educated,middle-class,NA,home,clara,
+Protassova,yes,,1,Russian,"Moscow, Russia",audio recorded,parent is investigator,no,0,0,0,0,1;6.5,2;10.14,8,8,90min,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,grandparents ; family with 2 children & a dog ,NA,NA,NA,NA,book illustrator ; psycholinguist ,home,clara,no paper 
+Tanja,yes,,1,Russian,United States,videotape,yes,no,0,0,0,0,2;05.14,2;11.20,15,15,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,graduate student,home,clara,
+SCECL,yes,,8,Serbian,"Belgrade (Serbia), Banja Luka (Bosnia & Herzegovina",NA,yes,no,NA,NA,NA,NA,1;6,4;0,NA,NA,90min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high school ; university ; higher education ,middle-class,NA,home,clara,paper not accessible 
+Zagar,yes,,20,Slovenian,Slovenia,videotape,no,NA,NA,NA,NA,NA,3;6/5;6,NA,NA,NA,180min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,kindergaten room,clara,paper not accessible 
+Caroline,?,,1,German,Germany,NA,no,NA,NA,NA,NA,NA,0;10,4;3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper, no info on CHILDES page"
+Grimm,yes,,4,German,"Postdam, Germany",audio recorded,yes,no,0,0,0,0,1;01,1;11,24.75,22-30,45min,30-60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,university degree or some kind professional training,middle-class,NA,home,clara,
+Leo,yes,some diary notes?,1,German,"Leipzig, Germany",audio recorded,no,no,1,0,0,1,1;11.13,4;11,NA,NA,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,kindergarten,NA,NA,higher education,NA,academic ; book seller,home,clara,password needed to browse transcripts 
+Manuela,no,lab environement (from transcript description),6,German,Germany,NA,no,NA,NA,NA,NA,NA,NA,NA,1.1,1-2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,lab ,clara,"paper is a book, not accessible"
+Miller,yes,,2,German,Germany,tape recorder,yes ; parent is investigator,no,1,0,0,1,1;6,3;8,NA,NA,"varied (1h at early stage of dev, then 6h)",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,higher education ; occupational school,middle-class ; low-class,teaching and research assistant ; school teacher / construction fitter ; clerk ,"home, playground, parks, department stores, street, friends' houses ",clara,
+PAIDUS-German,yes,,5,German,"Hamburg, Germany",audio recorded,yes,no,NA,NA,NA,NA,1;0,3;3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,transcripts only available through special arrangements 
+Rigol,yes,,21,German,USA,videotape then only audio,NA,NA,19,NA,NA,NA,0;9,NA,NA,NA,30min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,academic training ; vocational training ,NA,NA,home,clara,no paper ; password needed for browsable transcripts 
+Stuttgart,yes,,8,German,USA,audio recorded,no,no,8,NA,NA,1.875,1;7,3;7,16.125,9-28,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper only talks about 6 of the children
+Szagun,?,,22,German,Germany,audio recorded,yes,no,NA,NA,NA,NA,1;4,2;10,5,5,120min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,university playroom,clara,other half of the corpus is children with cochlear implants
+TAKI,yes,,8,German,"Stuttgart, Germany",audio recorded,no,no,8,NA,NA,1.875,1;7,3;7,16.125,9-28,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,page redirects to Stuttgart corpus ; paper only talks about 6 of the children
+Wagner,yes,,13,German,"Dortmund, Germany",audio recorded,yes,no,NA,NA,NA,NA,7;1,NA,NA,NA,242min,152-430,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,upper-middle-class ; upper-working-class ; middle-class ; working-class,varied,home,clara,paper not accessible 
+Weissenborn,no,experimental elicitations of route descriptions,50,German,Germany,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Plunkett,yes,,2,Danish,Denmark,videotape,yes,no,1,1,1,1,0;9:5,6;0,,,90min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,nursery school,NA,NA,university education,NA,worker,home,clara,
+Einarsdottir,?,,15,Icelandic,Iceland,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,paper in icelandic ; no info on childes page 
+Kari,yes,,1,Icelandic,Iceland,NA,yes,NA,NA,NA,NA,NA,2;0,6;0,33,33,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,"paper talks about narrative tasks and experiments, altho it seems the coprus on childes is only the longitudinal one"
+Garmann,yes,,8,Norwegian,"Oslo, Norway",videotape,yes,NA,2,NA,NA,1.5,1;3,1;9,NA,NA,30min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+Ringstad,yes,,3,Norwegian,Norway,NA,no except for one,no,NA,NA,NA,NA,1;9,2;8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper in norwegian
+Andrén,yes,,1 or 5,Swedish,Sweden,videotape,yes,no,NA,NA,NA,NA,1;5,2;5,12.2,9-14,122min,1h30-2h20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,password needed to browse transcripts ; childes page says 1 child while paper says 5 children 
+Lund,yes,,5,Swedish,Sweden,NA,NA,NA,2,NA,NA,2,1;3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,paper not accessible ; password needed to browse transcripts ; missing 3 children ages at end of recordings 
+Lacerda,yes,,3,Swedish,"Stockholm, Sweden",NA,NA,NA,NA,NA,NA,NA,1;0,2;7,6,6,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper 
+Stanford-Swedish,no,only child speech,5,Swedish,"Stockholm, Sweden",audio and video,NA,NA,NA,NA,NA,NA,0;9,1;04,3,3,30min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,well-educated,middle-class,NA,home,clara,"paper talks about 10 children, but only 5 on childes page ; browsable transcripts show only child speech "
+Champaud,yes,,1,French,France,videotape,yes,NA,1,1,2,2,1;9.18,2.5.27,10,10,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,college degree,upper-middle-class,professor of French ; professor of German,home,clara,paper not accessible
+Geneva,yes,,1,French,Switzerland,NA,no,NA,NA,NA,NA,NA,1;8.26,2;6.10,17,17,45min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,university education,NA,NA,home,clara,
+GoadRose,yes,,2,French,Canada,audio,yes,no,2,2,1.5,2,1;5,3;3,39.5,34-45,32.5,20-45,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,specialist in sociolinguistics,home,clara,
+Hammelrath,no,picture description,258,French,France,NA,yes,NA,NA,NA,NA,NA,4;6/5;1,NA,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,nursery school,clara,no paper
+Hunkeler,?,,2,French,France,NA,the parent is the investigator,NA,2,?,?,1,1;6,2;6,NA,NA,NA,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher,NA,clara,paper not accessible ; not much data on childes page ; for twins do we still consider one of them as the oldest? 
+Kern-French,no,only child speech,4,French,France,audio and video,NA,NA,NA,NA,NA,NA,0;8,2;1,32,32,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,upper to middle class,NA,home,clara,browsable transcripts show only child speech
+Leveillé,yes,,1,French,France,audio,yes,no,0,0,0,0,2;1,3;3,33,33,60min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,nursery school ; home with babysitter ,NA,NA,university education,NA,academics,home,clara,
+Lyon,yes,,5,French,France,audio and video,yes,no,NA,NA,NA,NA,2;0,NA,NA,NA,60min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,only 2 children described in the paper 
+MTLN,no,only child speech,56,French,France,audio and video ,yes,no,NA,NA,NA,NA,2;0,4;0,9,NA,20min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,browsable transcripts show only child speech
+Palasis,yes,,22,French,France,audio and video,yes,NA,NA,NA,NA,NA,3;2,5;1,NA,NA,110min,NA,NA,NA,yes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,classroom,clara,"project on 3 years divided in 3 corpus, 1 corpus per year "
+Paris,yes,,7,French,France,audio and video,yes,no,3,2,0.75,0.75,1.1,4;8,NA,NA,57.5min,45-60,NA,NA,NA,N,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,varied,varied,home,clara,
+Pauline,yes,,1,French,France,audio and video,no,no,1,1,3,3,1;2,2;6,33,NA,45min,29-67,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home,clara,
+Stanford-French,no,only child speech,6,French,France,audio and video,NA,NA,NA,NA,NA,NA,0;10,1;4,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,papers behind paywall 
+VionColas,no,picture description,180,French,France,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Yamaguchi,yes,,1,French,France,audio and video,no,no,0,0,0,0,1;11,4;3,26,NA,56,50-62,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,
+York,yes,,3,French,France,audio and video,yes,no,3,1,0.333,1,1;10,3;7,NA,NA,30min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"university, secondary school",NA,varied,home,clara,papers inaccessible
+Bates,no,some sessions at the lab,27,English,San Diego,NA,NA,no,NA,NA,NA,NA,0;10,2;4,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class,NA,home & lab,clara,papers inaccessible
+BernsteinRatner,no,playroom at lab,,English,USA,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Bliss,?,,8,English,USA,NA,NA,NA,NA,NA,NA,NA,4;11,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"paper not accessible, not enough info on childes"
+Bloom,?,,3,English,USA,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,one of the paper cited is a book and is not accessible ; not enough info on all children to gather it 
+Bohannon,?,,2,English,USA,audio,yes,no,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,college professor ,home,clara,not enough info for one child ; no info for the other 
+Braunwald,no,diary study,1,English,USA,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Brent,yes,,8,English,USA,audio,no,no,NA,NA,NA,NA,0;9,1;3,14,NA,105min,90-120,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,bachelor's degree,NA,NA,home,clara,
+Brown,yes,,3,English,USA,NA,NA,NA,NA,NA,NA,NA,1;11,4;1,71.3,20-139,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class/working-class,"minister, elementary school teacher",home,clara,found the paper cited on researchgate but it was a powerpoint of a class on humor (?????) 
+Clark,yes,,1,English,USA,NA,yes,NA,1,0,0,1,2;2.16,3;2.2,40,NA,60min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,daycare,NA,NA,NA,middle- to upper-middle-class,NA,home,clara,
+Demetras - Trevor,yes,,1,English,USA,audio and video ,no,NA,NA,NA,NA,NA,2;0.27,3;11.27,28,NA,20min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher ,NA,clara,
+Demetras - Working,yes,,3,English,USA,audio and video ,no,NA,NA,NA,NA,NA,2;0,NA,NA,NA,20min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,college or graduate degree ,middle-class,"publishing, management, nursing, purchasing, nursing, news editing ",NA,clara,
+EllisWeismer,no,clinical,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Evans,?,,44,English,Canada ,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,10min,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper 
+Feldman (Andrea) ,yes,,1,English,USA,audio and video ,yes,NA,1,0,0,1,0;5,2;9,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,linguistics doctoral student ; senior instructor at universoty ,home ,clara,
+Garvey,no,lab environment ,46,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Gathercole,?,,8,English,USA,videotape ,yes,part is structured play session ,NA,NA,NA,NA,4;4,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,middle-class ,NA,school ,clara,
+Gelman,no ,picture description ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Gillam,no,storytelling ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Gleason,no,lab environement ,24,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Haggerty,?,,1,English,USA,,,,1,0,0,1,2;7,2;7,1,1,84min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,home,clara,"paper doesn't give much info, considering the date of the recording it could be a diary? "
+Hall,yes,,39,English,USA,,,,NA,NA,NA,NA,4;9,NA,NA,NA,30min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,working class/middle-class ,NA,"home, school ",clara,
+Higginson,yes ,,3,English,USA,,,,0,0,0,0,1;4,1;10,7.3,2-14,45min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,"undergraduate, graduate students ",home ,clara,paper not accessible 
+HSLLD,no,child narratives,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Kuczaj,?,diary ? ,1,English,USA,,,,NA,NA,NA,NA,2;4,5;0,210,NA,30min,NA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher ,home,clara,
+MacWhinney,no,diary,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+McCune,yes,,10,English,USA,,,,NA,NA,NA,NA,0;9,3;0,NA,NA,30min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,middle-class,NA,home ,clara,
+McMillan,?,,3,English,USA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper cited, no info on childes page "
+Morisset,no,lab environment,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Nadig,404 Not Found,,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Nelson,yes,,1,English,USA,,,,1,0,0,1,1;9,3;0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,home,clara,paper not accessible 
+New England ,no,lab environment ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+NewmanRatner,no,lab tasks,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Nicholas-TD,no,lab environment ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Peters/Wilson,yes,,1,English,USA,,,,NA,NA,NA,NA,1;3,4;4,NA,NA,90min,60-120min,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,researcher,home ,clara,child is visually impaired 
+POLER-Controls,no,clinical,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Post,yes,,3,English,USA,,,,NA,NA,NA,NA,2;0,3;0,10,NA,60min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,college education ,working-class ,NA,home ,clara,
+Rollins,no,lab environment ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Rondal-TD,yes,,21,English,USA,,,,NA,NA,NA,NA,2;2,NA,2,NA,30min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,home ,clara,
+Sachs,?,,54,English,USA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no info on childes page, paper not accessible "
+Sawyer,?,,24,English,NA,,,,NA,NA,NA,NA,3;11,NA,NA,NA,NA,NA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,preschool classroom,clara,"paper not accessible, not much info on childes page "
+Snow,?,,1,English,"Boston, MA, USA",,,,NA,NA,NA,NA,2;5,3;9,30,NA,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,researcher,home ,clara,
+Sprott,yes,,12,English,NA,,,,NA,NA,NA,NA,3;6,3;6,NA,NA,160min,20-300min,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,highly educated,middle-class,NA,nursery school,clara,
+Soderstrom,yes,,2,English,USA,,,,2,2,1.5,1.5,6;0,1;6,13.5,12-15,53.44min,10-84min,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,daycare,NA,,garduate degrees,NA,NA,home ,clara,
+Suppes,?,,1,English,USA,,,,,,,,1;11,3;3,52,NA,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,NA,clara,
+Tardif,?,,24,English,USA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper cited, no info on childes page "
+Valian,yes,,21,English,USA,,,,NA,NA,NA,NA,2;3,2;3,2,2,45min,30-60min,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,"phd, graduate students ","working class, upper-middle-class ",NA,"home, daycare center, college play room ",clara,
+Van Houten ,?,,54,English,USA,,,,NA,NA,NA,NA,2;0,3;0,NA,NA,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,home,clara,
+Van Kleeck ,?,,20,English,USA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,"no paper cited, no info on childes page "
+Warren-Leubecker ,yes,,20,English,USA,,,,NA,NA,NA,NA,3;9,NA,2,2,17.5min,15-20min,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,middle-class,NA,home,clara,
+Weist ,?,some recordings in lab environment ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+COmptonPater,no,diary ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Davis,yes,,21,English,USA,,,,NA,NA,NA,NA,0;11,2;2,29.42,10-52,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,home,clara,papers not accessible 
+Goad,yes,,2,English,Canada,,,,NA,NA,NA,NA,1;07,3;2,33,25-41,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,home,clara,paper not accessible 
+Inkelas,yes,,1,English,USA,,,,1,1,1,1,0;06,3;09,200,200,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,phonologists ,home,clara,
+Menn,yes,,1,English,USA,,,,NA,NA,NA,NA,1;0,1;08,100,NA,NA,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,phonologists ,home,clara,
+Paidologos-English ,no ,recorded at university ,81,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,clara,
+Providence ,yes,,6,English,"Providence, RI",,,,NA,NA,NA,NA,1;01,2;08,45.5,50-88,60min,NA,,,,NA,NA,NA,NA,NA,,NA,,NA,NA,NA,NA,,NA,NA,NA,home,clara,papers not accessible 
+Stanford-English ,?,,5,English,USA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,clara,no paper cited and no indo 
+Narrative ,no,narratives ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Parent-Child ,no,clinical ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Twins ,no,clinical ,,English,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
