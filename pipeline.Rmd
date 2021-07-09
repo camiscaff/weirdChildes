@@ -12,13 +12,14 @@ https://rpubs.com/gloukatou/733656
 ## R Markdown
 
 ```{r libraries, message=FALSE, warning=FALSE}
-library(childesr)
+#library(childesr)
 library(wordbankr)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(purrr)
 require(scales)
+library(stringr)
 
 
 library(RColorBrewer)
@@ -35,25 +36,9 @@ myPalette <- brewer.pal(5, "Set2")
 ##################confront eg proportion of child population versus proportion of data by eg continent
 #############second goal: point out strengths and limitations of the current CHILDES, explain what is missing
 
+annotations<- read.csv("/Users/lscpuser/Downloads/Table_for_authors_8_7_2021_annotations.csv") %>%
+  rename(corpus_name=1, number_participants=2, language=3, location=4, first_age=7, last_age=8,bilingualism_corpus=9, bilingualism_community=10, bilingualism_family=11, children_with_siblings=12, household_structure=16, mean_session_child=17, mean_duration_child=19, type_community=24, fertility=25, interbirth_intervals=26, access_schooling=27, access_health=28, number_speakers=29 ) 
 
-annotations1<- read.csv("Childes_corpora-Clara1.csv")
-annotations2<- read.csv("Childes_corpora-Camila.csv")
-annotations3<- read.csv("Childes_corpora-Lara.csv")
-
-annotations <-rbind(annotations1, annotations2, annotations3) #merge annotations from 3 annotators
-
-annotations<- rename(annotations, lang = Language)
-annotations$Bilingualism.in.corpus..yes..no.[annotations$Bilingualism.in.corpus..yes..no. == "yes"] <- "Bilinguals"
-annotations$Bilingualism.in.corpus..yes..no.[annotations$Bilingualism.in.corpus..yes..no. == "no"] <- "Monolinguals"
-
-annotations <- annotations %>%  filter(!(Inclusion=="")) #only keep annotated corpora
-annotations[annotations==""]<-NA
-annotations[annotations=="N/A"]<-NA
-annotations[annotations=="N/A (0,33)"]<-NA
-annotations[annotations=="N/A (0)"]<-NA
-annotations[annotations=="NA (0)"]<-NA
-
-#head(annotations)
 ```
 
 `r nrow(annotations)` corpora already annotated. 
@@ -61,40 +46,60 @@ annotations[annotations=="NA (0)"]<-NA
 ### Optional chunk merging with childesr for extra information
 
 ```{r load_join childes, eval=FALSE}
-d_transcripts <- get_transcripts()
-d_statistics <- get_speaker_statistics()
+#d_transcripts <- get_transcripts()
+#d_statistics <- get_speaker_statistics()
 
-mergedChiAnnot <- annotations %>% left_join(d_transcripts)
-mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_d)
-mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_speaker)
-mergedChiAnnot<-mergedChiAnnot[!(is.na(mergedChiAnnot$n_utt) | mergedChiAnnot$n_utt=="" ), ]
+#mergedChiAnnot <- annotations %>% left_join(d_transcripts)
+#mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_d)
+#mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_speaker)
+#mergedChiAnnot<-mergedChiAnnot[!(is.na(mergedChiAnnot$n_utt) | mergedChiAnnot$n_utt=="" ), ]
 
-if ( length(unique(mergedChiAnnot$corpus_name)) < nrow(annotations) ) {
-annotations$corpus_name[!annotations$corpus_name %in% mergedChiAnnot$corpus_name]
-  } #print non merged corpora
+#if ( length(unique(mergedChiAnnot$corpus_name)) < nrow(annotations) ) {
+#annotations$corpus_name[!annotations$corpus_name %in% mergedChiAnnot$corpus_name]
+#  } #print non merged corpora
 ```
 # Corpus inclusion
 ## Based on "Inclusion" annotation column
 ### How many corpora should be included?
 
 ```{r group_by inclusion}
-inclu_data<- annotations %>%
-  group_by(Inclusion) %>%
+#Gathercole and Vila still have ? in inclusion
+
+include<- annotations %>%
+  mutate(inclusion=tolower(Inclusion)) %>%
+  mutate(inclusion = ifelse(str_detect(inclusion, "yes"), "yes", "no")) %>%
+  group_by(inclusion) %>%
   count() 
 
-ggplot(inclu_data,aes(y=Inclusion, x=n)) +
+ggplot(include,aes(y=n, x=inclusion)) +
   geom_bar(stat="identity", width=1, color="white") +
   theme_minimal() + 
   ggtitle("Corpus inclusion") 
 
 annotations <- annotations %>%
-  filter(Inclusion=="yes")  
+  filter(!Inclusion=="no")
+
 ```
-From the total amount of corpora, `r (inclu_data %>% filter(Inclusion=="yes"))$n` have been included in this study. The following analyses will continue only on these included corpora.
+From the total amount of corpora, `r nrow(annotations)` have been included in this study. The following analyses will continue only on these included corpora.
 
 # Bilinguals
 ## Based on "Bilingualism" annotation column
 ### How many corpora are bilingual?
+
+```{r group_byPart}
+byPart<- annotations %>%
+  select(language, number_participants) %>%
+   filter(!is.na(number_participants)) %>%
+     group_by(language) %>%
+       summarise(numpar = sum(as.numeric(number_participants))) 
+#     p
+
+ggplot(byPart[order(byPart$language),], aes(y=language, x=numpar)) + 
+    geom_col() 
+```
+
+
+
 
 ```{r group_by bilinguals}
 
@@ -105,38 +110,68 @@ data_<- data_ %>%
       return(data_)
 }
 
-byBilinguals<-group_count(annotations, Bilingualism.in.corpus..yes..no.)
-lbls <- paste(byBilinguals$Bilingualism.in.corpus..yes..no., byBilinguals$n, sep=" ") # add numbers to labels
+annotations <- annotations %>%
+  mutate(bilingualism_corpus=ifelse(bilingualism_corpus=="yes", "bilinguals", "monolinguals"))
+byBilinguals<-group_count(annotations, bilingualism_corpus)
+
+ggplot(byBilinguals,aes(y=n, x=bilingualism_corpus)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  theme_minimal() + 
+  ggtitle("Bilingualism") 
+
+byBili <- annotations %>%
+    group_by(language, bilingualism_corpus) %>%
+      summarise(numpar_bili = sum(as.numeric(number_participants))) %>%
+        filter(!is.na(bilingualism_corpus), !is.na(numpar_bili))
+
+
+ggplot(byBili[order(byBili$language),], aes(y=language, x=numpar_bili)) + 
+    geom_col() +
+  facet_grid(~bilingualism_corpus)
+
+
+byBilinguals<-group_count(annotations, bilingualism_corpus)
+lbls <- paste(byBilinguals$bilingualism_corpus, byBilinguals$n, sep=" ") # add numbers to labels
 pie(byBilinguals$n, labels=lbls, border="white", col=myPalette)
 
-head(byBilinguals)
 
 ```
 
-`r nrow(annotations[is.na(annotations$Bilingualism.in.corpus..yes..no.), ])` corpora have NA in "Bilingualism in corpus". 
+`r nrow(annotations[is.na(annotations$bilingualism_corpus), ])` corpora have NA in "Bilingualism in corpus". 
 
 # Siblings
 ## Based on "Number of children with siblings" annotation column
 ### How many of the target children have siblings?
 
 ```{r group_by children_with_siblings, warning=FALSE, message=FALSE}
-
-byPart <- annotations %>%
-    group_by(lang, Bilingualism.in.corpus..yes..no.) %>%
-      summarise(numpar = sum(as.numeric(Number.of.participants), na.rm=TRUE)) 
+#d[is.na(d)] <- 0
 
 bySibl<- annotations %>%
-    group_by(lang) %>%
-      summarise(numChildrenwithSiblings = sum(as.numeric(X..of.children.with.siblings)))
+  select(language,children_with_siblings) %>%
+   # mutate(child_sibl = ifelse(is.na(children_with_siblings), 0, children_with_siblings )) %>%
+     group_by(language) %>%
+      summarise(numpar_sibl = sum(as.numeric(children_with_siblings), na.rm=TRUE)) 
+#     pivot_longer(c(numpar_sibl, numpar), names_to = "type", values_to = "value")
+                    
 
-ggplot(bySibl[!is.na(bySibl$numChildrenwithSiblings),], mapping = aes(y=lang, x=numChildrenwithSiblings)) + 
+ggplot(bySibl[order(bySibl$language),], aes(y=language, x=numpar_sibl)) + 
+    geom_col() 
+
+ggplot(bySibl[!is.na(bySibl$numpar_sibl),], mapping = aes(y=language, x=numpar_sibl)) + 
   geom_point() + 
     ggtitle("Languages where number of children with siblings is not unknown") + 
       geom_col()
 
-head(bySibl)
+bySibl<- annotations %>%
+  select(language,children_with_siblings) %>%
+   # mutate(child_sibl = ifelse(is.na(children_with_siblings), 0, children_with_siblings )) %>%
+     group_by(language) %>%
+      summarise(numpar_sibl = sum(as.numeric(children_with_siblings))) 
+#     pivot_longer(c(numpar_sibl, numpar), names_to = "type", values_to = "value")
+                 
+
 ```
-Out of `r sum(byPart$numpar)` total target children, only `r sum(bySibl$numChildrenwithSiblings, na.rm =TRUE)` have siblings. No information for children in `r nrow(bySibl[bySibl$numChildrenwithSiblings==NA,])` languages (marked as NAs).
+Out of `r sum(byPart$numpar, na.rm=TRUE)` total target children, only `r sum(bySibl$numpar_sibl, na.rm =TRUE)` have siblings. No information for children in `r nrow(annotations %>% filter(is.na(children_with_siblings)))` corpora and `r nrow(bySibl %>% filter(is.na(numpar_sibl)))` languages (marked as NAs).
 
 ## Based on "Average number of siblings" annotation column
 ### How many siblings in average?
@@ -186,17 +221,23 @@ The mean number of older siblings has been left NA for `r byoldSiblnum[is.na(byo
 
 ```{r group_by session, warning=FALSE, message=FALSE}
 
-annotations <- annotations[!is.na(annotations$Mean...sessions.per.child), ]
-bySess<- annotations 
-bySess$Mean...sessions.per.child <- sub(",",".",bySess$Mean...sessions.per.child)
-bySess$Mean...sessions.per.child <- as.numeric(bySess$Mean...sessions.per.child)
+bySess <- annotations[!is.na(annotations$mean_session_child), ]
+
+bySess$mean_session_child <- sub(",",".",bySess$mean_session_child)
+bySess$mean_session_child <- as.numeric(bySess$mean_session_child)
 
 bySess<- bySess %>%
-  mutate(sessions = as.numeric(Number.of.participants) * Mean...sessions.per.child) %>%
-    group_by(lang, Bilingualism.in.corpus..yes..no.) %>%
+  mutate(sessions = as.numeric(number_participants) * mean_session_child) %>%
+    group_by(language, bilingualism_corpus) %>%
       summarise(numses = sum(as.numeric(sessions)))
 
-ggplot(bySess, mapping = aes(y = reorder(lang, numses), numses)) + geom_point() + ggtitle("Number of sessions per language") + geom_col()+ facet_wrap(~Bilingualism.in.corpus..yes..no., scale="free")
+
+head(bySess)
+#ggplot(bySess, mapping = aes(y = reorder(language, numses), numses)) + 
+#  geom_point() + 
+#  ggtitle("Number of sessions per language") + 
+#  geom_col()+ 
+#  facet_wrap(~bilingualism_corpus, scale="free")
 ```
 
 # Location
@@ -294,41 +335,41 @@ head(byLocation1)
 
 ```{r group_by place_of_recording}
 
-byPlaceofRecording <- group_count(annotations, Place.of.recordings...home..nursery....)
-lbls <- paste(byPlaceofRecording$Place.of.recordings...home..nursery...., byPlaceofRecording$n, sep=" ") # add numbers to labels
-pie(byPlaceofRecording$n, labels=lbls, border="white", col=myPalette)
+#byPlaceofRecording <- group_count(annotations, Place.of.recordings...home..nursery....)
+#lbls <- paste(byPlaceofRecording$Place.of.recordings...home..nursery...., byPlaceofRecording$n, sep=" ") # add numbers to labels
+#pie(byPlaceofRecording$n, labels=lbls, border="white", col=myPalette)
 
-head(byPlaceofRecording)
+#head(byPlaceofRecording)
 ```
 # Recording method
 ## Based on "Recording.method..static..portable..both..diary..other.." annotation column
 ### Will need handcoding. For now only prints column
 
 ```{r group_by recording_method, warning=FALSE, message=FALSE}
-byRecord <- annotations %>% 
-  group_by(Presence.of.investigator..yes.no.parent.is.investigator.half.half., Recording.method..static..portable..both..diary..other..) %>%
-    summarise(n = n()) %>% 
-      arrange(desc(n)) 
+#byRecord <- annotations %>% 
+#  group_by(Presence.of.investigator..yes.no.parent.is.investigator.half.half., #Recording.method..static..portable..both..diary..other..) %>%
+#    summarise(n = n()) %>% 
+#      arrange(desc(n)) 
  
-byRecord %>% 
-  filter(!is.na(Presence.of.investigator..yes.no.parent.is.investigator.half.half.), !is.na(Recording.method..static..portable..both..diary..other..)) %>%
-    rename( number_of_corpora = n)
+#byRecord %>% 
+#  filter(!is.na(Presence.of.investigator..yes.no.parent.is.investigator.half.half.), #!is.na(Recording.method..static..portable..both..diary..other..)) %>%
+#    rename( number_of_corpora = n)
 #lbls <- paste(byRecord$Presence.of.investigator..yes.no.parent.is.investigator.half.half., byRecord$Recording.method..static..portable..both..diary..other.., byRecord$n, sep=" & ") # add numbers to labels
 #pie(byRecord$n, labels=lbls, border="white", col=myPalette)
+#`r nrow(annotations[is.na(annotations$Presence.of.investigator..yes.no.parent.is.investigator.half.half.),])` #corpora have NA in "Presence.of.investigator" column. 
 
+#`r nrow(annotations[is.na(annotations$Recording.method..static..portable..both..diary..other..),])` corpora #have NA in "Recording.method" column. 
 ```
-`r nrow(annotations[is.na(annotations$Presence.of.investigator..yes.no.parent.is.investigator.half.half.),])` corpora have NA in "Presence.of.investigator" column. 
 
-`r nrow(annotations[is.na(annotations$Recording.method..static..portable..both..diary..other..),])` corpora have NA in "Recording.method" column. 
 
 # Recording age
 ## Based on "Mean.child.age.at.beginning.of.recordings, Mean.child.age.at.end.of.recordings" annotation columns
 
 ```{r group_by age, warning=FALSE, message=FALSE}
 byAge <- annotations %>% 
- select(Mean.child.age.at.beginning.of.recordings, Mean.child.age.at.end.of.recordings, country, continent) %>%
+ select(first_age, last_age, country, continent) %>%
   group_by(country, continent) %>%
-    summarize(min = min(Mean.child.age.at.beginning.of.recordings), max = max(Mean.child.age.at.end.of.recordings)) %>%
+    summarize(min = min(first_age), max = max(last_age)) %>%
        arrange(desc(min)) 
 
 
@@ -351,31 +392,31 @@ ggplot(byAge, aes(y=country))+
 group_select<-function(data_, column_){
 data_ <- data_%>%
     group_by(!!column_) %>%
-      select(Corpus, !!column_)
+      select(corpus_name, !!column_)
 data_ <- data_[ order( data_[,3] ),]
 return(data_)
 }
 
-byCdsTier <-group_select(annotations, "CDS.annotation..yes.no.")
-byCdsTier <- byCdsTier %>% group_by(CDS.annotation..yes.no.) %>%  summarise(n = n())
-head(byCdsTier)
+#byCdsTier <-group_select(annotations, "CDS.annotation..yes.no.")
+#byCdsTier <- byCdsTier %>% group_by(CDS.annotation..yes.no.) %>%  summarise(n = n())
+#head(byCdsTier)
 
-byannotTier <-group_select(annotations, "English.translation..yes.no")
-byannotTier <- byannotTier %>% group_by(English.translation..yes.no) %>%  summarise(n = n())
-head(byannotTier)
+#byannotTier <-group_select(annotations, "English.translation..yes.no")
+#byannotTier <- byannotTier %>% group_by(English.translation..yes.no) %>%  summarise(n = n())
+#head(byannotTier)
 
-bymorphTier <- group_select(annotations, "Morphological.annotation..yes.no.")
-bymorphTier <- bymorphTier %>% group_by(Morphological.annotation..yes.no.) %>%  summarise(n = n())
-head(bymorphTier)
+#bymorphTier <- group_select(annotations, "Morphological.annotation..yes.no.")
+#bymorphTier <- bymorphTier %>% group_by(Morphological.annotation..yes.no.) %>%  summarise(n = n())
+#head(bymorphTier)
 
-byCDStransTier <- group_select(annotations, "Only.directed.to.child.transcribed..i.e..speech.between.adults.not.transcribed...yes.no")
-byCDStransTier <- byCDStransTier %>% group_by(Only.directed.to.child.transcribed..i.e..speech.between.adults.not.transcribed...yes.no) %>%  summarise(n = n())
-head(byCDStransTier)
+#byCDStransTier <- group_select(annotations, #"Only.directed.to.child.transcribed..i.e..speech.between.adults.not.transcribed...yes.no")
+#byCDStransTier <- byCDStransTier %>% #group_by(Only.directed.to.child.transcribed..i.e..speech.between.adults.not.transcribed...yes.no) %>%  #summarise(n = n())
+#head(byCDStransTier)
 
 
-byCorrections<- group_select(annotations, "Correction.of.speech.errors..i.e..syntactic...transcriptions.not.exactly.matching.speech...yes.no")
-byCorrections <- byCorrections %>% group_by(Correction.of.speech.errors..i.e..syntactic...transcriptions.not.exactly.matching.speech...yes.no) %>%  summarise(n = n())
-head(byCorrections)
+#byCorrections<- group_select(annotations, #"Correction.of.speech.errors..i.e..syntactic...transcriptions.not.exactly.matching.speech...yes.no")
+#byCorrections <- byCorrections %>% #group_by(Correction.of.speech.errors..i.e..syntactic...transcriptions.not.exactly.matching.speech...yes.no) #%>%  summarise(n = n())
+#head(byCorrections)
 
 
 ```
@@ -386,45 +427,48 @@ head(byCorrections)
 
 ```{r group_by weird_var, warning=FALSE, message=FALSE}
 
-byFertility <- group_select(annotations, "Fertility.rate.of.community")
-byFertility <- byFertility %>% group_by(Fertility.rate.of.community) %>%  summarise(n = n())
+byFertility <- group_select(annotations, "fertility")
+byFertility <- byFertility %>% group_by(fertility) %>%  summarise(n = n())
 byFertility
+```
 
-byInterbirth <- group_select(annotations, "Interbirth.intervals")
-byInterbirth <- byInterbirth %>% group_by(Interbirth.intervals) %>%  summarise(n = n())
+```{r group_by weird_var2, warning=FALSE, message=FALSE}
+
+byInterbirth <- group_select(annotations, "interbirth_intervals")
+byInterbirth <- byInterbirth %>% group_by(interbirth_intervals) %>%  summarise(n = n())
 byInterbirth
 
-bySchooling <- group_select(annotations, "Access.to.schooling.for.children..yes.no.only.elementary.")
-bySchooling <- bySchooling %>% group_by(Access.to.schooling.for.children..yes.no.only.elementary.) %>%  summarise(n = n())
+bySchooling <- group_select(annotations, "access_schooling")
+bySchooling <- bySchooling %>% group_by(access_schooling) %>%  summarise(n = n())
 bySchooling
 
-byCommunity <- group_select(annotations, "Type.of.community..hunter.forager.herder.farmer.work.for.pay.industrial.")
-byCommunity <- byCommunity %>% group_by(Type.of.community..hunter.forager.herder.farmer.work.for.pay.industrial.) %>%  summarise(n = n())
+byCommunity <- group_select(annotations, "type_community")
+byCommunity <- byCommunity %>% group_by(type_community) %>%  summarise(n = n())
 byCommunity
 
-byHealth <- group_select(annotations, "Access.to.health.for.children...yes.no.")
-byHealth <- byHealth %>% group_by(Access.to.health.for.children...yes.no.) %>%  summarise(n = n())
+byHealth <- group_select(annotations, "access_health")
+byHealth <- byHealth %>% group_by(access_health) %>%  summarise(n = n())
 byHealth 
 
-byCulture <- group_select(annotations, "Type.of.culture..minority..majority.")
-byCulture <- byCulture %>% group_by(Type.of.culture..minority..majority.) %>%  summarise(n = n())
-byCulture
+#byCulture <- group_select(annotations, "type_culture")
+#byCulture <- byCulture %>% group_by(Type.of.culture..minority..majority.) %>%  summarise(n = n())
+#byCulture
 
-byMortality<- group_select(annotations, "Mortality.rate.of.children.in.the.community")
-byMortality<- byMortality %>% group_by(Mortality.rate.of.children.in.the.community) %>%  summarise(n = n())
-byMortality
+#byMortality<- group_select(annotations, "Mortality.rate.of.children.in.the.community")
+#byMortality<- byMortality %>% group_by(Mortality.rate.of.children.in.the.community) %>%  summarise(n = n())
+#byMortality
 
-byLangSpeakers<- group_select(annotations, "Number.of.speakers.of.the.language")
-byLangSpeakers<- byLangSpeakers %>% group_by(Number.of.speakers.of.the.language) %>%  summarise(n = n())
+byLangSpeakers<- group_select(annotations, "number_speakers")
+byLangSpeakers<- byLangSpeakers %>% group_by(number_speakers) %>%  summarise(n = n())
 byLangSpeakers
 
-byHousehold<- group_select(annotations, "Household.structure..nuclear..extended.")
-byhousehold<- byHousehold %>% group_by(Household.structure..nuclear..extended.) %>%  summarise(n = n())
+byHousehold<- group_select(annotations, "household_structure")
+byhousehold<- byHousehold %>% group_by(household_structure) %>%  summarise(n = n())
 byhousehold
 
-byTimespent<- group_select(annotations, "Where.children.spend.their.time..home..nursery..playing.by.the.river....")
-byTimespent<- byTimespent %>% group_by(Where.children.spend.their.time..home..nursery..playing.by.the.river....) %>%  summarise(n = n())
-byTimespent
+#byTimespent<- group_select(annotations, #"Where.children.spend.their.time..home..nursery..playing.by.the.river....")
+#byTimespent<- byTimespent %>% #group_by(Where.children.spend.their.time..home..nursery..playing.by.the.river....) %>%  summarise(n = n())
+#byTimespent
 
 ```
 
@@ -435,13 +479,12 @@ byTimespent
 ```{r group_by educ}
 
 byParentEducation<- annotations[!is.na(annotations$Parental.education),] %>%
-    group_by(lang, continent, Parental.education) %>%
+    group_by(language, continent, Parental.education) %>%
       count() 
 
 byParentEducation <- byParentEducation %>% 
   rename(
     number_of_corpora = n,
-    language = lang,
     Parental.education.NAs_excluded = Parental.education)
 
 byParentEducation
@@ -452,33 +495,34 @@ byParentEducation
 
 ```{r group_by prof}
 byParentProfession<- annotations[!is.na(annotations$Parental.profession),] %>%
-    group_by(lang, continent, Parental.profession) %>%
+    group_by(language, continent, Parental.profession) %>%
       count() 
 
 byParentProfession <- byParentProfession %>% 
   rename(
     number_of_corpora = n,
-    language = lang,
     Parental.profession.NAs_excluded = Parental.profession)
 
 byParentProfession
+
+annotations %>%
+  group_by(Parental.education) %>%
+  filter(is.na(Parental.education)) %>%
+  summarise(count=n())
+
 ```
-
-`r nrow(annotations[annotations$Parental.profession==NA,])` corpora have NA for parental education.
-
 
 # Parental SES
 ## Based on "Parental.ses" annotation column
 ```{r group_by ses}
 
 byParentSES<- annotations[!is.na(annotations$Parental.socioeconomic.status),] %>%
-    group_by(lang, continent, Parental.socioeconomic.status) %>%
+    group_by(language, continent, Parental.socioeconomic.status) %>%
       count() 
 
 byParentSES <- byParentSES %>% 
   rename(
     number_of_corpora = n,
-    language = lang,
     Parental.socioeconomic.status.NAs_excluded = Parental.socioeconomic.status)
 
 byParentSES 
@@ -493,26 +537,33 @@ byParentSES
 
 ```{r group_by participants}
 
+byPart<- annotations %>%
+  select(language, number_participants, bilingualism_corpus) %>%
+   filter(!is.na(number_participants)) %>%
+     group_by(language, bilingualism_corpus) %>%
+       summarise(numpar = sum(as.numeric(number_participants))) 
+#     p
+
 byPart %>%      
-  ggplot(mapping = aes(y = reorder(lang, numpar), numpar)) + 
+  ggplot(mapping = aes(y = reorder(language, numpar), numpar)) + 
     geom_point() + 
       ggtitle("Number of target children per language") + 
         geom_col()+ 
-          facet_wrap(~Bilingualism.in.corpus..yes..no., scale="free") +
+          facet_wrap(~bilingualism_corpus, scale="free") +
             labs(y= "Languages", x = "Number of target children")
 
-byPart_nona <- byPart[!is.na(byPart$Bilingualism.in.corpus..yes..no.),]
+byPart_nona <- byPart[!is.na(byPart$bilingualism_corpus),]
 byPart_mono <- byPart_nona %>%
-  filter(Bilingualism.in.corpus..yes..no.=="Monolinguals")
+  filter(bilingualism_corpus=="Monolinguals")
 byPart_bili <- byPart_nona %>%
-  filter(Bilingualism.in.corpus..yes..no.=="Bilinguals")
+  filter(bilingualism_corpus=="Bilinguals")
 
 head(byPart)
 ```
 
-`r nrow(annotations[is.na(annotations$Number.of.participants), ])` corpora have NA in "Number of participants". 
+`r nrow(annotations[is.na(annotations$number_participants), ])` corpora have NA in "Number of participants". 
 There is data from `r sum(byPart_mono$numpar)` target children in Monolingual corpora.
-There is data from `r sum(byPart[is.na(byPart$Bilingualism.in.corpus..yes..no.),]$numpar)` target children in corpora which have not been classified as Monolingual/Bilingual.
+There is data from `r sum(byPart[is.na(byPart$bilingualism_corpus),]$numpar)` target children in corpora which have not been classified as Monolingual/Bilingual.
 There is data from `r sum(byPart_bili$numpar)` target children in Bilingual corpora.
 Overall, the mean number of target children per language is `r mean(byPart$numpar)` with min `r min(byPart$numpar)` and max `r max(byPart$numpar)`.
 
@@ -523,8 +574,8 @@ Overall, the mean number of target children per language is `r mean(byPart$numpa
 
 byPartCont <- annotations %>%
     group_by(continent) %>%
-      select(Number.of.participants, continent) %>%
-      summarise(numpar = sum(as.numeric(Number.of.participants), na.rm=TRUE)) 
+      select(number_participants, continent) %>%
+      summarise(numpar = sum(as.numeric(number_participants), na.rm=TRUE)) 
 
 byPartCont %>%      
   ggplot(mapping = aes(y = reorder(continent, numpar), numpar)) + 
