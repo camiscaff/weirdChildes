@@ -1,0 +1,591 @@
+---
+title: "childes_weird"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+https://rpubs.com/gloukatou/733656
+
+## R Markdown
+
+```{r libraries, message=FALSE, warning=FALSE}
+#library(childesr)
+library(wordbankr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
+require(scales)
+library(stringr)
+
+
+library(RColorBrewer)
+myPalette <- brewer.pal(5, "Set2") 
+```
+
+# Load annotations 
+
+```{r load annotations}
+
+#####TODOS first part is the descriptive section, to what extent the full range of populations is represented, what are some codes that are missing often,
+##### descriptive section and representation of the population
+##########systematic review of features
+##################confront eg proportion of child population versus proportion of data by eg continent
+#############second goal: point out strengths and limitations of the current CHILDES, explain what is missing
+
+annotations<- read.csv("Table for authors - annotations.csv") %>%
+  rename(corpus_name=1, number_participants=2, language=3, location=4, first_age=7, last_age=8,bilingualism_corpus=9, bilingualism_community=10, bilingualism_family=11, children_with_siblings=12, household_structure=16, mean_session_child=17, mean_duration_child=19, type_community=24, fertility=25, interbirth_intervals=26, access_schooling=27, access_health=28, number_speakers=29 ) 
+
+```
+
+`r nrow(annotations)` corpora already annotated. 
+
+### Optional chunk merging with childesr for extra information
+
+```{r load_join childes, eval=FALSE}
+#d_transcripts <- get_transcripts()
+#d_statistics <- get_speaker_statistics()
+
+#mergedChiAnnot <- annotations %>% left_join(d_transcripts)
+#mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_d)
+#mergedChiAnnot <- mergedChiAnnot %>% left_join(n_utt_speaker)
+#mergedChiAnnot<-mergedChiAnnot[!(is.na(mergedChiAnnot$n_utt) | mergedChiAnnot$n_utt=="" ), ]
+
+#if ( length(unique(mergedChiAnnot$corpus_name)) < nrow(annotations) ) {
+#annotations$corpus_name[!annotations$corpus_name %in% mergedChiAnnot$corpus_name]
+#  } #print non merged corpora
+```
+# Corpus inclusion
+## Based on "Inclusion" annotation column
+### How many corpora should be included?
+
+```{r group_by inclusion}
+#Gathercole and Vila still have ? in inclusion
+
+include<- annotations %>%
+  mutate(inclusion=tolower(Inclusion)) %>%
+  mutate(inclusion = ifelse(str_detect(inclusion, "yes"), "yes", "no")) %>%
+  group_by(inclusion) %>%
+  count() 
+
+ggplot(include,aes(y=n, x=inclusion)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  theme_minimal() + 
+  ggtitle("Corpus inclusion") 
+
+annotations <- annotations %>%
+  filter(!Inclusion=="no")
+
+```
+From the total amount of corpora, `r nrow(annotations)` have been included in this study. The following analyses will continue only on these included corpora.
+
+# Bilinguals
+## Based on "Bilingualism" annotation column
+### How many corpora are bilingual?
+
+```{r group_byPart}
+byPart<- annotations %>%
+  select(language, number_participants) %>%
+   filter(!is.na(number_participants)) %>%
+     group_by(language) %>%
+       summarise(numpar = sum(as.numeric(number_participants))) 
+#     p
+
+ggplot(byPart[order(byPart$language),], aes(y=language, x=numpar)) + 
+    geom_col() 
+```
+
+
+
+
+```{r group_by bilinguals}
+
+group_count <-function(data_, column_){
+data_<- data_ %>%
+  group_by({{column_}}) %>%
+    count() 
+      return(data_)
+}
+
+annotations <- annotations %>%
+  mutate(bilingualism_corpus=ifelse(bilingualism_corpus=="yes", "bilinguals", "monolinguals"))
+byBilinguals<-group_count(annotations, bilingualism_corpus)
+
+ggplot(byBilinguals,aes(y=n, x=bilingualism_corpus)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  theme_minimal() + 
+  ggtitle("Bilingualism") 
+
+byBili <- annotations %>%
+    group_by(language, bilingualism_corpus) %>%
+      summarise(numpar_bili = sum(as.numeric(number_participants))) %>%
+        filter(!is.na(bilingualism_corpus), !is.na(numpar_bili))
+
+
+ggplot(byBili[order(byBili$language),], aes(y=language, x=numpar_bili)) + 
+    geom_col() +
+  facet_grid(~bilingualism_corpus)
+
+
+byBilinguals<-group_count(annotations, bilingualism_corpus)
+lbls <- paste(byBilinguals$bilingualism_corpus, byBilinguals$n, sep=" ") # add numbers to labels
+pie(byBilinguals$n, labels=lbls, border="white", col=myPalette)
+
+
+```
+
+`r nrow(annotations[is.na(annotations$bilingualism_corpus), ])` corpora have NA in "Bilingualism in corpus". 
+
+# Siblings
+## Based on "Number of children with siblings" annotation column
+### How many of the target children have siblings?
+
+```{r group_by children_with_siblings, warning=FALSE, message=FALSE}
+#d[is.na(d)] <- 0
+
+bySibl<- annotations %>%
+  select(language,children_with_siblings) %>%
+   # mutate(child_sibl = ifelse(is.na(children_with_siblings), 0, children_with_siblings )) %>%
+     group_by(language) %>%
+      summarise(numpar_sibl = sum(as.numeric(children_with_siblings), na.rm=TRUE)) 
+#     pivot_longer(c(numpar_sibl, numpar), names_to = "type", values_to = "value")
+                    
+
+ggplot(bySibl[order(bySibl$language),], aes(y=language, x=numpar_sibl)) + 
+    geom_col() 
+
+ggplot(bySibl[!is.na(bySibl$numpar_sibl),], mapping = aes(y=language, x=numpar_sibl)) + 
+  geom_point() + 
+    ggtitle("Languages where number of children with siblings is not unknown") + 
+      geom_col()
+
+bySibl<- annotations %>%
+  select(language,children_with_siblings) %>%
+   # mutate(child_sibl = ifelse(is.na(children_with_siblings), 0, children_with_siblings )) %>%
+     group_by(language) %>%
+      summarise(numpar_sibl = sum(as.numeric(children_with_siblings))) 
+#     pivot_longer(c(numpar_sibl, numpar), names_to = "type", values_to = "value")
+                 
+
+```
+Out of `r sum(byPart$numpar, na.rm=TRUE)` total target children, only `r sum(bySibl$numpar_sibl, na.rm =TRUE)` have siblings. No information for children in `r nrow(annotations %>% filter(is.na(children_with_siblings)))` corpora and `r nrow(bySibl %>% filter(is.na(numpar_sibl)))` languages (marked as NAs).
+
+## Based on "Average number of siblings" annotation column
+### How many siblings in average?
+```{r group_by siblings, warning=FALSE, message=FALSE}
+
+bySiblnum<-annotations %>%
+    group_by(Average.number.of.siblings) %>%
+      count()
+
+ggplot(bySiblnum, mapping = aes(x=Average.number.of.siblings, y=n)) + 
+  geom_point() + 
+    ggtitle("Average number of siblings per corpus") + 
+      geom_col()
+
+#ggplot(bySiblnum[!is.na(bySiblnum$Average.number.of.siblings),], mapping = aes(x=Average.number.of.siblings, y=n)) 
+
+annotations$Average.number.of.siblings <- as.numeric(as.character(annotations$Average.number.of.siblings))
+head(bySiblnum)
+```
+The mean number of  siblings has been left NA for `r bySiblnum[is.na(bySiblnum$Average.number.of.siblings),]$n` out of `r sum(bySiblnum$n)` corpora. In the remaining corpora, the mean number of siblings per corpus is `r mean(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings, na.rm=TRUE)` with min `r min(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)` and max `r max(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)`.
+
+
+## Based on "Average number of older siblings" annotation column
+### How many older siblings in average?
+```{r group_by old_siblings, warning=FALSE, message=FALSE}
+
+byoldSiblnum<-annotations %>%
+    group_by(Average.number.of.older.siblings) %>%
+      count()
+
+ggplot(byoldSiblnum, mapping = aes(x=Average.number.of.older.siblings, y=n)) + 
+  geom_point() + 
+    ggtitle("Average number of older siblings per corpus") + 
+      geom_col()
+
+annotations$Average.number.of.older.siblings <- as.numeric(as.character(annotations$Average.number.of.older.siblings))
+
+head(byoldSiblnum)
+```
+
+The mean number of older siblings has been left NA for `r byoldSiblnum[is.na(byoldSiblnum$Average.number.of.older.siblings),]$n` out of `r sum(byoldSiblnum$n)` corpora.  In the remaining corpora, the mean number of older siblings per corpus is `r mean(annotations[!is.na(annotations$Average.number.of.older.siblings),]$Average.number.of.older.siblings, na.rm=TRUE)` with min `r min(annotations[!is.na(annotations$Average.number.of.older.siblings),]$Average.number.of.siblings)` and max `r max(annotations[!is.na(annotations$Average.number.of.older.siblings),]$Average.number.of.older.siblings)`.
+
+
+# Sessions
+## Based on "Mean sessions per child" annotation column
+### How many sessions per language?
+
+```{r group_by session, warning=FALSE, message=FALSE}
+
+bySess <- annotations[!is.na(annotations$mean_session_child), ]
+
+bySess$mean_session_child <- sub(",",".",bySess$mean_session_child)
+bySess$mean_session_child <- as.numeric(bySess$mean_session_child)
+
+bySess<- bySess %>%
+  mutate(sessions = as.numeric(number_participants) * mean_session_child) %>%
+    group_by(language, bilingualism_corpus) %>%
+      summarise(numses = sum(as.numeric(sessions)))
+
+
+head(bySess)
+#ggplot(bySess, mapping = aes(y = reorder(language, numses), numses)) + 
+#  geom_point() + 
+#  ggtitle("Number of sessions per language") + 
+#  geom_col()+ 
+#  facet_wrap(~bilingualism_corpus, scale="free")
+```
+
+# Location
+## Based on "Neighbour.village.city.province.state.country" annotation column
+### For now only based on continents and countries. Lots of handcoding.
+
+```{r group_by location_cleaning}
+
+annotations$continent <-NA
+
+annotations$continent[grep("England|Sweden|Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Estonia|Tartu, Estonia ; Rapla, Estonia|Budapest, Hungary|West Coast, Ireland|Arfon area Gwynedd, North Wales|Netherlands|Belfast, Northern Ireland|Nottingham/Manchester, England|Sweden ; Portugal|Czech Republic|Bucharest, Romania|Postdam, Germany|Stuttgart, Germany|France|Alt penedes, region of catalonia|spain|Naples|Spain, Hungary, Lloret de mar|Spain, Salamanca|England, Brighton|France (Normandy, Marseille, + places visited)|Portugal|italy|Barcelona|Switzerland|Stockholm, Sweden|Iceland|Poznań, Poland|Romania|Antwerp, Belgium|Ireland|Hungary|Athens, Greece|Southern Estonia|Tartu, Estonia|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Moscow, Russia|Spain, Salamanca|Wales", annotations$Neighbour.village.city.province.state.country)]  <- "Europe"
+
+annotations$continent[grep("Rio Cuarto, Cordoba, Argentina|Sao Paulo|Patzcuaro, Michoacan, iMexico|Jamaica", annotations$Neighbour.village.city.province.state.country)]  <- "Central and South America"
+
+annotations$continent[grep("Iran|Israel|Bombay, India|China|Bangkok, Thailand|Tokyo area|Nagoya area|osaka area|Kuwait|Yahud, Israel|Nagoya center|Kusatsu City, Shiga Pref|Hong-Kong|Taiwan|Turkey", annotations$Neighbour.village.city.province.state.country)]  <- "Asia"
+
+annotations$continent[grep("Michigan, USA|USA, Northern Virginia|Canada|California, USA|washington dc|United States|USA", annotations$Neighbour.village.city.province.state.country)]  <- "North America"
+
+annotations$continent[grep("Alexandria, Egypt|Mokhotlong, Lesotho", annotations$Neighbour.village.city.province.state.country)]  <- "Africa"
+
+
+annotations$country <-NA
+annotations$country[grep("England|West Coast, Ireland|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Ireland|Wales", annotations$Neighbour.village.city.province.state.country)]  <- "UK/Ireland"
+annotations$country[grep("Sweden|Sweden ; Portugal|Stockholm, Sweden", annotations$Neighbour.village.city.province.state.country)]  <- "Sweden"
+annotations$country[grep("Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Alt penedes, region of catalonia|spain|Spain, Hungary, Lloret de mar|Spain, Salamanca|Barcelona|A Coruña, Santiago de Compostela ; Lugo ; Pontevedra, A Estrada ; SPAIN|Spain, Salamanca", annotations$Neighbour.village.city.province.state.country)]  <- "Spain"
+annotations$country[grep("Estonia|Tartu, Estonia ; Rapla, Estonia|Southern Estonia|Tartu, Estonia", annotations$Neighbour.village.city.province.state.country)]  <- "Estonia"
+annotations$country[grep("Budapest, Hungary|Hungary|Spain, Hungary, Lloret de mar", annotations$Neighbour.village.city.province.state.country)]  <- "Hungary"
+annotations$country[grep("Sweden ; Portugal|Portugal", annotations$Neighbour.village.city.province.state.country)]  <- "Portugal"
+annotations$country[grep("Czech Republic", annotations$Neighbour.village.city.province.state.country)]  <- "Czech Republic"
+annotations$country[grep("Bucharest, Romania|Romania", annotations$Neighbour.village.city.province.state.country)]  <- "Romania"
+annotations$country[grep("Postdam, Germany|Stuttgart, Germany", annotations$Neighbour.village.city.province.state.country)]  <- "Germany"
+annotations$country[grep("France|France (Normandy, Marseille, + places visited)", annotations$Neighbour.village.city.province.state.country)]  <- "France"
+annotations$country[grep("Naples|italy", annotations$Neighbour.village.city.province.state.country)]  <- "Italy"
+annotations$country[grep("Switzerland", annotations$Neighbour.village.city.province.state.country)]  <- "Switzerland"
+annotations$country[grep("Iceland", annotations$Neighbour.village.city.province.state.country)]  <- "Iceland"
+annotations$country[grep("Poznań, Poland", annotations$Neighbour.village.city.province.state.country)]  <- "Poland"
+annotations$country[grep("Antwerp, Belgium", annotations$Neighbour.village.city.province.state.country)]  <- "Belgium"
+annotations$country[grep("Athens, Greece", annotations$Neighbour.village.city.province.state.country)]  <- "Greece"
+annotations$country[grep("Moscow, Russia", annotations$Neighbour.village.city.province.state.country)]  <- "Russia"
+annotations$country[grep("Rio Cuarto, Cordoba, Argentina", annotations$Neighbour.village.city.province.state.country)]  <- "Argentina"
+annotations$country[grep("Sao Paulo", annotations$Neighbour.village.city.province.state.country)]  <- "Brazil"
+annotations$country[grep("Patzcuaro, Michoacan, iMexico", annotations$Neighbour.village.city.province.state.country)]  <- "Mexico"
+annotations$country[grep("Jamaica", annotations$Neighbour.village.city.province.state.country)]  <- "Jamaica"
+annotations$country[grep("Iran", annotations$Neighbour.village.city.province.state.country)]  <- "Iran"
+annotations$country[grep("Israel|Yahud, Israel", annotations$Neighbour.village.city.province.state.country)]  <- "Israel"
+annotations$country[grep("Bombay, India", annotations$Neighbour.village.city.province.state.country)]  <- "India"
+annotations$country[grep("China", annotations$Neighbour.village.city.province.state.country)]  <- "China"
+annotations$country[grep("Bangkok, Thailand", annotations$Neighbour.village.city.province.state.country)]  <- "Thailand"
+annotations$country[grep("Tokyo area|Nagoya area|osaka area|Nagoya center|Kusatsu City, Shiga Pref", annotations$Neighbour.village.city.province.state.country)]  <- "Japan"
+annotations$country[grep("Kuwait", annotations$Neighbour.village.city.province.state.country)]  <- "Kuwait"
+annotations$country[grep("Hong-Kong", annotations$Neighbour.village.city.province.state.country)]  <- "Hong-Kong"
+annotations$country[grep("Taiwan", annotations$Neighbour.village.city.province.state.country)]  <- "Taiwan"
+annotations$country[grep("Turkey", annotations$Neighbour.village.city.province.state.country)]  <- "Turkey"
+annotations$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA", annotations$Neighbour.village.city.province.state.country)]  <- "USA"
+annotations$country[grep("Canada", annotations$Neighbour.village.city.province.state.country)]  <- "Canada"
+annotations$country[grep("Alexandria, Egypt", annotations$Neighbour.village.city.province.state.country)]  <- "Egypt"
+annotations$country[grep("Mokhotlong, Lesotho", annotations$Neighbour.village.city.province.state.country)]  <- "Lesotho"
+
+```
+
+### Corpora by countries and continents
+```{r group_by location}
+
+byLocation <- annotations %>%
+  select(country, continent) %>%
+    group_by(country, continent) %>%
+      count()
+
+ggplot(byLocation, aes(x=n, y=country)) +
+  geom_bar(stat="identity", width=1, color="white") +
+    ggtitle("Corpora by Countries and Continents") +
+      facet_wrap(~continent, scale="free") 
+
+head(byLocation)
+
+```
+
+`r length(unique(byLocation$country))` countries are represented in childes. `r length(unique(byLocation$continent))-1` continents. 
+`r nrow(annotations[annotations$continent=="Europe",])` of the `r nrow(annotations)` corpora are European, and
+`r nrow(annotations[annotations$continent=="North America",])` of the corpora are North American. 
+
+## Based on "Neighbour.village.city.province.state.country" annotation column
+### Corpora by countries and continents
+```{r group_by location1}
+byLocation1 <- group_count(annotations, continent)
+lbls <- paste(byLocation1$continent, byLocation1$n, sep=" ") # add numbers to labels
+pie(byLocation1$n, labels=lbls, border="white", col=myPalette, main="Corpora by continent")
+
+head(byLocation1)
+
+```
+# Place of recording
+## Based on "Place.of.recordings." annotation column
+### Will need handcoding.
+
+```{r group_by place_of_recording}
+
+#byPlaceofRecording <- group_count(annotations, Place.of.recordings...home..nursery....)
+#lbls <- paste(byPlaceofRecording$Place.of.recordings...home..nursery...., byPlaceofRecording$n, sep=" ") # add numbers to labels
+#pie(byPlaceofRecording$n, labels=lbls, border="white", col=myPalette)
+
+#head(byPlaceofRecording)
+```
+# Recording method
+## Based on "Recording.method..static..portable..both..diary..other.." annotation column
+### Will need handcoding. For now only prints column
+
+```{r group_by recording_method, warning=FALSE, message=FALSE}
+#byRecord <- annotations %>% 
+#  group_by(Presence.of.investigator..yes.no.parent.is.investigator.half.half., #Recording.method..static..portable..both..diary..other..) %>%
+#    summarise(n = n()) %>% 
+#      arrange(desc(n)) 
+ 
+#byRecord %>% 
+#  filter(!is.na(Presence.of.investigator..yes.no.parent.is.investigator.half.half.), #!is.na(Recording.method..static..portable..both..diary..other..)) %>%
+#    rename( number_of_corpora = n)
+#lbls <- paste(byRecord$Presence.of.investigator..yes.no.parent.is.investigator.half.half., byRecord$Recording.method..static..portable..both..diary..other.., byRecord$n, sep=" & ") # add numbers to labels
+#pie(byRecord$n, labels=lbls, border="white", col=myPalette)
+#`r nrow(annotations[is.na(annotations$Presence.of.investigator..yes.no.parent.is.investigator.half.half.),])` #corpora have NA in "Presence.of.investigator" column. 
+
+#`r nrow(annotations[is.na(annotations$Recording.method..static..portable..both..diary..other..),])` corpora #have NA in "Recording.method" column. 
+```
+
+
+# Recording age
+## Based on "Mean.child.age.at.beginning.of.recordings, Mean.child.age.at.end.of.recordings" annotation columns
+
+```{r group_by age, warning=FALSE, message=FALSE}
+byAge <- annotations %>% 
+ select(first_age, last_age, country, continent) %>%
+  group_by(country, continent) %>%
+    summarize(min = min(first_age), max = max(last_age)) %>%
+       arrange(desc(min)) 
+
+
+ggplot(byAge, aes(y=country))+
+  geom_linerange(aes(xmin=min,xmax=max),linetype=2,color="blue")+
+    geom_point(aes(x=min),size=3,color="red")+
+      geom_point(aes(x=max),size=3,color="red")+
+        ggtitle("Nim and Max age per country") +
+          theme_bw()+
+             facet_wrap(~continent, scale="free") 
+            
+```
+
+# Yes/No Tiers
+## Based on "CDS.annotation, English.translation, Morphological.annotation, Only.directed.to.child.transcribed, Correction.of.speech.errors" annotation columns
+### Mostly NAs. For now just prints column 
+
+```{r group_by tiers, warning=FALSE, message=FALSE}
+
+group_select<-function(data_, column_){
+data_ <- data_%>%
+    group_by(!!column_) %>%
+      select(corpus_name, !!column_)
+data_ <- data_[ order( data_[,3] ),]
+return(data_)
+}
+
+#byCdsTier <-group_select(annotations, "CDS.annotation..yes.no.")
+#byCdsTier <- byCdsTier %>% group_by(CDS.annotation..yes.no.) %>%  summarise(n = n())
+#head(byCdsTier)
+
+#byannotTier <-group_select(annotations, "English.translation..yes.no")
+#byannotTier <- byannotTier %>% group_by(English.translation..yes.no) %>%  summarise(n = n())
+#head(byannotTier)
+
+#bymorphTier <- group_select(annotations, "Morphological.annotation..yes.no.")
+#bymorphTier <- bymorphTier %>% group_by(Morphological.annotation..yes.no.) %>%  summarise(n = n())
+#head(bymorphTier)
+
+#byCDStransTier <- group_select(annotations, #"Only.directed.to.child.transcribed..i.e..speech.between.adults.not.transcribed...yes.no")
+#byCDStransTier <- byCDStransTier %>% #group_by(Only.directed.to.child.transcribed..i.e..speech.between.adults.not.transcribed...yes.no) %>%  #summarise(n = n())
+#head(byCDStransTier)
+
+
+#byCorrections<- group_select(annotations, #"Correction.of.speech.errors..i.e..syntactic...transcriptions.not.exactly.matching.speech...yes.no")
+#byCorrections <- byCorrections %>% #group_by(Correction.of.speech.errors..i.e..syntactic...transcriptions.not.exactly.matching.speech...yes.no) #%>%  summarise(n = n())
+#head(byCorrections)
+
+
+```
+
+# Weird variables
+## Based on "Fertility, Interbirth intervals, Schooling, Community, Healty, Culture, Mortality, Household..." annotation columns
+### Mostly NAs. For now just prints column 
+
+```{r group_by weird_var, warning=FALSE, message=FALSE}
+
+byFertility <- group_select(annotations, "fertility")
+byFertility <- byFertility %>% group_by(fertility) %>%  summarise(n = n())
+byFertility
+```
+
+```{r group_by weird_var2, warning=FALSE, message=FALSE}
+
+byInterbirth <- group_select(annotations, "interbirth_intervals")
+byInterbirth <- byInterbirth %>% group_by(interbirth_intervals) %>%  summarise(n = n())
+byInterbirth
+
+bySchooling <- group_select(annotations, "access_schooling")
+bySchooling <- bySchooling %>% group_by(access_schooling) %>%  summarise(n = n())
+bySchooling
+
+byCommunity <- group_select(annotations, "type_community")
+byCommunity <- byCommunity %>% group_by(type_community) %>%  summarise(n = n())
+byCommunity
+
+byHealth <- group_select(annotations, "access_health")
+byHealth <- byHealth %>% group_by(access_health) %>%  summarise(n = n())
+byHealth 
+
+#byCulture <- group_select(annotations, "type_culture")
+#byCulture <- byCulture %>% group_by(Type.of.culture..minority..majority.) %>%  summarise(n = n())
+#byCulture
+
+#byMortality<- group_select(annotations, "Mortality.rate.of.children.in.the.community")
+#byMortality<- byMortality %>% group_by(Mortality.rate.of.children.in.the.community) %>%  summarise(n = n())
+#byMortality
+
+byLangSpeakers<- group_select(annotations, "number_speakers")
+byLangSpeakers<- byLangSpeakers %>% group_by(number_speakers) %>%  summarise(n = n())
+byLangSpeakers
+
+byHousehold<- group_select(annotations, "household_structure")
+byhousehold<- byHousehold %>% group_by(household_structure) %>%  summarise(n = n())
+byhousehold
+
+#byTimespent<- group_select(annotations, #"Where.children.spend.their.time..home..nursery..playing.by.the.river....")
+#byTimespent<- byTimespent %>% #group_by(Where.children.spend.their.time..home..nursery..playing.by.the.river....) %>%  summarise(n = n())
+#byTimespent
+
+```
+
+
+# Parental education, profession
+## Based on "Parental.education, Parental.profession" annotation columns
+
+```{r group_by educ}
+
+byParentEducation<- annotations[!is.na(annotations$Parental.education),] %>%
+    group_by(language, continent, Parental.education) %>%
+      count() 
+
+byParentEducation <- byParentEducation %>% 
+  rename(
+    number_of_corpora = n,
+    Parental.education.NAs_excluded = Parental.education)
+
+byParentEducation
+
+```
+`r nrow(annotations[annotations$Parental.education==NA,])` corpora have NA for parental education.
+
+
+```{r group_by prof}
+byParentProfession<- annotations[!is.na(annotations$Parental.profession),] %>%
+    group_by(language, continent, Parental.profession) %>%
+      count() 
+
+byParentProfession <- byParentProfession %>% 
+  rename(
+    number_of_corpora = n,
+    Parental.profession.NAs_excluded = Parental.profession)
+
+byParentProfession
+
+annotations %>%
+  group_by(Parental.education) %>%
+  filter(is.na(Parental.education)) %>%
+  summarise(count=n())
+
+```
+
+# Parental SES
+## Based on "Parental.ses" annotation column
+```{r group_by ses}
+
+byParentSES<- annotations[!is.na(annotations$Parental.socioeconomic.status),] %>%
+    group_by(language, continent, Parental.socioeconomic.status) %>%
+      count() 
+
+byParentSES <- byParentSES %>% 
+  rename(
+    number_of_corpora = n,
+    Parental.socioeconomic.status.NAs_excluded = Parental.socioeconomic.status)
+
+byParentSES 
+
+```
+`r nrow(annotations[annotations$Parental.socioeconomic.status==NA,])` corpora have NA for parental education.
+
+
+# Number of children in CHILDES
+## Based on "Number.of.participants" annotation column
+### Number of target children per language
+
+```{r group_by participants}
+
+byPart<- annotations %>%
+  select(language, number_participants, bilingualism_corpus) %>%
+   filter(!is.na(number_participants)) %>%
+     group_by(language, bilingualism_corpus) %>%
+       summarise(numpar = sum(as.numeric(number_participants))) 
+#     p
+
+byPart %>%      
+  ggplot(mapping = aes(y = reorder(language, numpar), numpar)) + 
+    geom_point() + 
+      ggtitle("Number of target children per language") + 
+        geom_col()+ 
+          facet_wrap(~bilingualism_corpus, scale="free") +
+            labs(y= "Languages", x = "Number of target children")
+
+byPart_nona <- byPart[!is.na(byPart$bilingualism_corpus),]
+byPart_mono <- byPart_nona %>%
+  filter(bilingualism_corpus=="Monolinguals")
+byPart_bili <- byPart_nona %>%
+  filter(bilingualism_corpus=="Bilinguals")
+
+head(byPart)
+```
+
+`r nrow(annotations[is.na(annotations$number_participants), ])` corpora have NA in "Number of participants". 
+There is data from `r sum(byPart_mono$numpar)` target children in Monolingual corpora.
+There is data from `r sum(byPart[is.na(byPart$bilingualism_corpus),]$numpar)` target children in corpora which have not been classified as Monolingual/Bilingual.
+There is data from `r sum(byPart_bili$numpar)` target children in Bilingual corpora.
+Overall, the mean number of target children per language is `r mean(byPart$numpar)` with min `r min(byPart$numpar)` and max `r max(byPart$numpar)`.
+
+## Based on "Number.of.participants" annotation column
+### Number of target children per continent
+
+```{r group_by participants_continent}
+
+byPartCont <- annotations %>%
+    group_by(continent) %>%
+      select(number_participants, continent) %>%
+      summarise(numpar = sum(as.numeric(number_participants), na.rm=TRUE)) 
+
+byPartCont %>%      
+  ggplot(mapping = aes(y = reorder(continent, numpar), numpar)) + 
+      ggtitle("Number of target children per continent") + 
+        geom_col()+
+           labs(y= "Continents", x = "Number of target children")
+head(byPartCont)
+```
+
+`r byPartCont[byPartCont$continent=="Europe",]$numpar[1]` target children in Europe, `r byPartCont[byPartCont$continent=="Africa",]$numpar[1]` in Africa,
+`r byPartCont[byPartCont$continent=="North America",]$numpar[1]` in North America, `r byPartCont[byPartCont$continent=="Asia",]$numpar[1]`in Asia, `r byPartCont[byPartCont$continent=="Central and South America",]$numpar[1]` in Central and South America.
+
+
