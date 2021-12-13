@@ -64,6 +64,17 @@ annotations$Number.of.participants[annotations$Number.of.participants=="1 CHI + 
 annotations$Number.of.participants[annotations$Number.of.participants=="4 CHI + MOTs, some FATs, some SIBs"]<-4
 annotations$Number.of.participants=as.numeric(as.character(annotations$Number.of.participants))
 
+annotations$Nb.of.children.with.siblings=as.numeric(as.character(annotations$Nb.of.children.with.siblings))
+
+annotations$Proportion.With.Siblings=annotations$Nb.of.children.with.siblings/annotations$Number.of.participants
+
+#table(annotations$Household.structure)
+annotations$Household.structure=tolower(annotations$Household.structure)
+annotations$Household.structure[grep("different|diverse|varied",annotations$Household.structure)] <- NA #turn to NA?
+annotations$Household.structure[annotations$Household.structure %in% c("nuclear, extended","extended/nuclear")]<-"varied"
+annotations$Household.structure[grep("nuclear|nucear|single",annotations$Household.structure)]<-"nuclear" # including single parent
+annotations$Household.structure[grep("extended",annotations$Household.structure)]<-"extended"
+annotations$Household.structure[annotations$Household.structure==""]<-NA
 ```
 
 `r nrow(annotations)` corpora annotated. 
@@ -88,6 +99,7 @@ annotations <- annotations %>%
 
 ```
 From the total amount of corpora, `r nrow(annotations)` have been included in this study. The following analyses will continue only on these included corpora.
+
 
 
 ```{r group_by location_cleaning}
@@ -233,9 +245,7 @@ byBilinguals<-group_count(annotations, Bilingualism.Multilingualism.in.community
 ggplot(byBilinguals,aes(y=n, x=Bilingualism.Multilingualism.in.community)) +
   geom_bar(stat="identity", width=1, color="white") +
   theme_minimal() + 
-  ggtitle("Bilingualism in the community") 
-
-
+  ggtitle("Bilingualism/Multilingualism in the community") 
 
 ```
 
@@ -304,45 +314,21 @@ annotations %>%
 
 ## Household structure
 
-## Siblings
-#### Based on "Number of children with siblings" annotation column
-##### How many of the target children have siblings?
-
-```{r group_by Nb.of.children.with.siblings, warning=FALSE, message=FALSE}
-#d[is.na(d)] <- 0
-
-bySibl<- annotations %>%
-  select(Language.or.Languages.spoken.in.recordings,Nb.of.children.with.siblings) %>%
-   # mutate(child_sibl = ifelse(is.na(Nb.of.children.with.siblings), 0, Nb.of.children.with.siblings )) %>%
-     group_by(Language.or.Languages.spoken.in.recordings) %>%
-      summarise(numpar_sibl = sum(as.numeric(Nb.of.children.with.siblings), na.rm=TRUE)) 
-#     pivot_longer(c(numpar_sibl, numpar), names_to = "type", values_to = "value")
-                    
-
-ggplot(bySibl[order(bySibl$Language.or.Languages.spoken.in.recordings),], aes(y=Language.or.Languages.spoken.in.recordings, x=numpar_sibl)) + 
-    geom_col() 
-
-ggplot(bySibl[!is.na(bySibl$numpar_sibl),], mapping = aes(y=Language.or.Languages.spoken.in.recordings, x=numpar_sibl)) + 
-  geom_point() + 
-    ggtitle("Languages where number of children with siblings is not unknown") + 
-      geom_col()
-
-bySibl<- annotations %>%
-  select(Language.or.Languages.spoken.in.recordings,Nb.of.children.with.siblings) %>%
-   # mutate(child_sibl = ifelse(is.na(Nb.of.children.with.siblings), 0, Nb.of.children.with.siblings )) %>%
-     group_by(Language.or.Languages.spoken.in.recordings) %>%
-      summarise(numpar_sibl = sum(as.numeric(Nb.of.children.with.siblings))) 
-#     pivot_longer(c(numpar_sibl, numpar), names_to = "type", values_to = "value")
-                 
-
+```{r nuclear vs extended}
+table(annotations$Household.structure)
 ```
-Out of `r sum(byPart$numpar, na.rm=TRUE)` total target children, only `r sum(bySibl$numpar_sibl, na.rm =TRUE)` have siblings. No information for children in `r nrow(annotations %>% filter(is.na(Nb.of.children.with.siblings)))` corpora and `r nrow(bySibl %>% filter(is.na(numpar_sibl)))` languages (marked as NAs).
-
-## Languages
 
 
-### Based on "Average number of siblings" annotation column
-#### How many siblings in average?
+## Siblings
+
+```{r prop kids with sibs}
+
+summary(annotations$Proportion.With.Siblings)
+plot(density(annotations$Proportion.With.Siblings[!is.na(annotations$Proportion.With.Siblings)]))
+```
+
+
+
 ```{r group_by siblings, warning=FALSE, message=FALSE}
 
 bySiblnum<-annotations %>%
@@ -359,30 +345,11 @@ ggplot(bySiblnum, mapping = aes(x=Average.number.of.siblings, y=n)) +
 annotations$Average.number.of.siblings <- as.numeric(as.character(annotations$Average.number.of.siblings))
 head(bySiblnum)
 ```
+
 The mean number of  siblings has been left NA for `r bySiblnum[is.na(bySiblnum$Average.number.of.siblings),]$n` out of `r sum(bySiblnum$n)` corpora. In the remaining corpora, the mean number of siblings per corpus is `r mean(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings, na.rm=TRUE)` with min `r min(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)` and max `r max(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)`.
 
 
-### Based on "Average number of older siblings" annotation column
-#### How many older siblings in average?
-```{r group_by old_siblings, warning=FALSE, message=FALSE}
-
-byoldSiblnum<-annotations %>%
-    group_by(Average.number.of.older.siblings) %>%
-      count()
-
-ggplot(byoldSiblnum, mapping = aes(x=Average.number.of.older.siblings, y=n)) + 
-  geom_point() + 
-    ggtitle("Average number of older siblings per corpus") + 
-      geom_col()
-
-annotations$Average.number.of.older.siblings <- as.numeric(as.character(annotations$Average.number.of.older.siblings))
-
-head(byoldSiblnum)
-```
-
-The mean number of older siblings has been left NA for `r byoldSiblnum[is.na(byoldSiblnum$Average.number.of.older.siblings),]$n` out of `r sum(byoldSiblnum$n)` corpora.  In the remaining corpora, the mean number of older siblings per corpus is `r mean(annotations[!is.na(annotations$Average.number.of.older.siblings),]$Average.number.of.older.siblings, na.rm=TRUE)` with min `r min(annotations[!is.na(annotations$Average.number.of.older.siblings),]$Average.number.of.siblings)` and max `r max(annotations[!is.na(annotations$Average.number.of.older.siblings),]$Average.number.of.older.siblings)`.
-
-## Bilingualism
+## Bilingualism/Multilingualism
 
 ```{r group_by bilinguals}
 
@@ -400,7 +367,7 @@ byBilinguals<-group_count(annotations, Bilingualism.Multilingualism.in.family)
 ggplot(byBilinguals,aes(y=n, x=Bilingualism.Multilingualism.in.family)) +
   geom_bar(stat="identity", width=1, color="white") +
   theme_minimal() + 
-  ggtitle("Bilingualism in family") 
+  ggtitle("Bilingualism/Multilingualism in family") 
 
 
 ```
