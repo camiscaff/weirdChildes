@@ -224,7 +224,9 @@ dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SE.TER.CUAT.BA.ZS
 
 annotations=merge(annotations,dat,by="country",all.x=T)
 
-plot(annotations$NY.GDP.PCAP.PP.KD~annotations$SE.SEC.CUAT.UP.ZS)
+plot(annotations$Education.Naomi~annotations$SE.SEC.CUAT.UP.ZS)
+plot(annotations$Education.Naomi~annotations$SE.TER.CUAT.BA.ZS)
+plot(annotations$Education.Naomi~annotations$NY.GDP.PCAP.PP.KD)
 
 ```
 
