@@ -76,6 +76,22 @@ annotations$Household.structure[annotations$Household.structure %in% c("nuclear,
 annotations$Household.structure[grep("nuclear|nucear|single",annotations$Household.structure)]<-"nuclear" # including single parent
 annotations$Household.structure[grep("extended",annotations$Household.structure)]<-"extended"
 annotations$Household.structure[annotations$Household.structure==""]<-NA
+
+
+# Education & SES cleaning
+annotations$Education.Naomi[annotations$Education.Naomi==""]<-NA
+annotations$Education.min<-gsub("-.*","",annotations$Education.Naomi)
+annotations$Education.max<-gsub(".*-","",annotations$Education.Naomi)
+annotations$Education.mid<-as.numeric(as.character(annotations$Education.min))+(as.numeric(as.character(annotations$Education.max))-as.numeric(as.character(annotations$Education.min)))/2
+
+annotations$SES.Naomi[annotations$SES.Naomi==""]<-NA
+annotations$SES.min<-gsub("-.*","",annotations$SES.Naomi)
+annotations$SES.max<-gsub(".*-","",annotations$SES.Naomi)
+annotations$SES.max[grep("upper",annotations$Parental.socioeconomic.status)]<-3
+
+annotations$SES.mid<-as.numeric(as.character(annotations$SES.min))+(as.numeric(as.character(annotations$SES.max))-as.numeric(as.character(annotations$SES.min)))/2
+
+
 ```
 
 `r nrow(annotations)` corpora annotated. 
@@ -120,8 +136,8 @@ annotations$country[grep("Belgium", annotations$Location)]  <- "Belgium"
 annotations$country[grep("Germany", annotations$Location)]  <- "Germany"
 annotations$country[grep("Netherlands", annotations$Location)]  <- "Netherlands"
 
-#Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc
-annotations$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Liechtenstein|Luxembourg|Monaco|Netherlands|Switzerland|UK", annotations$country)]  <- "Western Europe"
+#Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
+annotations$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations$country)]  <- "Western Europe"
 
 
 annotations$country[grep("Poznań, Poland", annotations$Location)]  <- "Poland"
@@ -166,7 +182,7 @@ annotations$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indo
 
 
 annotations$country[grep("Papua-New Guinea", annotations$Location)]  <- "Papua New Guinea"
-annotations$continent[grep("PNG", annotations$country)]  <- "Oceania"
+annotations$continent[grep("Papua New Guinea", annotations$country)]  <- "Oceania"
 
 
 annotations$country[grep("Alexandria, Egypt", annotations$Location)]  <- "Egypt"
@@ -183,7 +199,7 @@ annotations$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations$countr
 
 annotations$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran", annotations$Location)]  <- "United States"
 annotations$country[grep("Canada", annotations$Location)]  <- "Canada"
-annotations$continent[grep("USA|Canada", annotations$country)]  <- "North America"
+annotations$continent[grep("United States|Canada", annotations$country)]  <- "North America"
 
 
 #Special cases
@@ -194,6 +210,42 @@ annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotati
 
 #to check if any left
 #annotations[is.na(annotations$country),"Location"]
+#annotations[is.na(annotations$continent),"Location"]
+
+
+
+
+
+```
+
+```{r cleaning type}
+
+annotations$Type.of.community.at.the.time.of.the.recordings[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]<-annotations$Naomi.community.type[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]
+
+annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
+                                                                                                                               "industrial & service &trade activities...","industrial city (3.000.000 inhabitants",
+                                                                                                                               "Industrial city (population: around 272,000 inhabitants)",
+                                                                                                                               "Mediterranean city of 1.6 million inhabitants",
+                                                                                                                               "modern city families, usually both working parents",
+                                                                                                                               "Orthodox Jews",
+                                                                                                                               "Seaside tourist town",
+                                                                                                                               "work-for-pay/industrial","industrial")]<-"urban"
+
+annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("farmer","rural","rural farming village")]<-"rural"
+
+annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("industrial, farmers")]<-"both"
+table(annotations$Type.of.community.at.the.time.of.the.recordings)
+```
+
+
+
+```{r ancillary data}
+byPart<- annotations %>%
+  select(Language.or.Languages.spoken.in.recordings, Number.of.participants) %>%
+   filter(!is.na(Number.of.participants)) %>%
+     group_by(Language.or.Languages.spoken.in.recordings) %>%
+       summarise(numpar = sum(as.numeric(Number.of.participants))) 
+
 
 read.csv("country_iso.csv")->iso_lookup
 codes=iso_lookup$Code
@@ -212,7 +264,6 @@ annotations[is.na(annotations$country_WB),"country"]
 
 
 annotations$continent <-factor(annotations$continent)
-
 # Indices
 # WDIsearch('gdp')
 #"GDP per capita, PPP (constant 2005 international $)"
@@ -220,42 +271,17 @@ annotations$continent <-factor(annotations$continent)
 # Naomi: secondary, some college, university, 
 # WDI:  SE.SEC.CUAT.UP.ZS   Educational attainment, at least completed upper secondary, population 25+, total (%) (cumulative)
 # WDI:  SE.TER.CUAT.BA.ZS   Educational attainment, at least Bachelor's or equivalent, population 25+, total (%) (cumulative)
-dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SE.TER.CUAT.BA.ZS'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
+dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SE.TER.CUAT.BA.ZS','SP.RUR.TOTL.ZS'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
 
 annotations=merge(annotations,dat,by="country",all.x=T)
 
-plot(annotations$Education.Naomi~annotations$SE.SEC.CUAT.UP.ZS)
-plot(annotations$Education.Naomi~annotations$SE.TER.CUAT.BA.ZS)
-plot(annotations$Education.Naomi~annotations$NY.GDP.PCAP.PP.KD)
-
-```
-
-```{r cleaning type}
-
-annotations$Type.of.community.at.the.time.of.the.recordings[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]<-annotations$Our.coding.of.community.type[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]
-
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("academic","capital city of the Soviet Union","city","industial","industrial ",
-                                                                                                                               "industrial & service &trade activities...","industrial city (3.000.000 inhabitants",
-                                                                                                                               "Industrial city (population: around 272,000 inhabitants)",
-                                                                                                                               "Mediterranean city of 1.6 million inhabitants",
-                                                                                                                               "modern city families, usually both working parents",
-                                                                                                                               "Orthodox Jews",
-                                                                                                                               "Seaside tourist town",
-                                                                                                                               "work-for-pay/industrial")]<-"urban"
-
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("farmer","rural","rural farming village")]<-"rural"
-
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("industrial, farmers")]<-"both"
-```
+table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
+table(!is.na(annotations$Education.mid),!is.na(annotations$SE.TER.CUAT.BA.ZS)) #too little data
+table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
+table(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings),!is.na(annotations$SP.RUR.TOTL.ZS))
+            
 
 
-
-```{r ancillary data}
-byPart<- annotations %>%
-  select(Language.or.Languages.spoken.in.recordings, Number.of.participants) %>%
-   filter(!is.na(Number.of.participants)) %>%
-     group_by(Language.or.Languages.spoken.in.recordings) %>%
-       summarise(numpar = sum(as.numeric(Number.of.participants))) 
 ```
 
 # At the level of the population
@@ -278,10 +304,11 @@ kable(mytab)
 ```
 ## Educated
 
-await cleaning
+
 
 ```{r}
-
+plot(annotations$Education.mid~annotations$SE.SEC.CUAT.UP.ZS,xlab="Proportion of the population finishing high school",ylab="Education level in the CHILDES sample",yaxt="n")
+axis(2,at=1:5,labels=c("primary", "secondary","some college","college","postgraduate"),las=2)
 ```
 
 
@@ -289,7 +316,10 @@ await cleaning
 
 ```{r tab x rur/urb}
 kable(table(annotations$Type.of.community.at.the.time.of.the.recordings))
+#annotations[!is.na(annotations$Type.of.community.at.the.time.of.the.recordings) & !is.na(annotations$SP.RUR.TOTL.ZS),c("Type.of.community.at.the.time.of.the.recordings","SP.RUR.TOTL.ZS")]
 
+boxplot(annotations$SP.RUR.TOTL.ZS ~ annotations$Type.of.community.at.the.time.of.the.recordings,type='n')
+points(annotations$SP.RUR.TOTL.ZS ~ jitter(as.numeric(as.factor(annotations$Type.of.community.at.the.time.of.the.recordings))))
 ```
 
 
@@ -302,6 +332,14 @@ kable(mytab)
 
 
 ## Rich
+
+
+
+```{r}
+plot(annotations$SES.mid~annotations$NY.GDP.PCAP.PP.KD,xlab="GDP per capita",ylab="SES in the CHILDES sample",yaxt="n")
+axis(2,at=1:3,labels=c("lower", "middle","upper"),las=2)
+```
+
 
 ## Democratic
 
