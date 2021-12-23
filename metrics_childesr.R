@@ -112,6 +112,11 @@ childes_metrics <- get_childes_metrics(childes_data) |>
   left_join(transcripts)
 
 
+write.csv(childes_metrics,"childes_metrics.csv")
+
+d_participants <- get_participants()
+
+write.csv(d_participants,"childes_participants.csv")
 
 
 

@@ -12,6 +12,10 @@ https://rpubs.com/gloukatou/733656
 ## R Markdown
 
 ```{r libraries, message=FALSE, warning=FALSE}
+
+#devtools::install_github("unDocUMeantIt/koRpus.lang.fr") # stable release
+
+
 #library(childesr)
 #library(wordbankr)
 library(ggplot2)
@@ -267,17 +271,22 @@ annotations$continent <-factor(annotations$continent)
 # Indices
 # WDIsearch('gdp')
 #"GDP per capita, PPP (constant 2005 international $)"
-# WDIsearch('Educational attainment')
+# WDIsearch('Educational attainment, at least')
 # Naomi: secondary, some college, university, 
-# WDI:  SE.SEC.CUAT.UP.ZS   Educational attainment, at least completed upper secondary, population 25+, total (%) (cumulative)
-# WDI:  SE.TER.CUAT.BA.ZS   Educational attainment, at least Bachelor's or equivalent, population 25+, total (%) (cumulative)
-dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SE.TER.CUAT.BA.ZS','SP.RUR.TOTL.ZS'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
+# WDI:  SE.SEC.CUAT.LO.ZS    "Educational attainment, at least completed lower secondary, population 25+, total (%) (cumulative)" -- 62 countries are NOT NA
+# WDI:  SE.SEC.CUAT.UP.ZS   Educational attainment, at least completed upper secondary, population 25+, total (%) (cumulative) -- 66 countries are NOT NA
+# WDI:  SE.TER.CUAT.BA.ZS   Educational attainment, at least Bachelor's or equivalent, population 25+, total (%) (cumulative) -- only 25 countries are not NA
+# note, only 23 countries have all three... 
+
+dat_all = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS'), start=2012, end=2012)
+
+
+dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
 
 annotations=merge(annotations,dat,by="country",all.x=T)
 
-table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
-table(!is.na(annotations$Education.mid),!is.na(annotations$SE.TER.CUAT.BA.ZS)) #too little data
 table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
+table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
 table(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings),!is.na(annotations$SP.RUR.TOTL.ZS))
             
 
@@ -307,12 +316,79 @@ kable(mytab)
 
 
 ```{r}
+dens_dat=data.frame(rbind(cbind(dat_all$SE.SEC.CUAT.UP.ZS[!is.na(dat_all$SE.SEC.CUAT.UP.ZS)],0),
+               cbind(dat$SE.SEC.CUAT.UP.ZS[!is.na(dat$SE.SEC.CUAT.UP.ZS)],1) ))
+colnames(dens_dat)<-c("completed.HS","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5)
+
+
+```
+
+
+## Urban versus rural
+
+```{r }
+dens_dat=data.frame(rbind(cbind(dat_all$SP.RUR.TOTL.ZS[!is.na(dat_all$SP.RUR.TOTL.ZS)],0),
+               cbind(dat$SP.RUR.TOTL.ZS[!is.na(dat$SP.RUR.TOTL.ZS)],1) ))
+colnames(dens_dat)<-c("pc.rural","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+ggplot(dens_dat, aes(x = pc.rural, fill = in.childes)) + geom_density(alpha = 0.5)
+
+```
+
+
+## Rich
+
+
+
+```{r}
+
+dens_dat=data.frame(rbind(cbind(dat_all$NY.GDP.PCAP.PP.KD[!is.na(dat_all$NY.GDP.PCAP.PP.KD)],0),
+               cbind(dat$NY.GDP.PCAP.PP.KD[!is.na(dat$NY.GDP.PCAP.PP.KD)],1) ))
+colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5)
+
+```
+
+
+## Monolingualism
+
+```{r group_by bilinguals_community}
+annotations$Bilingualism.Multilingualism.in.community[annotations$Bilingualism.Multilingualism.in.community %in% c(" yes (bilingualism Galician-Spanish)","bilingual (Arabic/English)","probably","Yes (Spanish/Catalan)")] <- "yes"
+annotations$Bilingualism.Multilingualism.in.community[annotations$Bilingualism.Multilingualism.in.community %in% c("Minimal","slight","yes (but minimal)","only for Jong, other monolinguals")] <- "minimal"
+annotations$Bilingualism.Multilingualism.in.community<-tolower(annotations$Bilingualism.Multilingualism.in.community)
+annotations$Bilingualism.Multilingualism.in.community[annotations$Bilingualism.Multilingualism.in.community==""]<-NA
+
+byBilinguals<-group_count(annotations, Bilingualism.Multilingualism.in.community)
+
+ggplot(byBilinguals,aes(y=n, x=Bilingualism.Multilingualism.in.community)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  theme_minimal() + 
+  ggtitle("Bilingualism/Multilingualism in the community") 
+
+```
+
+
+# At the level of the family
+
+## Educated
+
+
+
+```{r}
 plot(annotations$Education.mid~annotations$SE.SEC.CUAT.UP.ZS,xlab="Proportion of the population finishing high school",ylab="Education level in the CHILDES sample",yaxt="n")
 axis(2,at=1:5,labels=c("primary", "secondary","some college","college","postgraduate"),las=2)
 ```
 
 
 ## Urban versus rural
+
+
 
 ```{r tab x rur/urb}
 kable(table(annotations$Type.of.community.at.the.time.of.the.recordings))
@@ -339,90 +415,6 @@ kable(mytab)
 plot(annotations$SES.mid~annotations$NY.GDP.PCAP.PP.KD,xlab="GDP per capita",ylab="SES in the CHILDES sample",yaxt="n")
 axis(2,at=1:3,labels=c("lower", "middle","upper"),las=2)
 ```
-
-
-## Democratic
-
-
-## Monolingualism
-
-```{r group_by bilinguals_community}
-annotations$Bilingualism.Multilingualism.in.community[annotations$Bilingualism.Multilingualism.in.community %in% c(" yes (bilingualism Galician-Spanish)","bilingual (Arabic/English)","probably","Yes (Spanish/Catalan)")] <- "yes"
-annotations$Bilingualism.Multilingualism.in.community[annotations$Bilingualism.Multilingualism.in.community %in% c("Minimal","slight","yes (but minimal)","only for Jong, other monolinguals")] <- "minimal"
-annotations$Bilingualism.Multilingualism.in.community<-tolower(annotations$Bilingualism.Multilingualism.in.community)
-annotations$Bilingualism.Multilingualism.in.community[annotations$Bilingualism.Multilingualism.in.community==""]<-NA
-
-byBilinguals<-group_count(annotations, Bilingualism.Multilingualism.in.community)
-
-ggplot(byBilinguals,aes(y=n, x=Bilingualism.Multilingualism.in.community)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  theme_minimal() + 
-  ggtitle("Bilingualism/Multilingualism in the community") 
-
-```
-
-
-# At the level of the family
-
-## Education
-
-### Based on "Parental.education, Parental.profession" annotation columns
-
-```{r group_by educ}
-
-byParentEducation<- annotations[!is.na(annotations$Parental.education),] %>%
-    group_by(Language.or.Languages.spoken.in.recordings, continent, Parental.education) %>%
-      count() 
-
-byParentEducation <- byParentEducation %>% 
-  rename(
-    number_of_corpora = n,
-    Parental.education.NAs_excluded = Parental.education)
-
-byParentEducation
-
-```
-`r nrow(annotations[annotations$Parental.education==NA,])` corpora have NA for parental education.
-
-
-
-### Based on "Parental.ses" annotation column
-```{r group_by ses}
-
-byParentSES<- annotations[!is.na(annotations$Parental.socioeconomic.status),] %>%
-    group_by(Language.or.Languages.spoken.in.recordings, continent, Parental.socioeconomic.status) %>%
-      count() 
-
-byParentSES <- byParentSES %>% 
-  rename(
-    number_of_corpora = n,
-    Parental.socioeconomic.status.NAs_excluded = Parental.socioeconomic.status)
-
-byParentSES 
-
-```
-`r nrow(annotations[annotations$Parental.socioeconomic.status==NA,])` corpora have NA for parental education.
-
-
-```{r group_by prof}
-byParentProfession<- annotations[!is.na(annotations$Parental.profession),] %>%
-    group_by(Language.or.Languages.spoken.in.recordings, continent, Parental.profession) %>%
-      count() 
-
-byParentProfession <- byParentProfession %>% 
-  rename(
-    number_of_corpora = n,
-    Parental.profession.NAs_excluded = Parental.profession)
-
-byParentProfession
-
-annotations %>%
-  group_by(Parental.education) %>%
-  filter(is.na(Parental.education)) %>%
-  summarise(count=n())
-
-```
-
 
 ## Household structure
 
@@ -544,9 +536,6 @@ byhousehold
 
 
 
-### Location 
-Based on "Location" annotation column
-For now only based on continents and countries. Lots of handcoding.
 
 
 
