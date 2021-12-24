@@ -5,9 +5,10 @@ library(koRpus.lang.fr)
 
 ############################ variables
 
-lang="fra"
+#lang="fra"
+#included_corpora=
 #dan, eng, deu, ita, ell, nor, por, rus, spa, swe, tur, hrv, ces, zho, yue, heb, kor, cat, nld, hun, ind, ron, tam, afr, ara, eus, isl, gle, pol, srp, cym, est, gla, glg, haw, jam, jpn, jav, kik, xmm, mar, nan, esk, fas, que, slv, sot, tgl, taq, tha, und, yuw, yid
-corpus_args <- list(corpus = NULL, token = "*")
+corpus_args <- list(corpus = included_corpora, token = "*")
 
 ############################ metric functions
 
@@ -106,7 +107,7 @@ get_childes_metrics <- function(childes_data) { #computes metrics on childes dat
 
 transcripts <- get_transcripts()
 
-childes_data <- get_childes_data(lang, corpus_args)
+childes_data <- get_childes_data(corpus_args) #lang, 
 
 childes_metrics <- get_childes_metrics(childes_data) |>
   left_join(transcripts)

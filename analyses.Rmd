@@ -9,9 +9,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 https://rpubs.com/gloukatou/733656
 
+TODO
+
+- remove bilingualism
+- fix %rur
+- add family size
+
+
+
 ## R Markdown
 
 ```{r libraries, message=FALSE, warning=FALSE}
+
+read.csv("childes_metrics.csv")->x
 
 #devtools::install_github("unDocUMeantIt/koRpus.lang.fr") # stable release
 
@@ -278,10 +288,15 @@ annotations$continent <-factor(annotations$continent)
 # WDI:  SE.TER.CUAT.BA.ZS   Educational attainment, at least Bachelor's or equivalent, population 25+, total (%) (cumulative) -- only 25 countries are not NA
 # note, only 23 countries have all three... 
 
-dat_all = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS'), start=2012, end=2012)
+## ADD
+# "SH.FPL.IDLC.Q3" "Mean ideal number of children (per woman): Q3"
+# "SP.DYN.CEBN.Q3" "Mean number of children ever born to women aged 40-49: Q3" 
 
 
-dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
+dat_all = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS','5.01.01.01.indust'), start=2012, end=2012)
+# flip %rur
+
+dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS','5.01.01.01.indust'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
 
 annotations=merge(annotations,dat,by="country",all.x=T)
 
@@ -409,9 +424,10 @@ kable(mytab)
 
 ## Rich
 
+This graph isn't good, but we don't know exactly how to convey this.
 
 
-```{r}
+```{r, eval=F}
 plot(annotations$SES.mid~annotations$NY.GDP.PCAP.PP.KD,xlab="GDP per capita",ylab="SES in the CHILDES sample",yaxt="n")
 axis(2,at=1:3,labels=c("lower", "middle","upper"),las=2)
 ```
@@ -424,6 +440,9 @@ table(annotations$Household.structure)
 
 
 ## Siblings
+
+- change to histogram
+- show proportion of corpora that have at least one child with sibling
 
 ```{r prop kids with sibs}
 
