@@ -30,7 +30,6 @@ library(purrr)
 require(scales)
 library(stringr)
 library(kableExtra)
-library(WDI)
 
 
 library(RColorBrewer)
@@ -255,7 +254,6 @@ byPart<- annotations %>%
      group_by(Language.or.Languages.spoken.in.recordings) %>%
        summarise(numpar = sum(as.numeric(Number.of.participants))) 
 
-
 read.csv("country_iso.csv")->iso_lookup
 codes=iso_lookup$Code
 iso_lookup$Name<-as.character(iso_lookup$Name)
@@ -266,6 +264,7 @@ iso_lookup$Name=gsub(", Republic of","",iso_lookup$Name)
 
 names(codes)<-iso_lookup$Name
 
+
 annotations$country_WB<-codes[annotations$country]
 
 annotations$country_WB <-factor(annotations$country_WB)
@@ -273,38 +272,33 @@ annotations[is.na(annotations$country_WB),"country"]
 
 
 annotations$continent <-factor(annotations$continent)
-# Indices
-# WDIsearch('gdp')
-#"GDP per capita, PPP (constant 2005 international $)"
-# WDIsearch('Educational attainment, at least')
-# Naomi: secondary, some college, university, 
-# WDI:  SE.SEC.CUAT.LO.ZS    "Educational attainment, at least completed lower secondary, population 25+, total (%) (cumulative)" -- 62 countries are NOT NA
-# WDI:  SE.SEC.CUAT.UP.ZS   Educational attainment, at least completed upper secondary, population 25+, total (%) (cumulative) -- 66 countries are NOT NA
-# WDI:  SE.TER.CUAT.BA.ZS   Educational attainment, at least Bachelor's or equivalent, population 25+, total (%) (cumulative) -- only 25 countries are not NA
-# note, only 23 countries have all three... 
-
-## ADD
-# "SH.FPL.IDLC.Q3" "Mean ideal number of children (per woman): Q3"
-# "SP.DYN.CEBN.Q3" "Mean number of children ever born to women aged 40-49: Q3" 
 
 
-dat_all = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS','5.01.01.01.indust','SP.DYN.CEBN.Q3'), start=2012, end=2012)
+read.csv("wdi-data.csv")->dat_all
+
+dat = dat_all[dat_all$iso2c %in% levels(annotations$country_WB),]
 
 
-dat = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS','5.01.01.01.indust','SP.DYN.CEBN.Q3'), country=c(levels(annotations$country_WB)), start=2012, end=2012)
-
-# flip %rur
-dat_all$SP.URB.TOTL.ZS=1-dat_all$SP.RUR.TOTL.ZS
-dat$SP.URB.TOTL.ZS=1-dat$SP.RUR.TOTL.ZS
-
-annotations=merge(annotations,dat,by="country",all.x=T)
+annotations=merge(annotations,dat_all,by="country",all.x=T)
 
 table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
 table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
 table(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings),!is.na(annotations$SP.URB.TOTL.ZS))
             
+table(!is.na(annotations$Average.number.of.siblings),!is.na(annotations$SP.DYN.CEBN.Q3))
 
+read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
 
+cpw[cpw$Year<2013,]->cpw
+rcpw_all <- cpw %>% 
+             group_by(Entity) %>%
+             filter(Year == max(Year)) 
+colnames(rcpw_all)[colnames(rcpw_all)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"fertility"
+annotations=merge(annotations,rcpw_all,by.x="country",by.y="Entity",all.x=T)
+
+rcpw=rcpw_all[rcpw_all$Entity %in% levels(factor(annotations$country)),]
+
+#TODO check no missing countries across WB & OWID merge
 ```
 
 # At the level of the population
@@ -346,10 +340,10 @@ ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha 
 ```{r }
 dens_dat=data.frame(rbind(cbind(dat_all$SP.URB.TOTL.ZS[!is.na(dat_all$SP.URB.TOTL.ZS)],0),
                cbind(dat$SP.URB.TOTL.ZS[!is.na(dat$SP.URB.TOTL.ZS)],1) ))
-colnames(dens_dat)<-c("pc.rural","in.childes_T")
+colnames(dens_dat)<-c("pc.urban","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-ggplot(dens_dat, aes(x = pc.rural, fill = in.childes)) + geom_density(alpha = 0.5)
+ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5)
 
 ```
 
@@ -370,10 +364,13 @@ ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alph
 ```
 
 ## Family size
+
+This graph shows "total fertility rate", namely the number of children a woman has over her whole reproductive period.
+
 ```{r}
 
-dens_dat=data.frame(rbind(cbind(dat_all$SP.DYN.CEBN.Q3[!is.na(dat_all$SP.DYN.CEBN.Q3)],0),
-               cbind(dat$SP.DYN.CEBN.Q3[!is.na(dat$SP.DYN.CEBN.Q3)],1) ))
+dens_dat=data.frame(rbind(cbind(rcpw_all$fertility[!is.na(rcpw_all$fertility)],0),
+               cbind(rcpw$fertility[!is.na(rcpw$fertility)],1) ))
 colnames(dens_dat)<-c("N.children.woman","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
@@ -414,15 +411,6 @@ kable(mytab)
 ```
 
 
-## Rich
-
-This graph isn't good, but we don't know exactly how to convey this.
-
-
-```{r, eval=F}
-plot(annotations$SES.mid~annotations$NY.GDP.PCAP.PP.KD,xlab="GDP per capita",ylab="SES in the CHILDES sample",yaxt="n")
-axis(2,at=1:3,labels=c("lower", "middle","upper"),las=2)
-```
 
 ## Household structure
 
@@ -433,13 +421,12 @@ table(annotations$Household.structure)
 
 ## Siblings
 
-- change to histogram
-- show proportion of corpora that have at least one child with sibling
 
 ```{r prop kids with sibs}
 
 summary(annotations$Proportion.With.Siblings)
-plot(density(annotations$Proportion.With.Siblings[!is.na(annotations$Proportion.With.Siblings)]))
+hist(annotations$Proportion.With.Siblings)
+#plot(density(annotations$Proportion.With.Siblings[!is.na(annotations$Proportion.With.Siblings)]))
 ```
 
 
@@ -449,17 +436,25 @@ plot(density(annotations$Proportion.With.Siblings[!is.na(annotations$Proportion.
 bySiblnum<-annotations %>%
     group_by(Average.number.of.siblings) %>%
       count()
-
-ggplot(bySiblnum, mapping = aes(x=Average.number.of.siblings, y=n)) + 
-  geom_point() + 
-    ggtitle("Average number of siblings per corpus") + 
-      geom_col()
+#head(bySiblnum)
 
 #ggplot(bySiblnum[!is.na(bySiblnum$Average.number.of.siblings),], mapping = aes(x=Average.number.of.siblings, y=n)) 
 
-annotations$Average.number.of.siblings <- as.numeric(as.character(annotations$Average.number.of.siblings))
-head(bySiblnum)
+annotations$Average.number.of.siblings <- as.numeric(as.character(annotations$Average.number.of.siblings)) #hand-checked, and there is nothing weird, so it's ok to do this, even if it complains about values turned into NAs -- this is bc data missing for some
+
+annotations$totalNchildren = annotations$Average.number.of.siblings + 1 #here we add the key child to the count
+
+hist(annotations$Average.number.of.siblings)
 ```
 
 The mean number of  siblings has been left NA for `r bySiblnum[is.na(bySiblnum$Average.number.of.siblings),]$n` out of `r sum(bySiblnum$n)` corpora. In the remaining corpora, the mean number of siblings per corpus is `r mean(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings, na.rm=TRUE)` with min `r min(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)` and max `r max(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)`.
+
+The next plot shows the total number of children in CHILDES corpora (y axis) as a function of that country's average fertility. If samples were representative, most points would be along the diagonal; if small families are oversampled, points would be below the diagonal (observed N children is lower than expected given fertility). What we observed is that large families are oversampled.
+
+```{r}
+
+plot(annotations$totalNchildren~annotations$fertility,xlim=c(1,4),ylim=c(1,4))
+lines(c(0,5),c(0,5))
+
+```
 
