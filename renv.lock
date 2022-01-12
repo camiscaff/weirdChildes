@@ -413,6 +413,18 @@
       "Repository": "CRAN",
       "Hash": "ca7f1c23a900deface718333b652824f"
     },
+    "koRpus.lang.fr": {
+      "Package": "koRpus.lang.fr",
+      "Version": "0.1-2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "koRpus.lang.fr",
+      "RemoteUsername": "unDocUMeantIt",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "f195a83522c464cb50b08cd1f1944e6df670ae57",
+      "Hash": "68381878a6cd72f51863cbf65f4ab25f"
+    },
     "labeling": {
       "Package": "labeling",
       "Version": "0.4.2",
@@ -671,6 +683,12 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "ad4955c417c7b109a409898e50b8a02c"
+    },
+    "sylly.fr": {
+      "Package": "sylly.fr",
+      "Version": "0.1-2",
+      "Source": "unknown",
+      "Hash": "731c877355c0d4b9edac02e4dbdf7d2a"
     },
     "sys": {
       "Package": "sys",
