@@ -3,12 +3,6 @@ library(tidyverse)
 library(koRpus)
 library(koRpus.lang.fr)
 
-############################ variables
-
-#lang="fra"
-#included_corpora=
-#dan, eng, deu, ita, ell, nor, por, rus, spa, swe, tur, hrv, ces, zho, yue, heb, kor, cat, nld, hun, ind, ron, tam, afr, ara, eus, isl, gle, pol, srp, cym, est, gla, glg, haw, jam, jpn, jav, kik, xmm, mar, nan, esk, fas, que, slv, sot, tgl, taq, tha, und, yuw, yid
-corpus_args <- list(corpus = included_corpora, token = "*")
 
 ############################ metric functions
 
@@ -66,8 +60,15 @@ compute_mattr <- function(metric_data) {
 }
 
 ########################### main functions
+get_childes_data <- function( corpus_args) { #gets data from childes
+  utterances <- get_utterances(corpus = corpus_args$corpus)
+  tokens <- get_tokens(
+                       corpus = corpus_args$corpus,
+                       token = corpus_args$token)
+  return(list("utterances" = utterances, "tokens" = tokens))
+}
 
-get_childes_data <- function(childes_lang ="fra", corpus_args) { #gets data from childes
+get_childes_data_lang <- function(childes_lang ="fra", corpus_args) { #gets data from childes
   utterances <- get_utterances(language = childes_lang,
                                corpus = corpus_args$corpus)
   tokens <- get_tokens(language = childes_lang,
@@ -102,8 +103,18 @@ get_childes_metrics <- function(childes_data) { #computes metrics on childes dat
   return(metric_tokens |>
            full_join(metric_utts))
 }
+############################ variables
+
+#lang="fra"
+#included_corpora=
+#dan, eng, deu, ita, ell, nor, por, rus, spa, swe, tur, hrv, ces, zho, yue, heb, kor, cat, nld, hun, ind, ron, tam, afr, ara, eus, isl, gle, pol, srp, cym, est, gla, glg, haw, jam, jpn, jav, kik, xmm, mar, nan, esk, fas, que, slv, sot, tgl, taq, tha, und, yuw, yid
+corpus_args <- list(token = "*") #corpus = included_corpora, 
+
 
 ###############################
+
+
+
 
 transcripts <- get_transcripts()
 

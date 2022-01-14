@@ -7,16 +7,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-https://rpubs.com/gloukatou/733656
-
-
 
 
 ## R Markdown
 
 ```{r libraries, message=FALSE, warning=FALSE}
 
-read.csv("childes_metrics.csv")->x
 
 #devtools::install_github("unDocUMeantIt/koRpus.lang.fr") # stable release
 
@@ -55,12 +51,6 @@ return(data_)
 # Load annotations 
 
 ```{r load annotations}
-
-#####TODOS first part is the descriptive section, to what extent the full range of populations is represented, what are some codes that are missing often,
-##### descriptive section and representation of the population
-##########systematic review of features
-##################confront eg proportion of child population versus proportion of data by eg continent
-#############second goal: point out strengths and limitations of the current CHILDES, explain what is missing
 
 annotations<- read.csv("Table for authors - annotations.csv") 
 colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
@@ -386,7 +376,13 @@ ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(al
 
 ```{r}
 plot(annotations$Education.mid~annotations$SE.SEC.CUAT.UP.ZS,xlab="Proportion of the population finishing high school",ylab="Education level in the CHILDES sample",yaxt="n")
+
+
 axis(2,at=1:5,labels=c("primary", "secondary","some college","college","postgraduate"),las=2)
+
+ggplot(annotations, aes(x=jitter(SE.SEC.CUAT.UP.ZS), y=Education.mid)) + 
+    geom_errorbar(aes(ymin=Education.min, ymax=Education.max), colour="black", width=.1) 
+
 ```
 
 
@@ -405,7 +401,7 @@ points(annotations$SP.URB.TOTL.ZS ~ jitter(as.numeric(as.factor(annotations$Type
 
 ```{r nch x rur/urb}
 mytab=aggregate(annotations$Number.of.participants,by=list(annotations$Type.of.community.at.the.time.of.the.recordings),sum)
-colnames(mytab)<-c("Setting","Number of children")
+colnames(mytab)<-c("Setting","Number of participants")
 kable(mytab)
 
 ```
@@ -457,4 +453,58 @@ plot(annotations$totalNchildren~annotations$fertility,xlim=c(1,4),ylim=c(1,4))
 lines(c(0,5),c(0,5))
 
 ```
+
+## Integrate with childesr
+
+```{r}
+read.csv("childes_metrics.csv")->x
+dim(x) #4906
+
+# merge(annotations,x,all.x=T,by.x="Corpus_childesr",by.y="corpus_name")->y
+# dim(y) # 5044 -- extra lines mean not everything has been matched
+# 
+# levels(factor(y[is.na(y$target_child_age),"Corpus"]))  #corpus in our list but NOT on childes
+
+merge(annotations,x,by.x="Corpus",by.y="corpus_name")->annotations
+annotations$speaker_type=NA
+annotations$speaker_type[annotations$speaker_role %in% c("Mother")]<-"Mother"
+annotations$speaker_type[annotations$speaker_role %in% c("Adult","Caretaker",
+                                                         "Father","Grandfather",
+                                                         "Grandmother","Investigator",
+                                                         "Relative","Teacher","Visitor","Teenager")]<-"Adult"
+annotations$speaker_type[annotations$speaker_role %in% c("Target_Child")]<-"Key_Child"
+annotations$speaker_type[annotations$speaker_role %in% c("Boy","Girl","Brother","Sister","Friend","Playmate")]<-"Other_Child"
+#de facto removed: Media, Student, Unidentified
+
+
+```
+
+
+Now each line is a transcript from one child at one age. The questions we have are:
+- get duration, n of children, n sessions, etc from cha, not from human-annotated table
+- derive proportion tokens female adults, male adults, other children, 
+
+
+```{r}
+
+byCorpusSpeaker_type<- annotations %>%
+  select(Corpus, speaker_type, token_sum, type_sum, mlu, duration) %>%
+     group_by(Corpus, speaker_type) %>%
+       summarise(tok = sum(token_sum), typ = sum(type_sum), mlu = weighted.mean(mlu,token_sum),dur = mean(duration)) %>%
+  mutate(tok_d = tok/dur, typ_d = typ/dur, .keep = "all")
+
+
+```
+
+### Planned analyses
+
+- how many tokens overall as a function of speaker type by continent -- this tells us how much data overall there are for each
+- if we group as Western: North America and Western Europe, non-Western the others, look at pattern of tok, typ, mlu by speaker type across these two
+- although in some cases v little data: look at pattern of tok, typ, mlu by speaker type by continent
+- I don't think it makes sense to look at same by countries with more vs less 50% population finishes HS, or same for rural/urban (by country)
+- nor does it make sense to look at same at level of the family - not enough data points for less versus more educated
+- nor for household structure
+- nor for corpora where the avg n of sib is smaller than 1 (~60) versus higher (~20)
+
+
 
