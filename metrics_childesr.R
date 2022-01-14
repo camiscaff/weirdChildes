@@ -68,7 +68,7 @@ get_childes_data <- function( corpus_args) { #gets data from childes
   return(list("utterances" = utterances, "tokens" = tokens))
 }
 
-get_childes_data_lang <- function(childes_lang ="fra", corpus_args) { #gets data from childes
+get_childes_data_lang <- function(childes_lang ="fra", corpus_args) { #gets data from childes French
   utterances <- get_utterances(language = childes_lang,
                                corpus = corpus_args$corpus)
   tokens <- get_tokens(language = childes_lang,
