@@ -4,12 +4,10 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE)
 ```
 
 
-
-## R Markdown
 
 ```{r libraries, message=FALSE, warning=FALSE}
 
@@ -26,6 +24,7 @@ library(purrr)
 require(scales)
 library(stringr)
 library(kableExtra)
+library(ggpubr)
 
 
 library(RColorBrewer)
@@ -78,42 +77,60 @@ annotations$Household.structure[annotations$Household.structure==""]<-NA
 
 # Education & SES cleaning
 annotations$Education.Naomi[annotations$Education.Naomi==""]<-NA
-annotations$Education.min<-gsub("-.*","",annotations$Education.Naomi)
-annotations$Education.max<-gsub(".*-","",annotations$Education.Naomi)
-annotations$Education.mid<-as.numeric(as.character(annotations$Education.min))+(as.numeric(as.character(annotations$Education.max))-as.numeric(as.character(annotations$Education.min)))/2
-
+annotations$Education.Naomi[annotations$Education.Naomi=="4-6"]<-"4-5" #fix typo
+annotations$Education.min<-as.numeric(as.character(gsub("-.*","",annotations$Education.Naomi)))
+annotations$Education.max<-as.numeric(as.character(gsub(".*-","",annotations$Education.Naomi)))
+annotations$Education.mid<-annotations$Education.min+(annotations$Education.max-annotations$Education.min)/2
+# 1 = primary
+# 2 = secondary school
+# 3 = some college
+# 4 = university
+# 5 = postgraduate
 annotations$SES.Naomi[annotations$SES.Naomi==""]<-NA
 annotations$SES.min<-gsub("-.*","",annotations$SES.Naomi)
 annotations$SES.max<-gsub(".*-","",annotations$SES.Naomi)
 annotations$SES.max[grep("upper",annotations$Parental.socioeconomic.status)]<-3
+
+
+
 
 annotations$SES.mid<-as.numeric(as.character(annotations$SES.min))+(as.numeric(as.character(annotations$SES.max))-as.numeric(as.character(annotations$SES.min)))/2
 
 
 ```
 
-`r nrow(annotations)` corpora annotated. 
+
+
+
 
 
 
 ```{r group_by inclusion}
 
-include<- annotations %>%
-  mutate(inclusion=tolower(Inclusion)) %>%
-  mutate(inclusion = ifelse(str_detect(inclusion, "yes"), "yes", "no")) %>%
-  group_by(inclusion) %>%
-  count() 
+# include<- annotations %>%
+#   mutate(inclusion=tolower(Inclusion)) %>%
+#   mutate(inclusion = ifelse(str_detect(inclusion, "yes"), "yes", "no")) %>%
+#   group_by(inclusion) %>%
+#   count() 
 
-ggplot(include,aes(y=n, x=inclusion)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  theme_minimal() + 
-  ggtitle("Corpus inclusion") 
+# ggplot(include,aes(y=n, x=inclusion)) +
+#   geom_bar(stat="identity", width=1, color="white") +
+#   theme_minimal() + 
+#   ggtitle("Corpus inclusion") 
 
-annotations <- annotations %>%
+all_annotations <- annotations
+
+annotations <- all_annotations %>%
   filter(Inclusion=="yes")
 
+
+all_annotations$why.exclude<-NA
+#all_annotations$why.exclude[all_annotations$Reason.for.exclusion %in% ]
+
 ```
-From the total amount of corpora, `r nrow(annotations)` have been included in this study. The following analyses will continue only on these included corpora.
+
+
+A total of `r nrow(all_annotations)` corpora were considered.  From the total amount of corpora, `r nrow(annotations)` have been included in this study. The following analyses will continue only on these included corpora.
 
 
 
@@ -232,7 +249,7 @@ annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.
 annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("farmer","rural","rural farming village")]<-"rural"
 
 annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("industrial, farmers")]<-"both"
-table(annotations$Type.of.community.at.the.time.of.the.recordings)
+#table(annotations$Type.of.community.at.the.time.of.the.recordings)
 ```
 
 
@@ -271,15 +288,15 @@ dat = dat_all[dat_all$iso2c %in% levels(annotations$country_WB),]
 
 annotations=merge(annotations,dat_all,by="country",all.x=T)
 
-table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
-table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
-table(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings),!is.na(annotations$SP.URB.TOTL.ZS))
-            
-table(!is.na(annotations$Average.number.of.siblings),!is.na(annotations$SP.DYN.CEBN.Q3))
+# table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
+# table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
+# table(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings),!is.na(annotations$SP.URB.TOTL.ZS))
+#             
+# table(!is.na(annotations$Average.number.of.siblings),!is.na(annotations$SP.DYN.CEBN.Q3))
 
 read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
 
-cpw[cpw$Year<2013,]->cpw
+cpw[cpw$Year==2011,]->cpw
 rcpw_all <- cpw %>% 
              group_by(Entity) %>%
              filter(Year == max(Year)) 
@@ -291,220 +308,103 @@ rcpw=rcpw_all[rcpw_all$Entity %in% levels(factor(annotations$country)),]
 #TODO check no missing countries across WB & OWID merge
 ```
 
-# At the level of the population
+We had WDI information for `r dim(dat_all)[1]` countries, of which  `r dim(dat)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(dat_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(dat$NY.GDP.PCAP.PP.KD))` countries in CHILDES. Education information was available for `r sum(!is.na(dat_all$SE.SEC.CUAT.UP.ZS))` countries overall, and `r sum(!is.na(dat$SE.SEC.CUAT.UP.ZS))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(dat_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(dat$SP.URB.TOTL.ZS))` countries in CHILDES. 
 
-## Western
-
-There are corpora for every continent, although more corpora in Europe than other continents:
-
-```{r tab x cont}
-kable(table(annotations$continent))
-
-```
+Fertility rate was obtained from Our World in Data, which had `r sum(!is.na(rcpw_all$fertility))` countries overall for the selected year, and `r sum(!is.na(rcpw$fertility))` of them were represented in CHILDES. 
 
 
-```{r nch x cont}
-mytab=aggregate(annotations$Number.of.participants,by=list(annotations$continent),sum)
-colnames(mytab)<-c("Continent","Number of children")
-kable(mytab)
+## At the level of the population
 
-```
-## Educated
+The samples are varied in geographic terms, with corpora for every peopled continent. Specifically, `r sum(annotations$continent=="Africa")` corpora were collected in Africa; `r sum(annotations$continent=="Asia")` in Asia; `r sum(annotations$continent=="Western Europe")` in Western Europe, and a further `r sum(annotations$continent=="Non-Western Europe")` in Non-Western Europe; `r sum(annotations$continent=="North America")` in North America and `r sum(annotations$continent=="Western Europe")` in Latin America. Only `r sum(annotations$continent=="Oceania")` was collected in Oceania.
+
+The samples, however, over-represent richer countries, with relatively educated populations, living mostly in urban settings, and having relatively small families (Figure XX).
 
 
 
-```{r}
-dens_dat=data.frame(rbind(cbind(dat_all$SE.SEC.CUAT.UP.ZS[!is.na(dat_all$SE.SEC.CUAT.UP.ZS)],0),
-               cbind(dat$SE.SEC.CUAT.UP.ZS[!is.na(dat$SE.SEC.CUAT.UP.ZS)],1) ))
-colnames(dens_dat)<-c("completed.HS","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5)
-
-
-```
-
-
-## Urban versus rural
-
-```{r }
-dens_dat=data.frame(rbind(cbind(dat_all$SP.URB.TOTL.ZS[!is.na(dat_all$SP.URB.TOTL.ZS)],0),
-               cbind(dat$SP.URB.TOTL.ZS[!is.na(dat$SP.URB.TOTL.ZS)],1) ))
-colnames(dens_dat)<-c("pc.urban","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-
-ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5)
-
-```
-
-
-## Rich
-
-
-
-```{r}
+```{r rich}
 
 dens_dat=data.frame(rbind(cbind(dat_all$NY.GDP.PCAP.PP.KD[!is.na(dat_all$NY.GDP.PCAP.PP.KD)],0),
                cbind(dat$NY.GDP.PCAP.PP.KD[!is.na(dat$NY.GDP.PCAP.PP.KD)],1) ))
 colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5)
+rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita")
 
 ```
 
-## Family size
 
-This graph shows "total fertility rate", namely the number of children a woman has over her whole reproductive period.
 
-```{r}
+```{r Educated}
+dens_dat=data.frame(rbind(cbind(dat_all$SE.SEC.CUAT.UP.ZS[!is.na(dat_all$SE.SEC.CUAT.UP.ZS)],0),
+               cbind(dat$SE.SEC.CUAT.UP.ZS[!is.na(dat$SE.SEC.CUAT.UP.ZS)],1) ))
+colnames(dens_dat)<-c("completed.HS","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent completed high school")
+
+
+```
+
+
+
+
+```{r urban}
+dens_dat=data.frame(rbind(cbind(dat_all$SP.URB.TOTL.ZS[!is.na(dat_all$SP.URB.TOTL.ZS)],0),
+               cbind(dat$SP.URB.TOTL.ZS[!is.na(dat$SP.URB.TOTL.ZS)],1) ))
+colnames(dens_dat)<-c("pc.urban","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent urban")
+
+```
+
+
+
+
+```{r fertility}
 
 dens_dat=data.frame(rbind(cbind(rcpw_all$fertility[!is.na(rcpw_all$fertility)],0),
                cbind(rcpw$fertility[!is.na(rcpw$fertility)],1) ))
 colnames(dens_dat)<-c("N.children.woman","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)
+fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Total fertility rate")
 
 ```
 
-# At the level of the family
+```{r combined}
 
-## Educated
-
-
-
-```{r}
-plot(annotations$Education.mid~annotations$SE.SEC.CUAT.UP.ZS,xlab="Proportion of the population finishing high school",ylab="Education level in the CHILDES sample",yaxt="n")
-
-
-axis(2,at=1:5,labels=c("primary", "secondary","some college","college","postgraduate"),las=2)
-
-ggplot(annotations, aes(x=jitter(SE.SEC.CUAT.UP.ZS), y=Education.mid)) + 
-    geom_errorbar(aes(ymin=Education.min, ymax=Education.max), colour="black", width=.1) 
-
+ggarrange(rich, ed, urb, fert,  
+          labels = c("A", "B", "C", "D"),
+          ncol = 2, nrow = 2)
 ```
 
 
-## Urban versus rural
+## At the level of the family
+
+### Educated
 
 
+We then investigated the extent to which samples themselves captured families with diverse educational backgrounds. There were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse")` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had a graduate or a post-graduate degree.
 
-```{r tab x rur/urb}
-kable(table(annotations$Type.of.community.at.the.time.of.the.recordings))
-#annotations[!is.na(annotations$Type.of.community.at.the.time.of.the.recordings) & !is.na(annotations$SP.URB.TOTL.ZS),c("Type.of.community.at.the.time.of.the.recordings","SP.URB.TOTL.ZS")]
+### Urban versus rural
 
-boxplot(annotations$SP.URB.TOTL.ZS ~ annotations$Type.of.community.at.the.time.of.the.recordings,type='n')
-points(annotations$SP.URB.TOTL.ZS ~ jitter(as.numeric(as.factor(annotations$Type.of.community.at.the.time.of.the.recordings))))
-```
+Samples were also very homogeneous in terms of the type of community represented: `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was not missing) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural.
 
 
-```{r nch x rur/urb}
-mytab=aggregate(annotations$Number.of.participants,by=list(annotations$Type.of.community.at.the.time.of.the.recordings),sum)
-colnames(mytab)<-c("Setting","Number of participants")
-kable(mytab)
+### Household structure
 
-```
+As for household structure, there was a great deal of missing data, with only `r  sum(!is.na(annotations$Household.structure))` (`r round(sum( !is.na(annotations$Household.structure))/length(annotations$Household.structure)*100)`%) of the samples specified. Among these, `r  sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were nuclear; in `r  sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were extended; and in one sample structure varied. 
 
+### Siblings
 
-
-## Household structure
-
-```{r nuclear vs extended}
-table(annotations$Household.structure)
-```
+It was not the case that the majority of children were single children. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least some siblings. However, it should be born in mind that this variable was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples).
 
 
-## Siblings
-
-
-```{r prop kids with sibs}
-
-summary(annotations$Proportion.With.Siblings)
-hist(annotations$Proportion.With.Siblings)
-#plot(density(annotations$Proportion.With.Siblings[!is.na(annotations$Proportion.With.Siblings)]))
-```
-
-
-
-```{r group_by siblings, warning=FALSE, message=FALSE}
-
-bySiblnum<-annotations %>%
-    group_by(Average.number.of.siblings) %>%
-      count()
-#head(bySiblnum)
-
-#ggplot(bySiblnum[!is.na(bySiblnum$Average.number.of.siblings),], mapping = aes(x=Average.number.of.siblings, y=n)) 
-
-annotations$Average.number.of.siblings <- as.numeric(as.character(annotations$Average.number.of.siblings)) #hand-checked, and there is nothing weird, so it's ok to do this, even if it complains about values turned into NAs -- this is bc data missing for some
-
-annotations$totalNchildren = annotations$Average.number.of.siblings + 1 #here we add the key child to the count
-
-hist(annotations$Average.number.of.siblings)
-```
-
-The mean number of  siblings has been left NA for `r bySiblnum[is.na(bySiblnum$Average.number.of.siblings),]$n` out of `r sum(bySiblnum$n)` corpora. In the remaining corpora, the mean number of siblings per corpus is `r mean(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings, na.rm=TRUE)` with min `r min(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)` and max `r max(annotations[!is.na(annotations$Average.number.of.siblings),]$Average.number.of.siblings)`.
-
-The next plot shows the total number of children in CHILDES corpora (y axis) as a function of that country's average fertility. If samples were representative, most points would be along the diagonal; if small families are oversampled, points would be below the diagonal (observed N children is lower than expected given fertility). What we observed is that large families are oversampled.
-
-```{r}
-
-plot(annotations$totalNchildren~annotations$fertility,xlim=c(1,4),ylim=c(1,4))
-lines(c(0,5),c(0,5))
-
-```
-
-## Integrate with childesr
-
-```{r}
-read.csv("childes_metrics.csv")->x
-dim(x) #4906
-
-# merge(annotations,x,all.x=T,by.x="Corpus_childesr",by.y="corpus_name")->y
-# dim(y) # 5044 -- extra lines mean not everything has been matched
-# 
-# levels(factor(y[is.na(y$target_child_age),"Corpus"]))  #corpus in our list but NOT on childes
-
-merge(annotations,x,by.x="Corpus",by.y="corpus_name")->annotations
-annotations$speaker_type=NA
-annotations$speaker_type[annotations$speaker_role %in% c("Mother")]<-"Mother"
-annotations$speaker_type[annotations$speaker_role %in% c("Adult","Caretaker",
-                                                         "Father","Grandfather",
-                                                         "Grandmother","Investigator",
-                                                         "Relative","Teacher","Visitor","Teenager")]<-"Adult"
-annotations$speaker_type[annotations$speaker_role %in% c("Target_Child")]<-"Key_Child"
-annotations$speaker_type[annotations$speaker_role %in% c("Boy","Girl","Brother","Sister","Friend","Playmate")]<-"Other_Child"
-#de facto removed: Media, Student, Unidentified
-
-
-```
-
-
-Now each line is a transcript from one child at one age. The questions we have are:
-- get duration, n of children, n sessions, etc from cha, not from human-annotated table
-- derive proportion tokens female adults, male adults, other children, 
-
-
-```{r}
-
-byCorpusSpeaker_type<- annotations %>%
-  select(Corpus, speaker_type, token_sum, type_sum, mlu, duration) %>%
-     group_by(Corpus, speaker_type) %>%
-       summarise(tok = sum(token_sum), typ = sum(type_sum), mlu = weighted.mean(mlu,token_sum),dur = mean(duration)) %>%
-  mutate(tok_d = tok/dur, typ_d = typ/dur, .keep = "all")
-
-
-```
-
-### Planned analyses
-
-- how many tokens overall as a function of speaker type by continent -- this tells us how much data overall there are for each
-- if we group as Western: North America and Western Europe, non-Western the others, look at pattern of tok, typ, mlu by speaker type across these two
-- although in some cases v little data: look at pattern of tok, typ, mlu by speaker type by continent
-- I don't think it makes sense to look at same by countries with more vs less 50% population finishes HS, or same for rural/urban (by country)
-- nor does it make sense to look at same at level of the family - not enough data points for less versus more educated
-- nor for household structure
-- nor for corpora where the avg n of sib is smaller than 1 (~60) versus higher (~20)
-
-
-
+- is WEIRD confounded in the world:
+		- density plots (Western non Western): education, urban, rich, family size
+		- correlation matrix: W/nW, education, urban, rich, family size
+		- table
+	- is WEIRD confounded in CHILDES
+		- table: W/nW, urban,  education, has sibs (N of corpora)
