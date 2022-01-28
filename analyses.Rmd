@@ -12,11 +12,6 @@ knitr::opts_chunk$set(echo = FALSE,warning = FALSE)
 ```{r libraries, message=FALSE, warning=FALSE}
 
 
-#devtools::install_github("unDocUMeantIt/koRpus.lang.fr") # stable release
-
-
-#library(childesr)
-#library(wordbankr)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -25,7 +20,8 @@ require(scales)
 library(stringr)
 library(kableExtra)
 library(ggpubr)
-
+library(plotly)
+library(GGally)
 
 library(RColorBrewer)
 myPalette <- brewer.pal(5, "Set2") 
@@ -123,14 +119,14 @@ all_annotations <- annotations
 annotations <- all_annotations %>%
   filter(Inclusion=="yes")
 
-
-all_annotations$why.exclude<-NA
-#all_annotations$why.exclude[all_annotations$Reason.for.exclusion %in% ]
+table(all_annotations$why_exclude)->excl
 
 ```
 
 
-A total of `r nrow(all_annotations)` corpora were considered.  From the total amount of corpora, `r nrow(annotations)` have been included in this study. The following analyses will continue only on these included corpora.
+A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing; `r excl["Diary"]` because they were diary studies;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only one transcribed"]` because only the child or the adult were transcribed; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults.
+
+After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
 
 
 
@@ -233,6 +229,20 @@ annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotati
 
 ```
 
+```{r cleaning language}
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Catalan (and the variant of Spanish spoken in Barcelona)"]<-"Catalan/Spanish"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Japanese (Kyoto dialect)"]<-"Japanese"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Mandarin Chinese, influenced by the dialects of Jianghuai Mandarin and Cantonese to a minor degree"]<-"Mandarin"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Norwegian (Children: mostly trøndersk, parents/care-takers: trøndersk, vestnorsk, nordnorsk, austnorsk)"]<-"Norwegian"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Spanish Spain"]<-"Spanish"
+
+lang_temp=levels(factor(annotations$Language.or.Languages.spoken.in.recordings))
+langs=lang_temp[1]
+for(x in 2:length(lang_temp)) langs=paste0(langs,", ",lang_temp[x])
+
+```
+
+
 ```{r cleaning type}
 
 annotations$Type.of.community.at.the.time.of.the.recordings[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]<-annotations$Naomi.community.type[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]
@@ -268,6 +278,7 @@ iso_lookup$Name=gsub(", Islamic Republic of","",iso_lookup$Name)
 iso_lookup$Name=gsub("Russian Federation","Russia",iso_lookup$Name)
 iso_lookup$Name=gsub(", Province of China","",iso_lookup$Name)
 iso_lookup$Name=gsub(", Republic of","",iso_lookup$Name)
+iso_lookup$Name=gsub("Congo, the Democratic Republic of the","Democratic Republic of Congo",iso_lookup$Name)
 
 names(codes)<-iso_lookup$Name
 
@@ -283,10 +294,62 @@ annotations$continent <-factor(annotations$continent)
 
 read.csv("wdi-data.csv")->dat_all
 
-dat = dat_all[dat_all$iso2c %in% levels(annotations$country_WB),]
+#remove areas
+dat_all=dat_all[!(dat_all$country %in% c( "Africa Eastern and Southern" ,"Africa Western and Central",
+                                   "Arab World", "Caribbean small states", "Central Europe and the Baltics" ,
+                                  "European Union", "Fragile and conflict affected situations",
+                                  "OECD members", "West Bank and Gaza",
+                                 "Small states"  , "Pacific island small states" 
+                                  , "Caribbean small states" , "Other small states",
+                                  "Latin America & the Caribbean (IDA & IBRD countries)", "Middle East & North Africa (IDA & IBRD countries)"  ,
+ "East Asia & Pacific (IDA & IBRD countries)"     ,      "South Asia (IDA & IBRD)"    ,                        
+ "Sub-Saharan Africa (IDA & IBRD countries)"    ,        "Europe & Central Asia (IDA & IBRD countries)" ,
+                                  "Turks and Caicos Islands", 
+                                  "Euro area"      ,                                     
+ "High income"                               ,           "Heavily indebted poor countries (HIPC)"              
+, "IBRD only"                                ,            "IDA total"                                           
+, "IDA blend"                               ,            "IDA only"                                            
+, "Latin America & Caribbean (excluding high income)",
+                          "Middle East & North Africa"                          
+, "IDA & IBRD total"  ,
+                                  "Europe & Central Asia"  ,  "Sub-Saharan Africa (excluding high income)"  ,"Sub-Saharan Africa"    ,                               "Africa Eastern and Southern",
+                                  "Least developed countries: UN classification"   ,      "Low income"                                          
+, "Lower middle income"      ,                            "Low & middle income"                                 
+, "Middle income"          ,                              "Middle East & North Africa (excluding high income)"  
+, "Upper middle income"     ,                             "North America"                                       
+, "Not classified"                                             
+, "East Asia & Pacific", "Pre-demographic dividend" , "Early-demographic dividend" ,"Late-demographic dividend"       , "Post-demographic dividend" , "World","East Asia & Pacific (excluding high income)"  , "Europe & Central Asia (excluding high income)","Latin America & Caribbean","Western Sahara","World" ,"South Asia"
+                                  )),]
+#cleanup
+dat_all$country[dat_all$country=="Congo, Dem. Rep."]<-"Democratic Republic of Congo"
+dat_all$country[dat_all$country=="Congo, Rep."]<-"Congo"
+dat_all$country[dat_all$country=="Lao PDR"]<-"Laos"
+dat_all$country[dat_all$country=="Virgin Islands (U.S.)"]<-"United States Virgin Islands"
+dat_all$country<-gsub(", The","",dat_all$country)
+dat_all$country<-gsub(", RB","",dat_all$country)
+dat_all$country<-gsub(", Arab Rep.","",dat_all$country)
+dat_all$country<-gsub(", Islamic Rep.","",dat_all$country)
+dat_all$country<-gsub(" SAR, China","",dat_all$country)
+dat_all$country<-gsub("St.","Saint",dat_all$country,fixed=T)
+dat_all$country<-gsub(", Fed. Sts.","",dat_all$country,fixed=T)
+dat_all$country<-gsub("Kyrgyz Republic","Kyrgyzstan",dat_all$country,fixed=T)
+
+read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
+
+cpw[cpw$Year==2011,]->rcpw_all
+# rcpw_all <- cpw %>% #old version, I thought data may be missing one particular year for a given country, but it's not the case
+#              group_by(Entity) %>%
+#              filter(Year == max(Year)) 
+colnames(rcpw_all)[colnames(rcpw_all)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"fertility"
 
 
-annotations=merge(annotations,dat_all,by="country",all.x=T)
+ind_all = merge(dat_all,rcpw_all,by.x="country",by.y="Entity",all=T)
+#ind_all$country
+
+ind = ind_all[ind_all$iso2c %in% levels(annotations$country_WB),]
+
+
+annotations=merge(annotations,ind_all,by="country",all.x=T)
 
 # table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
 # table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
@@ -294,23 +357,18 @@ annotations=merge(annotations,dat_all,by="country",all.x=T)
 #             
 # table(!is.na(annotations$Average.number.of.siblings),!is.na(annotations$SP.DYN.CEBN.Q3))
 
-read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
 
-cpw[cpw$Year==2011,]->cpw
-rcpw_all <- cpw %>% 
-             group_by(Entity) %>%
-             filter(Year == max(Year)) 
-colnames(rcpw_all)[colnames(rcpw_all)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"fertility"
-annotations=merge(annotations,rcpw_all,by.x="country",by.y="Entity",all.x=T)
 
-rcpw=rcpw_all[rcpw_all$Entity %in% levels(factor(annotations$country)),]
+#annotations=merge(annotations,rcpw_all,by.x="country",by.y="Entity",all.x=T)
+
+#rcpw=rcpw_all[rcpw_all$Entity %in% levels(factor(annotations$country)),]
 
 #TODO check no missing countries across WB & OWID merge
 ```
 
-We had WDI information for `r dim(dat_all)[1]` countries, of which  `r dim(dat)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(dat_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(dat$NY.GDP.PCAP.PP.KD))` countries in CHILDES. Education information was available for `r sum(!is.na(dat_all$SE.SEC.CUAT.UP.ZS))` countries overall, and `r sum(!is.na(dat$SE.SEC.CUAT.UP.ZS))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(dat_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(dat$SP.URB.TOTL.ZS))` countries in CHILDES. 
+We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES. Education information was available for `r sum(!is.na(ind_all$SE.SEC.CUAT.UP.ZS))` countries overall, and `r sum(!is.na(ind$SE.SEC.CUAT.UP.ZS))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
 
-Fertility rate was obtained from Our World in Data, which had `r sum(!is.na(rcpw_all$fertility))` countries overall for the selected year, and `r sum(!is.na(rcpw$fertility))` of them were represented in CHILDES. 
+Fertility rate was obtained from Our World in Data, which had `r sum(!is.na(rcpw_all$fertility))` countries overall for the selected year, and `r sum(!is.na(ind$fertility))` of them were represented in CHILDES. 
 
 
 ## At the level of the population
@@ -324,8 +382,8 @@ The samples, however, over-represent richer countries, with relatively educated 
 
 ```{r rich}
 
-dens_dat=data.frame(rbind(cbind(dat_all$NY.GDP.PCAP.PP.KD[!is.na(dat_all$NY.GDP.PCAP.PP.KD)],0),
-               cbind(dat$NY.GDP.PCAP.PP.KD[!is.na(dat$NY.GDP.PCAP.PP.KD)],1) ))
+dens_dat=data.frame(rbind(cbind(ind_all$NY.GDP.PCAP.PP.KD[!is.na(ind_all$NY.GDP.PCAP.PP.KD)],0),
+               cbind(ind$NY.GDP.PCAP.PP.KD[!is.na(ind$NY.GDP.PCAP.PP.KD)],1) ))
 colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
@@ -336,8 +394,8 @@ rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_dens
 
 
 ```{r Educated}
-dens_dat=data.frame(rbind(cbind(dat_all$SE.SEC.CUAT.UP.ZS[!is.na(dat_all$SE.SEC.CUAT.UP.ZS)],0),
-               cbind(dat$SE.SEC.CUAT.UP.ZS[!is.na(dat$SE.SEC.CUAT.UP.ZS)],1) ))
+dens_dat=data.frame(rbind(cbind(ind_all$SE.SEC.CUAT.UP.ZS[!is.na(ind_all$SE.SEC.CUAT.UP.ZS)],0),
+               cbind(ind$SE.SEC.CUAT.UP.ZS[!is.na(ind$SE.SEC.CUAT.UP.ZS)],1) ))
 colnames(dens_dat)<-c("completed.HS","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
@@ -350,8 +408,8 @@ ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(
 
 
 ```{r urban}
-dens_dat=data.frame(rbind(cbind(dat_all$SP.URB.TOTL.ZS[!is.na(dat_all$SP.URB.TOTL.ZS)],0),
-               cbind(dat$SP.URB.TOTL.ZS[!is.na(dat$SP.URB.TOTL.ZS)],1) ))
+dens_dat=data.frame(rbind(cbind(ind_all$SP.URB.TOTL.ZS[!is.na(ind_all$SP.URB.TOTL.ZS)],0),
+               cbind(ind$SP.URB.TOTL.ZS[!is.na(ind$SP.URB.TOTL.ZS)],1) ))
 colnames(dens_dat)<-c("pc.urban","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
@@ -364,8 +422,8 @@ urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alp
 
 ```{r fertility}
 
-dens_dat=data.frame(rbind(cbind(rcpw_all$fertility[!is.na(rcpw_all$fertility)],0),
-               cbind(rcpw$fertility[!is.na(rcpw$fertility)],1) ))
+dens_dat=data.frame(rbind(cbind(ind_all$fertility[!is.na(ind_all$fertility)],0),
+               cbind(ind$fertility[!is.na(ind$fertility)],1) ))
 colnames(dens_dat)<-c("N.children.woman","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
@@ -382,6 +440,11 @@ ggarrange(rich, ed, urb, fert,
 
 
 ## At the level of the family
+
+
+
+
+A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The precise list is (multiple languages spoken within the family are separated by "/", "&" indicates two participant subsamples in terms of languages spoken): `r langs`.
 
 ### Educated
 
@@ -401,6 +464,22 @@ As for household structure, there was a great deal of missing data, with only `r
 
 It was not the case that the majority of children were single children. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least some siblings. However, it should be born in mind that this variable was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples).
 
+## Confounds
+
+Above, we suggested that our samples are biased in several ways -- but perhaps it is hard to separate these biases. That is, some readers may have the intuition that Western, Educated, Industrialized, Rich, and Infertile are correlated in the world, and thus it will be hard to fix one without fixing the others and vice versa. One way to address this concern which has been suggested in other work is to study within-country variation. But we also want to know -- are these aspects confounded in terms of between-country variation?
+
+```{r}
+p <- ggpairs(ind_all[,c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','fertility')], title="Association across vars: all countries") 
+p
+
+```
+
+
+```{r}
+p <- ggpairs(ind[,c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','fertility')], title="Association across vars; in CHILDES") 
+p
+
+```
 
 - is WEIRD confounded in the world:
 		- density plots (Western non Western): education, urban, rich, family size

@@ -15,13 +15,13 @@ library(WDI)
 # "SP.DYN.CEBN.Q3" "Mean number of children ever born to women aged 40-49: Q3" 
 
 
-dat_all = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS','5.01.01.01.indust','SP.DYN.CEBN.Q3'), start=2011, end=2011)
+dat_all = WDI(indicator=c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.RUR.TOTL.ZS'), start=2011, end=2011)
 
 #test= WDI(indicator=c('SE.SEC.CUAT.UP.ZS'))
 #sort(table(test$year[!is.na(test$SE.SEC.CUAT.UP.ZS)]))
 
 # flip %rur
 dat_all$SP.URB.TOTL.ZS=100-dat_all$SP.RUR.TOTL.ZS
-
+dat_all[,-6]->dat_all
 write.csv(dat_all,"wdi-data.csv")
 
