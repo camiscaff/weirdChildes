@@ -343,13 +343,39 @@ cpw[cpw$Year==2011,]->rcpw_all
 colnames(rcpw_all)[colnames(rcpw_all)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"fertility"
 
 
+
+
+
 ind_all = merge(dat_all,rcpw_all,by.x="country",by.y="Entity",all=T)
 #ind_all$country
 
-ind = ind_all[ind_all$iso2c %in% levels(annotations$country_WB),]
 
 
 annotations=merge(annotations,ind_all,by="country",all.x=T)
+
+#https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
+read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions
+
+ind_all=merge(ind_all,regions,by.x="iso2c",by.y="alpha.2")
+#2 data points lost: Channel Islands & Kosovo
+
+ind_all$simple_region=ind_all$sub.region
+ind_all$simple_region[ind_all$sub.region%in% c("Australia and New Zealand","Melanesia","Micronesia","Polynesia")]<-"Oceania"
+
+ind_all$simple_region[grep("Asia",ind_all$sub.region)]<-"Asia"
+ind_all$simple_region[grep("Africa",ind_all$sub.region)]<-"Africa"
+
+ind_all$simple_region[ind_all$sub.region%in% c("Southern Europe","Eastern Europe","Northern Europe")]<-"Non-Western Europe"
+
+ind_all$simple_region[ind_all$country%in% c("Spain","Italy","Portugal")]<-"Western Europe"
+
+ind_all$log_gdp=log(ind_all$NY.GDP.PCAP.PP.KD,10)
+ind_all$log2_fert=log(ind_all$fertility,2)
+ind_all$western<-0
+ind_all$western[ind_all$simple_region %in% c('Western Europe',"Northern America")]<-1
+
+ind = ind_all[ind_all$iso2c %in% levels(annotations$country_WB),]
+
 
 # table(!is.na(annotations$SES.mid),!is.na(annotations$NY.GDP.PCAP.PP.KD))
 # table(!is.na(annotations$Education.mid),!is.na(annotations$SE.SEC.CUAT.UP.ZS))
@@ -469,21 +495,15 @@ It was not the case that the majority of children were single children. In fact,
 Above, we suggested that our samples are biased in several ways -- but perhaps it is hard to separate these biases. That is, some readers may have the intuition that Western, Educated, Industrialized, Rich, and Infertile are correlated in the world, and thus it will be hard to fix one without fixing the others and vice versa. One way to address this concern which has been suggested in other work is to study within-country variation. But we also want to know -- are these aspects confounded in terms of between-country variation?
 
 ```{r}
-p <- ggpairs(ind_all[,c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','fertility')], title="Association across vars: all countries") 
+p <- ggpairs(ind_all[,c('western','log_gdp','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log2_fert')], title="Association across vars: all countries") 
 p
 
 ```
 
 
 ```{r}
-p <- ggpairs(ind[,c('NY.GDP.PCAP.PP.KD','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','fertility')], title="Association across vars; in CHILDES") 
-p
+p2 <- ggpairs(ind[,c('western','log_gdp','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log2_fert')], title="Association across vars: childes") 
+p2
 
 ```
 
-- is WEIRD confounded in the world:
-		- density plots (Western non Western): education, urban, rich, family size
-		- correlation matrix: W/nW, education, urban, rich, family size
-		- table
-	- is WEIRD confounded in CHILDES
-		- table: W/nW, urban,  education, has sibs (N of corpora)
