@@ -230,15 +230,31 @@ annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotati
 ```
 
 ```{r cleaning language}
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="British English"]<-"English"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Catalan (and the variant of Spanish spoken in Barcelona)"]<-"Catalan/Spanish"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Japanese (Kyoto dialect)"]<-"Japanese"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Mandarin Chinese, influenced by the dialects of Jianghuai Mandarin and Cantonese to a minor degree"]<-"Mandarin"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Norwegian (Children: mostly trøndersk, parents/care-takers: trøndersk, vestnorsk, nordnorsk, austnorsk)"]<-"Norwegian"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Spanish Spain"]<-"Spanish"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("European Portuguese","Brazilian Portuguese")]<-"Portuguese (Brazilian or European)"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Kuwaiti Arabic","Egyptian Arabic")]<-"Arabic (Egyptian or Kuwaiti)"
 
 lang_temp=levels(factor(annotations$Language.or.Languages.spoken.in.recordings))
-langs=lang_temp[1]
-for(x in 2:length(lang_temp)) langs=paste0(langs,", ",lang_temp[x])
+
+#split up &
+lang_temp2=NULL
+for(x in lang_temp) lang_temp2=c(lang_temp2,unlist(strsplit(x," & ")))
+lang_temp2=levels(factor(lang_temp2))
+
+#put mono separately from multi
+mono=lang_temp2[grep("/",lang_temp2, invert=T)]
+multi=lang_temp2[grep("/",lang_temp2)]
+
+mono_langs=mono[1]
+for(x in 2:length(mono)) mono_langs=paste0(mono_langs,", ",mono[x])
+
+multi_langs=multi[1]
+for(x in 2:length(multi)) multi_langs=paste0(multi_langs,", ",multi[x])
 
 ```
 
@@ -371,9 +387,9 @@ ind_all$simple_region[ind_all$country%in% c("Spain","Italy","Portugal")]<-"Weste
 
 ind_all$log_gdp=log(ind_all$NY.GDP.PCAP.PP.KD,10)
 ind_all$log2_fert=log(ind_all$fertility,2)
-ind_all$western<-0
-ind_all$western[ind_all$simple_region %in% c('Western Europe',"Northern America")]<-1
-
+ind_all$western<-"non-Western"
+ind_all$western[ind_all$simple_region %in% c('Western Europe',"Northern America")]<-"Western"
+ind_all$western=factor(ind_all$western)
 ind = ind_all[ind_all$iso2c %in% levels(annotations$country_WB),]
 
 
@@ -399,7 +415,7 @@ Fertility rate was obtained from Our World in Data, which had `r sum(!is.na(rcpw
 
 ## At the level of the population
 
-The samples are varied in geographic terms, with corpora for every peopled continent. Specifically, `r sum(annotations$continent=="Africa")` corpora were collected in Africa; `r sum(annotations$continent=="Asia")` in Asia; `r sum(annotations$continent=="Western Europe")` in Western Europe, and a further `r sum(annotations$continent=="Non-Western Europe")` in Non-Western Europe; `r sum(annotations$continent=="North America")` in North America and `r sum(annotations$continent=="Western Europe")` in Latin America. Only `r sum(annotations$continent=="Oceania")` was collected in Oceania.
+The samples are varied in geographic terms, with corpora for every populated continent. Specifically, `r sum(annotations$continent=="Africa")` corpora were collected in Africa; `r sum(annotations$continent=="Asia")` in Asia; `r sum(annotations$continent=="Western Europe")` in Western Europe, and a further `r sum(annotations$continent=="Non-Western Europe")` in Non-Western Europe; `r sum(annotations$continent=="North America")` in North America and `r sum(annotations$continent=="Western Europe")` in Latin America. Only `r sum(annotations$continent=="Oceania")` was collected in Oceania.
 
 The samples, however, over-represent richer countries, with relatively educated populations, living mostly in urban settings, and having relatively small families (Figure XX).
 
@@ -470,39 +486,48 @@ ggarrange(rich, ed, urb, fert,
 
 
 
-A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The precise list is (multiple languages spoken within the family are separated by "/", "&" indicates two participant subsamples in terms of languages spoken): `r langs`.
+A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The monolingual samples spoke `r mono_langs`, and the others spoke `r multi_langs`.
 
-### Educated
-
-
-We then investigated the extent to which samples themselves captured families with diverse educational backgrounds. There were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse")` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had a graduate or a post-graduate degree.
-
-### Urban versus rural
-
-Samples were also very homogeneous in terms of the type of community represented: `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was not missing) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural.
+### Comparison between families and world data in terms of education, income, urbanity and family size
 
 
-### Household structure
+
+We then investigated the extent to which samples themselves captured families with diverse educational backgrounds. There were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had at least a graduate, if not a postgraduate, degree.
+
+
+
+Samples were also very homogeneous in terms of the type of community represented: `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was available) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural.
+
+
+
 
 As for household structure, there was a great deal of missing data, with only `r  sum(!is.na(annotations$Household.structure))` (`r round(sum( !is.na(annotations$Household.structure))/length(annotations$Household.structure)*100)`%) of the samples specified. Among these, `r  sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were nuclear; in `r  sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were extended; and in one sample structure varied. 
 
-### Siblings
 
-It was not the case that the majority of children were single children. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least some siblings. However, it should be born in mind that this variable was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples).
+
+Most samples were from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least some siblings. However, it should be born in mind that this variable was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples).
 
 ## Confounds
 
 Above, we suggested that our samples are biased in several ways -- but perhaps it is hard to separate these biases. That is, some readers may have the intuition that Western, Educated, Industrialized, Rich, and Infertile are correlated in the world, and thus it will be hard to fix one without fixing the others and vice versa. One way to address this concern which has been suggested in other work is to study within-country variation. But we also want to know -- are these aspects confounded in terms of between-country variation?
 
+
 ```{r}
-p <- ggpairs(ind_all[,c('western','log_gdp','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log2_fert')], title="Association across vars: all countries") 
+p <- ggpairs(ind_all[,c('log_gdp','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log2_fert')], title="Association across vars: all countries",aes(colour = ind_all$western, fill = ind_all$western, alpha = 0.4),columnLabels=c("GDP per capita (log 10)","Proportion completed high school","Proportion urban","Total fertility (log 2)"), 
+               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
+  theme_bw()
 p
 
+pdf("scattermatrix-all.pdf")
+p
+dev.off()
 ```
 
 
 ```{r}
-p2 <- ggpairs(ind[,c('western','log_gdp','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log2_fert')], title="Association across vars: childes") 
+p2 <- ggpairs(ind[,c('log_gdp','SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log2_fert')], title="Association across vars: all countries",aes(colour = ind$western, fill = ind$western, alpha = 0.4),columnLabels=c("GDP per capita (log 10)","Proportion completed high school","Proportion urban","Total fertility (log 2)"), 
+               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
+  theme_bw()
 p2
 
 ```
