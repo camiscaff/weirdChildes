@@ -22,6 +22,8 @@ library(kableExtra)
 library(ggpubr)
 library(plotly)
 library(GGally)
+library(ggthemes)
+
 
 library(RColorBrewer)
 myPalette <- brewer.pal(5, "Set2") 
@@ -82,23 +84,18 @@ annotations$Education.mid<-annotations$Education.min+(annotations$Education.max-
 # 3 = some college
 # 4 = university
 # 5 = postgraduate
+
+annotations$Education.ac=NA
+annotations$Education.ac[annotations$Education.min==1 & !is.na(annotations$Education.min)]<-"Some primary"
+annotations$Education.ac[annotations$Education.min==2 & !is.na(annotations$Education.min)]<-"Some secondary"
+annotations$Education.ac[annotations$Education.min==3 & !is.na(annotations$Education.min)]<-"Some college"
+annotations$Education.ac[annotations$Education.min>3 & !is.na(annotations$Education.min)]<-"College and above"
+
 annotations$SES.Naomi[annotations$SES.Naomi==""]<-NA
-annotations$SES.min<-gsub("-.*","",annotations$SES.Naomi)
-annotations$SES.max<-gsub(".*-","",annotations$SES.Naomi)
-annotations$SES.max[grep("upper",annotations$Parental.socioeconomic.status)]<-3
-
-
-
-
-annotations$SES.mid<-as.numeric(as.character(annotations$SES.min))+(as.numeric(as.character(annotations$SES.max))-as.numeric(as.character(annotations$SES.min)))/2
+annotations$SES.Naomi[annotations$SES.Naomi=="middle class"]<-2
 
 
 ```
-
-
-
-
-
 
 
 ```{r group_by inclusion}
@@ -124,9 +121,7 @@ table(all_annotations$why_exclude)->excl
 ```
 
 
-A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing; `r excl["Diary"]` because they were diary studies;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only one transcribed"]` because only the child or the adult were transcribed; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults.
 
-After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
 
 
 
@@ -364,10 +359,12 @@ wdi_all$country<-gsub("Slovak Republic","Slovakia",wdi_all$country,fixed=T)
 ```
 
 ```{r ancillary data: owid}
-read.csv("economic-inequality-gini-index-OWID-20220208.csv")->gini
+# https://ourworldindata.org/grapher/economic-inequality-gini-index
+read.csv("economic-inequality-gini-index-OWID-20220215.csv")->gini
 gini[gini$Year==2011,]->gini
 
-read.csv("political-regimes-OWID-20220208.csv")->democr
+#https://ourworldindata.org/grapher/political-regimes
+read.csv("political-regimes-OWID-20220215.csv")->democr
 democr[democr$Year==2011,]->democr
 
 read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
@@ -382,10 +379,10 @@ owid=owid[grep("(Urban)",owid$Entity,invert=T),]
 owid=owid[grep("(Rural)",owid$Entity,invert=T),]
 owid=owid[!(owid$Entity%in% c("World","Palestine/Gaza","Palestine/West Bank","Western Sahara")),]
 owid$Political.regime_t<-NA
-owid$Political.regime_t[owid$Political.regime==0]<-"closed \n autocracies"
-owid$Political.regime_t[owid$Political.regime==1]<-"electoral \n autocracies"
-owid$Political.regime_t[owid$Political.regime==2]<-"electoral \n democracies"
-owid$Political.regime_t[owid$Political.regime==3]<-"liberal \n democracies"
+owid$Political.regime_t[owid$Political.regime %in% c(0,1)]<-"autocracies"
+#owid$Political.regime_t[owid$Political.regime==1]<-"electoral \n autocracies"
+owid$Political.regime_t[owid$Political.regime%in% c(2,3)]<-"democracies"
+#owid$Political.regime_t[owid$Political.regime==3]<-"liberal \n democracies"
   
   
 # check no missing countries across WB & OWID merge
@@ -435,14 +432,13 @@ We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[
 
 Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES. We also drew from Our World in Data information about income inequality within countries via the GINI coefficient, containing `r sum(!is.na(gini$Gini.index))` countries overall for the selected year,  `r sum(!is.na(ind$Gini.index))` of which were represented in CHILDES.
 
-## Confounds
+## Introduction: Confounds
 
-Perhaps it is hard to separate these biases. That is, some readers may have the intuition that Western, Educated, Industrialized, Rich, and Infertile are correlated in the world, and thus it will be hard to fix one without fixing the others and vice versa. Are these aspects confounded in terms of between-country variation?
-
-We looked at 
+> As we further discuss below, some of these factors are correlated, such that it is not obvious what each separate letter contributes (see fig. 1). Others show such large within-variable variance, that they might not be a useful addition (see fig. 2).
 
 
-```{r scatterplot matrix}
+
+```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing high school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
 # W E I R D
 p1 <- ggpairs(ind_all[,c('SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log_gdp','Gini.index','log2_fert')], title="Association across vars: all countries",aes(colour = ind_all$western, fill = ind_all$western, alpha = 0.4),columnLabels=c("% compl. high school","% urban","GDP (log 10)","Gini","Fert. (log 2)"), 
                lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
@@ -457,7 +453,7 @@ p
 
 ```
 
-```{r western and demo, echo=FALSE, out.height="200%", fig.cap="A nice image."}
+```{r western and demo, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing high school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
 
 
 ed <- ggplot(ind_all, aes(western, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. HS") +
@@ -526,69 +522,65 @@ ggarrange( ed, ed_d,  rich,rich_d,
 
 ```
 
+## Results
 
+### Early remarks
 
-## At the level of the population
+A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only child transcribed"]` because only the child was transcribed; `r excl["Diary"]` because they were diary studies; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults. After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
+
+A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The monolingual samples spoke `r mono_langs`, and the multilingual samples spoke `r multi_langs`.
+
+### Comparison between corpora and world data in terms of education, income, urbanity and family size
+
 
 The samples are varied in geographic terms, with corpora for every populated continent. Specifically, `r sum(annotations$continent=="Africa")` corpora were collected in Africa; `r sum(annotations$continent=="Asia")` in Asia; `r sum(annotations$continent=="Western Europe")` in Western Europe, and a further `r sum(annotations$continent=="Non-Western Europe")` in Non-Western Europe; `r sum(annotations$continent=="North America")` in North America and `r sum(annotations$continent=="Western Europe")` in Latin America. Only `r sum(annotations$continent=="Oceania")` was collected in Oceania.
 
-The samples, however, over-represent richer countries, with relatively educated populations, living mostly in urban settings, and having relatively small families (Figure XX).
+The samples, however, over-represent richer countries, with relatively educated populations, living mostly in urban settings, and having relatively small families (Figure 3).
 
 
 
 
-```{r rich}
+```{r figcomp, fig.cap="Figure 3: Density plots showing the distribution of country-level descriptors for all countries (dark gray) versus countries represented in CHILDES (orange). GDP stands for Gross Domestic Product. Percent completed high school is the percent of the country's population completing high school. Percent urban is the percent of the country's population residing in urban (as opposed to rural) locations. Total fertility rate is the average number of children a woman has over her whole reproductive period."}
 
-dens_dat=data.frame(rbind(cbind(ind_all$NY.GDP.PCAP.PP.KD[!is.na(ind_all$NY.GDP.PCAP.PP.KD)],0),
-               cbind(ind$NY.GDP.PCAP.PP.KD[!is.na(ind$NY.GDP.PCAP.PP.KD)],1) ))
+
+
+#  rich
+dens_dat=data.frame(rbind(cbind(ind_all$log_gdp[!is.na(ind_all$log_gdp)],0),
+               cbind(ind$log_gdp[!is.na(ind$log_gdp)],1) ))
 colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita")
-
-```
+rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita (log)")+ scale_fill_colorblind()
 
 
-
-```{r Educated}
+#Educated
 dens_dat=data.frame(rbind(cbind(ind_all$SE.SEC.CUAT.UP.ZS[!is.na(ind_all$SE.SEC.CUAT.UP.ZS)],0),
                cbind(ind$SE.SEC.CUAT.UP.ZS[!is.na(ind$SE.SEC.CUAT.UP.ZS)],1) ))
 colnames(dens_dat)<-c("completed.HS","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent completed high school")
-
-
-```
+ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "Percent completed high school")+ scale_fill_colorblind()
 
 
 
-
-```{r urban}
+#urban
 dens_dat=data.frame(rbind(cbind(ind_all$SP.URB.TOTL.ZS[!is.na(ind_all$SP.URB.TOTL.ZS)],0),
                cbind(ind$SP.URB.TOTL.ZS[!is.na(ind$SP.URB.TOTL.ZS)],1) ))
 colnames(dens_dat)<-c("pc.urban","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent urban")
+urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent urban")+ scale_fill_colorblind()
 
-```
-
-
-
-
-```{r Fertility}
-
+#Fertility
 dens_dat=data.frame(rbind(cbind(ind_all$Fertility[!is.na(ind_all$Fertility)],0),
                cbind(ind$Fertility[!is.na(ind$Fertility)],1) ))
 colnames(dens_dat)<-c("N.children.woman","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Total fertility rate")
+fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Total fertility rate")+ scale_fill_colorblind()
 
-```
+# combined
 
-```{r combined}
 #W E I R D
 ggarrange(ed, urb, rich, fert,  
           labels = c("A", "B", "C", "D"),
@@ -596,30 +588,38 @@ ggarrange(ed, urb, rich, fert,
 ```
 
 
-## At the level of the family
+
+### Description of included families
+
+We then investigated the extent to which samples themselves captured families with diverse backgrounds. 
+
+For education, there
+ were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had at least a graduate, if not a postgraduate, degree.
+
+For socioeconomic status, there
+ were `r sum(is.na(annotations$SES.Naomi))` missing values (`r round(sum(is.na(annotations$SES.Naomi))/length(annotations$SES.Naomi)*100)`%). Of the remaining `r sum(!is.na(annotations$SES.Naomi))` samples, `r sum(annotations$SES.Naomi==1 & !is.na(annotations$SES.Naomi))` were described as having low SES; `r sum(annotations$SES.Naomi=="1-2" & !is.na(annotations$SES.Naomi))` were described as spanning both lower and middle or higher SES; and `r sum(annotations$SES.Naomi==2 & !is.na(annotations$SES.Naomi))` were described as middle or higher SES exclusively.
+ 
+ 
+
+Samples were also very homogeneous in terms of the type of community represented. Setting aside `r sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` missing values (`r round(sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/length(annotations$Type.of.community.at.the.time.of.the.recordings)*100)`%), and focusing on the remaining `r sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples,  `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was available) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural.
 
 
 
 
-A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The monolingual samples spoke `r mono_langs`, and the others spoke `r multi_langs`.
-
-### Comparison between families and world data in terms of education, income, urbanity and family size
+As for household structure, there was a great deal of missing data, with only `r  sum(!is.na(annotations$Household.structure))` (`r round(sum( !is.na(annotations$Household.structure))/length(annotations$Household.structure)*100)`%) of the samples specified. Among these, `r  sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were nuclear; in `r  sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were extended; and in one sample the structure was varied. 
 
 
 
-We then investigated the extent to which samples themselves captured families with diverse educational backgrounds. There were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had at least a graduate, if not a postgraduate, degree.
+Whether the children had siblings or not was an information that was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples). For the remaining `r sum(!is.na(annotations$Proportion.With.Siblings))` samples, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling. 
 
 
-
-Samples were also very homogeneous in terms of the type of community represented: `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was available) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural.
-
-
-
-
-As for household structure, there was a great deal of missing data, with only `r  sum(!is.na(annotations$Household.structure))` (`r round(sum( !is.na(annotations$Household.structure))/length(annotations$Household.structure)*100)`%) of the samples specified. Among these, `r  sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="nuclear" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were nuclear; in `r  sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))` (`r round(sum(annotations$Household.structure=="extended" & !is.na(annotations$Household.structure))/sum(!is.na(annotations$Household.structure))*100)`%) were extended; and in one sample structure varied. 
+```{r, eval=F}
+table(annotations$Education.ac,annotations$SES.Naomi)
+#,annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings)
+#annotations$Type.of.community.at.the.time.of.the.recordings,annotations$Household.structure,
 
 
-
-Most samples were from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least some siblings. However, it should be born in mind that this variable was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples).
+table(is.na(annotations$Education.ac),is.na(annotations$Household.structure))
+```
 
 
