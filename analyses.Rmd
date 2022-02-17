@@ -252,6 +252,11 @@ for(x in 2:length(mono)) mono_langs=paste0(mono_langs,", ",mono[x])
 multi_langs=multi[1]
 for(x in 2:length(multi)) multi_langs=paste0(multi_langs,", ",multi[x])
 
+annotations$Bilingualism.Multilingualism.in.corpus<-tolower(annotations$Bilingualism.Multilingualism.in.corpus)
+annotations$Bilingualism.Multilingualism.in.corpus[grep("yes",annotations$Bilingualism.Multilingualism.in.corpus)]<-"yes"
+annotations$Bilingualism.Multilingualism.in.corpus[grep("trilinguism",annotations$Bilingualism.Multilingualism.in.corpus)]<-"yes"
+
+
 ```
 
 
@@ -456,6 +461,20 @@ annotations=merge(annotations,ind_all,by="country",all.x=T)
 ```
 
 
+```{r oecd-kidsNhousehold-data}
+read.csv("Households-by-number-of-children-2015-OECD-20220217.csv",sep=";")->nkids
+for(i in 2:dim(nkids)[2]) nkids[,c(i)]<-as.numeric(as.character(nkids[,c(i)]))
+nkids[grep("average",nkids$country,invert=T),]->nkids
+nkids$anychildren<-rowSums(nkids[,c("X1.child","X2.children","X3.or.more.children")],na.rm=T)
+nkids$total=nkids$X0.children+nkids$anychildren # this mostly checks out -- total is 100%
+#% of single kids' household, out of households with any children
+nkids$single=(nkids$X1.child/nkids$anychildren)*100
+summary(nkids)
+
+```
+
+## Methods info
+
 We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES. Education information was available for `r sum(!is.na(ind_all$SE.SEC.CUAT.UP.ZS))` countries overall, and `r sum(!is.na(ind$SE.SEC.CUAT.UP.ZS))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
 
 Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES. We also drew from Our World in Data information about income inequality within countries via the GINI coefficient, containing `r sum(!is.na(gini$Gini.index))` countries overall for the selected year,  `r sum(!is.na(ind$Gini.index))` of which were represented in CHILDES.
@@ -629,7 +648,7 @@ ggarrange( ed, ed_d,  rich,rich_d,
 
 A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only child transcribed"]` because only the child was transcribed; `r excl["Diary"]` because they were diary studies; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults. After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
 
-A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The monolingual samples spoke `r mono_langs`, and the multilingual samples spoke `r multi_langs`.
+
 
 ### Comparison between corpora and world data in terms of education, income, urbanity and family size
 
@@ -692,7 +711,9 @@ ggarrange(ed, urb, rich, fert,
 
 ### Description of included families
 
-We then investigated the extent to which samples themselves captured families with diverse backgrounds. 
+We then investigated the extent to which samples themselves captured diverse families. We started with how varied language backgrounds were. All corpora could be coded in terms of which language or languages were spoken in the recordings.  A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The samples in which only one language was reported spoke `r mono_langs`, and the  samples in which multiple languages were reported spoke `r multi_langs`. That said, for `r sum(is.na(annotations$Bilingualism.Multilingualism.in.corpus))` corpora, we could not establish based on the description whether the corpora and/or the community from which the data were collected were monolingual mostly or not. Among the `r sum(!is.na(annotations$Bilingualism.Multilingualism.in.corpus))` corpora for which this could be established, `r round(sum(annotations$Bilingualism.Multilingualism.in.corpus=="yes" & !is.na(annotations$Bilingualism.Multilingualism.in.corpus)) /sum(!is.na(annotations$Bilingualism.Multilingualism.in.corpus))*100)`% were multilingual. It is hard to find reliable  estimates of the percentage of the population who are multilingual in the world (which some estimate at 57%) or the countries represented in CHILDES, but for instance, in Europe in 2016, 65% of adults reported knowing multiple languages (Eurostat, 2022). According to such estimates, even if samples are linguistically diverse, it would appear that input data in CHILDES under-represents bilinguals and multilinguals.
+
+<!-- https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Foreign_language_skills_statistics -->
 
 For education, there
  were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had at least a graduate, if not a postgraduate, degree. In those same countries, the proportion of the population with tertiary education was `r round(mean(annotations$College, na.rm=T))`%) in 2010, suggesting that samples were not representative in terms of education.
@@ -711,7 +732,9 @@ As for household structure, there was a great deal of missing data, with only `r
 
 
 
-Whether the children had siblings or not was an information that was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples). For the remaining `r sum(!is.na(annotations$Proportion.With.Siblings))` samples, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling. TO BE ADDED
+Whether the children had siblings or not was an information that was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples). For the remaining `r sum(!is.na(annotations$Proportion.With.Siblings))` samples, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling. As a comparison point, `r round(mean(nkids$single,na.rm=T))`% of children had no siblings in OECD countries according to 2015 data. In this sense, children with multiple siblings appear to be over-represented in CHILDES. Note that this could emerge from a bias in reporting, with corpora creators more often reporting the number of siblings when there are some than when there are none.
+
+
 
 <!-- https://www.oecd.org/els/family/database.htm -->
 
