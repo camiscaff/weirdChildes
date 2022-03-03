@@ -375,9 +375,14 @@ langs=fromJSON(paste(readLines(jsonfile), collapse=""))
 
 
 ```{r ancillary data: owid}
-# https://ourworldindata.org/grapher/economic-inequality-gini-index
-read.csv("economic-inequality-gini-index-OWID-20220215.csv")->gini
-gini[gini$Year==2011,]->gini
+# https://ourworldindata.org/primary-and-secondary-education
+read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->ed_basic
+ed_basic[ed_basic$Year>2006 & ed_basic$Year<2015,]->ed_basic
+ed_basic[!duplicated(ed_basic$Entity),]->ed_basic
+colnames(ed_basic)[colnames(ed_basic)=="Lower.secondary.completion.rate..total....of.relevant.age.group."]<-"Compl.LS"
+ed_basic$Compl.LS[ed_basic$Compl.LS>100]<-100  #cap to 100%
+
+
 
 #https://ourworldindata.org/grapher/political-regimes
 read.csv("political-regimes-OWID-20220215.csv")->democr
@@ -399,8 +404,9 @@ colnames(ed)[colnames(ed)=="Barro.Lee..Percentage.of.population.age.15..with.ter
 read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
 cpw[cpw$Year==2011,]->cpw
 colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
+cpw$Entity<-gsub("Slovak Republic","Slovakia",cpw$Entity,fixed=T)
 
-merge(gini,democr[,c("Entity","Political.regime")],all=T)->owid
+merge(ed_basic,democr[,c("Entity","Political.regime")],all=T)->owid
 merge(owid,pop[,c("Entity","Population")],all=T)->owid
 merge(owid,ed[,c("Entity","College")],all=T)->owid
 merge(owid,cpw[,c("Entity","Fertility")],all=T)->owid
@@ -408,8 +414,38 @@ merge(owid,cpw[,c("Entity","Fertility")],all=T)->owid
 #clean up
 owid=owid[grep("(Urban)",owid$Entity,invert=T),]
 owid=owid[grep("(Rural)",owid$Entity,invert=T),]
-owid=owid[!(owid$Entity%in% c("World","Western Sahara")),]
-# note: ,"Palestine/Gaza","Palestine/West Bank" -- we are leaving them in and not matching them with the World Bank's data, which has just Palestine
+owid=owid[!(owid$Entity%in% c("World","Western Sahara","Africa" ,"Asia","Oceania","South America",
+                   "Europe", "North America"  , "Arab World" ,"Caribbean Small States"  , "Central Europe and the Baltics" ,"Early-demographic dividend", "East Asia & Pacific" ,
+                   "East Asia & Pacific (excluding high income)", "East Asia & Pacific (IDA & IBRD)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (excluding high income)",
+                  "Europe & Central Asia (IDA & IBRD)", "European Union",
+                  "Fragile and conflict affected situations" , "Heavily indebted poor countries (HIPC)","High income" , "IBRD only"    ,                                     
+ "IDA & IBRD total"    ,                              
+ "IDA blend"           ,                              
+ "IDA only"           ,                               
+ "Late-demographic dividend"              ,           
+ "Latin America & Caribbean"     ,                    
+ "Latin America & Caribbean (excluding high income)" ,
+ "Latin America & Caribbean (IDA & IBRD)"       ,     
+ "Least developed countries: UN classification"      ,
+ "Low & middle income"         ,                      
+ "Low income"             ,                           
+ "Lower middle income"     ,
+ "Middle East & North Africa"        ,                
+ "Middle East & North Africa (excluding high income)",
+"Middle East & North Africa (IDA & IBRD)"           ,
+ "Middle income",
+"OECD members"   ,                                   
+ "Other small states"       ,                         
+ "Pacific island small states"    , "Post-demographic dividend"    ,                     
+ "Pre-demographic dividend"     ,
+ "South Asia"   ,                                     
+ "South Asia (IDA & IBRD)"       ,                    
+ "Sub-Saharan Africa"    ,                            
+"Sub-Saharan Africa (excluding high income)"        ,
+"Sub-Saharan Africa (IDA & IBRD)"  ,   
+                  "Upper middle income" 
+                   )),]
+
 owid$Political.regime_t<-NA
 owid$Political.regime_t[owid$Political.regime %in% c(0,1)]<-"autocracies"
 #owid$Political.regime_t[owid$Political.regime==1]<-"electoral \n autocracies"
@@ -419,6 +455,9 @@ owid$Political.regime_t[owid$Political.regime%in% c(2,3)]<-"democracies"
   
 # check no missing countries across WB & OWID merge
 owid$Entity[!(owid$Entity %in% levels(factor(wdi_all$country)))]
+#lots of dependencies; but also Palestine -- unclear how to merge
+# note: ,"Palestine/Gaza","Palestine/West Bank" -- we are leaving them in and not matching them with other OWID data, which has just Palestine
+
 #2 data points lost: Channel Islands & Kosovo
 wdi_all$country[!(wdi_all$country %in% levels(factor(owid$Entity)))]
 
@@ -475,9 +514,9 @@ summary(nkids)
 
 ## Methods info
 
-We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES. Education information was available for `r sum(!is.na(ind_all$SE.SEC.CUAT.UP.ZS))` countries overall, and `r sum(!is.na(ind$SE.SEC.CUAT.UP.ZS))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
+We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
 
-Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES. We also drew from Our World in Data information about income inequality within countries via the GINI coefficient, containing `r sum(!is.na(gini$Gini.index))` countries overall for the selected year,  `r sum(!is.na(ind$Gini.index))` of which were represented in CHILDES.
+Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES.  Education information was also drawn from this source; by allowing data between 2007 and 2014, we could find the proportion of the population having completed lower secondary school for `r sum(!is.na(ind_all$Compl.LS))` countries overall, and `r sum(!is.na(ind$Compl.LS))` countries in CHILDES. In all other cases, data was always from 2011.
 
 ## Introduction: Confounds
 
@@ -485,14 +524,9 @@ Our World in Data was our source of fertility data and type of political regime,
 
 
 
-```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing high school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
-# W E I R D
-# p1 <- ggpairs(ind_all[,c('SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log_gdp','Gini.index','log2_fert')], title="Association across vars: all countries",aes(colour = ind_all$western, fill = ind_all$western, alpha = 0.4),columnLabels=c("% compl. high school","% urban","GDP (log 10)","Gini","Fert. (log 2)"), 
-#                lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
-#   theme_bw()
-# p1
+```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
 
-p <- ggpairs(ind_all[,c('SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log_gdp','Gini.index','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. high school","% urban","GDP (log 10)","Gini","Fert. (log 2)"), 
+p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. lower secondary school","% urban","GDP (log 10)","Fert. (log 2)"), 
                lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
   theme_bw()
 p
@@ -500,83 +534,13 @@ p
 
 ```
 
-```{r western and demo, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing high school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
 
 
-ed <- ggplot(ind_all, aes(western, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. HS") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
 
-urb <- ggplot(ind_all, aes(western, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% urban") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-rich <- ggplot(ind_all, aes(western, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("GDP (log 10)") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-gini <- ggplot(ind_all, aes(western, Gini.index)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("Gini.index") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-fert <- ggplot(ind_all, aes(western, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Western") +  ylab("Fert. (log 2)") 
-
-# ggarrange( ed, urb, rich, gini, fert,  
-#           labels = c("A", "B", "C", "D", "E"),
-#           ncol = 1, nrow = 5)
+```{r confounds2, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing lower secondary school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility."}
 
 
-ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t),], aes(Political.regime_t, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-urb_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t),], aes(Political.regime_t, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-rich_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t),], aes(Political.regime_t, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-gini_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t),], aes(Political.regime_t, Gini.index)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t),], aes(Political.regime_t, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Political regime") +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-ggarrange( ed, ed_d,  rich,rich_d,   
-          urb, urb_d,  gini, gini_d, fert, fert_d,
-           ncol = 2, nrow = 5)
-
-```
-
-
-```{r confounds2, echo=FALSE, out.height="200%", fig.cap="The same, but removing areas with fewer than 1 million"}
-p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log_gdp','Gini.index','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. high school","% urban","GDP (log 10)","Gini","Fert. (log 2)"), 
-               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
-  theme_bw()
-p
-
-ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. HS") +
+ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. HS") +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
@@ -591,10 +555,6 @@ rich <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], a
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
 
-gini <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, Gini.index)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("Gini.index") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
 
 fert <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Western") +  ylab("Fert. (log 2)") 
 
@@ -603,7 +563,7 @@ fert <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], a
  #           ncol = 1, nrow = 5)
 
 
-ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t) & ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
+ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t) & ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank(),axis.title.y=element_blank(),
@@ -624,12 +584,6 @@ rich_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-gini_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, Gini.index)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
 
 fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Political regime") +
   theme(axis.title.y=element_blank(),
@@ -637,8 +591,8 @@ fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>
         axis.ticks.y=element_blank())
 
 ggarrange( ed, ed_d,  rich,rich_d,   
-          urb, urb_d,  gini, gini_d, fert, fert_d,
-           ncol = 2, nrow = 5)
+          urb, urb_d,   fert, fert_d,
+           ncol = 2, nrow = 4)
 
 ```
 
@@ -660,7 +614,7 @@ The samples, however, over-represent richer countries, with relatively educated 
 
 
 
-```{r figcomp, fig.cap="Figure 3: Density plots showing the distribution of country-level descriptors for all countries (dark gray) versus countries represented in CHILDES (orange). GDP stands for Gross Domestic Product. Percent completed high school is the percent of the country's population completing high school. Percent urban is the percent of the country's population residing in urban (as opposed to rural) locations. Total fertility rate is the average number of children a woman has over her whole reproductive period."}
+```{r figcomp, fig.cap="Figure 3: Density plots showing the distribution of country-level descriptors for all countries (dark gray) versus countries represented in CHILDES (orange). GDP stands for Gross Domestic Product. Percent completed lower secondary school is the percent of the country's population completing lower secondary school. Percent urban is the percent of the country's population residing in urban (as opposed to rural) locations. Total fertility rate is the average number of children a woman has over her whole reproductive period."}
 
 
 
@@ -674,12 +628,12 @@ rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_dens
 
 
 #Educated
-dens_dat=data.frame(rbind(cbind(ind_all$SE.SEC.CUAT.UP.ZS[!is.na(ind_all$SE.SEC.CUAT.UP.ZS)],0),
-               cbind(ind$SE.SEC.CUAT.UP.ZS[!is.na(ind$SE.SEC.CUAT.UP.ZS)],1) ))
+dens_dat=data.frame(rbind(cbind(ind_all$Compl.LS[!is.na(ind_all$Compl.LS)],0),
+               cbind(ind$Compl.LS[!is.na(ind$Compl.LS)],1) ))
 colnames(dens_dat)<-c("completed.HS","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
 
-ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "Percent completed high school")+ scale_fill_colorblind()
+ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "Percent completed lower secondary school")+ scale_fill_colorblind()
 
 
 
@@ -721,6 +675,8 @@ For education, there
 For socioeconomic status, there
  were `r sum(is.na(annotations$SES.Naomi))` missing values (`r round(sum(is.na(annotations$SES.Naomi))/length(annotations$SES.Naomi)*100)`%). Of the remaining `r sum(!is.na(annotations$SES.Naomi))` samples, `r sum(annotations$SES.Naomi==1 & !is.na(annotations$SES.Naomi))` were described as having low SES; `r sum(annotations$SES.Naomi=="1-2" & !is.na(annotations$SES.Naomi))` were described as spanning both lower and middle or higher SES; and `r sum(annotations$SES.Naomi==2 & !is.na(annotations$SES.Naomi))` were described as middle or higher SES exclusively. Given that most countries in CHILDES are in the OECD, we can compare this proportion with the proportion of the population in these countries that are middle class. According to a 2016 report, "Almost two-thirds of people live in middle-income households in OECD countries", for whom "household net income [is] between 0.75 and 2 times the median". Thus, middle and higher class participants appear to be over-represented in CHILDES data, composing a majority of available data.
 <!-- https://www.oecd.org/inclusive-growth/about/centre-for-opportunity-and-equality/Issues-note-Middle-Class-squeeze.pdf -->
+
+Professions were overall varied, but it should be noted that `r round(length(grep("stud|prof|ling|investig|resear|sociol|academ|scienti",annotations$Parental.profession))/sum(!is.na(annotations$Parental.profession))*100)`% of the samples contained parents who were described as (Masters or PhD) students, professors, linguists, researchers, scientists, or academics. To give an idea of the extent to which this is not representative, consider the fact that in 2020, 47,000 people were scientists in the USA (including both in academia and the private sector), 135,000 were professors, 20 million were Masters students, and 3 million were PhD students. Given that USA's population is 392 million, so that `r round((47000 +135000+20000000+3000000)/392000000*100)`% of the American population would be included in that list of professions. Similar data is hard to find for all countries represented in CHILDES, but we suspect that the proportion of scientists, professors, Masters and PhD students found in most other countries will be lower.
  
 
 Samples were also very homogeneous in terms of the type of community represented. Setting aside `r sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` missing values (`r round(sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/length(annotations$Type.of.community.at.the.time.of.the.recordings)*100)`%), and focusing on the remaining `r sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples,  `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was available) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural. In those same countries, the proportion of the population residing in urban settings was `r round(mean(annotations$SP.URB.TOTL.ZS, na.rm=T))`%) in 2011, suggesting that samples were not representative of their countries in terms of rural versus urban settings either.
