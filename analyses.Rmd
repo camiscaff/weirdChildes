@@ -95,7 +95,7 @@ annotations$Education.ac[annotations$Education.min>3 & !is.na(annotations$Educat
 annotations$SES.Naomi[annotations$SES.Naomi==""]<-NA
 annotations$SES.Naomi[annotations$SES.Naomi=="middle class"]<-2
 
-
+annotations$Average.number.of.siblings=as.numeric(as.character(gsub(",",".",annotations$Average.number.of.siblings)))
 ```
 
 
@@ -508,32 +508,20 @@ nkids$anychildren<-rowSums(nkids[,c("X1.child","X2.children","X3.or.more.childre
 nkids$total=nkids$X0.children+nkids$anychildren # this mostly checks out -- total is 100%
 #% of single kids' household, out of households with any children
 nkids$single=(nkids$X1.child/nkids$anychildren)*100
-summary(nkids)
+#summary(nkids)
 
+#https://www.oecd.org/about/document/ratification-oecd-convention.htm
+read.csv("oecd.txt",sep="\t",header=F, skip=1)->countries
+countries$V1=tolower(gsub("^ ","", countries$V1))
+
+annotations$country_l=tolower(annotations$country)
+
+annotations$oecd<-annotations$country_l %in% countries$V1
 ```
 
-## Methods info
+## Introduction
 
-We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
-
-Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES.  Education information was also drawn from this source; by allowing data between 2007 and 2014, we could find the proportion of the population having completed lower secondary school for `r sum(!is.na(ind_all$Compl.LS))` countries overall, and `r sum(!is.na(ind$Compl.LS))` countries in CHILDES. In all other cases, data was always from 2011.
-
-## Introduction: Confounds
-
-> As we further discuss below, some of these factors are correlated, such that it is not obvious what each separate letter contributes (see fig. 1). Others show such large within-variable variance, that they might not be a useful addition (see fig. 2).
-
-
-
-```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
-
-p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. lower secondary school","% urban","GDP (log 10)","Fert. (log 2)"), 
-               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
-  theme_bw()
-p
-
-
-```
-
+### Figures 1 & 2
 
 
 
@@ -595,6 +583,47 @@ ggarrange( ed, ed_d,  rich,rich_d,
            ncol = 2, nrow = 4)
 
 ```
+
+
+
+```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show an index of within-country wealth variation (the Gini coefficient: higher gini means greater wealth inequality) and women's average total fertility."}
+
+p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. lower secondary school","% urban","GDP (log 10)","Fert. (log 2)"), 
+               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
+  theme_bw()
+p
+
+
+```
+
+### Table 2
+
+```{r tab2}
+
+colSums(!is.na(annotations[,c("country","Education.Naomi","SP.URB.TOTL.ZS","SES.Naomi","Parental.profession","Type.of.community.at.the.time.of.the.recordings","Language.or.Languages.spoken.in.recordings",
+                    "Minority", "Household.structure","Proportion.With.Siblings","Average.number.of.siblings")]))
+
+
+```
+
+### Text
+The answer to the question of who surrounds the child may also depend on how large the nuclear family is. There is considerable cross-population variation in terms of the average number of children a woman has in her reproductive lifetime, varying between a little over 1 (`r ind_all[which(ind_all$Fertility==min(ind_all$Fertility,na.rm=T)),c("country","Fertility")]`) to over 6 (`r ind_all[which(ind_all$Fertility==max(ind_all$Fertility,na.rm=T)),c("country","Fertility")]`). 
+
+```{r}
+#https://submissions2.mirasmart.com/Verify/PAA2021/Submission/Temp/radd1gjhtkk.pdf
+#data extracted from fig 6
+x<-read.csv("arg2010pcwch.txt",sep="\t")
+x$tfr<-(x$X1+x$X2*2+x$X3*3+x$X4*4)/100
+```
+
+
+
+## Methods info
+
+We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
+
+Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES.  Education information was also drawn from this source; by allowing data between 2007 and 2014, we could find the proportion of the population having completed lower secondary school for `r sum(!is.na(ind_all$Compl.LS))` countries overall, and `r sum(!is.na(ind$Compl.LS))` countries in CHILDES. In all other cases, data was always from 2011.
+
 
 ## Results
 
@@ -665,21 +694,22 @@ ggarrange(ed, urb, rich, fert,
 
 ### Description of included families
 
-We then investigated the extent to which samples themselves captured diverse families. We started with how varied language backgrounds were. All corpora could be coded in terms of which language or languages were spoken in the recordings.  A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The samples in which only one language was reported spoke `r mono_langs`, and the  samples in which multiple languages were reported spoke `r multi_langs`. That said, for `r sum(is.na(annotations$Bilingualism.Multilingualism.in.corpus))` corpora, we could not establish based on the description whether the corpora and/or the community from which the data were collected were monolingual mostly or not. Among the `r sum(!is.na(annotations$Bilingualism.Multilingualism.in.corpus))` corpora for which this could be established, `r round(sum(annotations$Bilingualism.Multilingualism.in.corpus=="yes" & !is.na(annotations$Bilingualism.Multilingualism.in.corpus)) /sum(!is.na(annotations$Bilingualism.Multilingualism.in.corpus))*100)`% were multilingual. It is hard to find reliable  estimates of the percentage of the population who are multilingual in the world (which some estimate at 57%) or the countries represented in CHILDES, but for instance, in Europe in 2016, 65% of adults reported knowing multiple languages (Eurostat, 2022). According to such estimates, even if samples are linguistically diverse, it would appear that input data in CHILDES under-represents bilinguals and multilinguals.
+We then investigated the extent to which samples themselves captured diverse families. We started with how varied language backgrounds were. All corpora could be coded in terms of which language or languages were spoken in the recordings.  A total of `r length(lang_temp)` different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The samples in which only one language was reported spoke `r mono_langs`, and the  samples in which multiple languages were reported spoke `r multi_langs`. That said, for `r sum(is.na(annotations$Bilingualism.Multilingualism.in.corpus))` corpora, we could not establish based on the description whether the corpora and/or the community from which the data were collected were mostly monolingual  or not. Among the `r sum(!is.na(annotations$Bilingualism.Multilingualism.in.corpus))` corpora for which this could be established, `r round(sum(annotations$Bilingualism.Multilingualism.in.corpus=="yes" & !is.na(annotations$Bilingualism.Multilingualism.in.corpus)) /sum(!is.na(annotations$Bilingualism.Multilingualism.in.corpus))*100)`% were not monolingual. It is hard to find reliable  estimates of the percentage of the population who are multilingual in the world (which some estimate at 57%) or the countries represented in CHILDES, but for instance, in Europe in 2016, 65% of adults reported knowing multiple languages (Eurostat, 2022). According to such estimates, even if samples are linguistically diverse, it would appear that input data in CHILDES under-represents bilinguals and multilinguals.
 
 <!-- https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Foreign_language_skills_statistics -->
 
-For education, there
- were `r sum(is.na(annotations$Education.Naomi))` missing values (`r round(sum(is.na(annotations$Education.Naomi))/length(annotations$Education.Naomi)*100)`%); and `r sum(annotations$Education.Naomi=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had at least a graduate, if not a postgraduate, degree. In those same countries, the proportion of the population with tertiary education was `r round(mean(annotations$College, na.rm=T))`%) in 2010, suggesting that samples were not representative in terms of education.
+
+
+Education information was missing for more than half of the corpora (see Table 2); and `r sum(annotations$Education.Naomi=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education; `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, the majority of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`%) portrayed children whose parents had at least a graduate, if not a postgraduate, degree. Samples were not representative of the countries they were collected, since in those same countries the proportion of the population with tertiary education was `r round(mean(annotations$College, na.rm=T))`% in 2010.
 
 For socioeconomic status, there
- were `r sum(is.na(annotations$SES.Naomi))` missing values (`r round(sum(is.na(annotations$SES.Naomi))/length(annotations$SES.Naomi)*100)`%). Of the remaining `r sum(!is.na(annotations$SES.Naomi))` samples, `r sum(annotations$SES.Naomi==1 & !is.na(annotations$SES.Naomi))` were described as having low SES; `r sum(annotations$SES.Naomi=="1-2" & !is.na(annotations$SES.Naomi))` were described as spanning both lower and middle or higher SES; and `r sum(annotations$SES.Naomi==2 & !is.na(annotations$SES.Naomi))` were described as middle or higher SES exclusively. Given that most countries in CHILDES are in the OECD, we can compare this proportion with the proportion of the population in these countries that are middle class. According to a 2016 report, "Almost two-thirds of people live in middle-income households in OECD countries", for whom "household net income [is] between 0.75 and 2 times the median". Thus, middle and higher class participants appear to be over-represented in CHILDES data, composing a majority of available data.
+ were `r sum(is.na(annotations$SES.Naomi))` missing values (`r round(sum(is.na(annotations$SES.Naomi))/length(annotations$SES.Naomi)*100)`%). Of the remaining `r sum(!is.na(annotations$SES.Naomi))` samples, `r sum(annotations$SES.Naomi==1 & !is.na(annotations$SES.Naomi))` were described as having low SES; `r sum(annotations$SES.Naomi=="1-2" & !is.na(annotations$SES.Naomi))` were described as spanning both lower and middle or higher SES; and `r sum(annotations$SES.Naomi==2 & !is.na(annotations$SES.Naomi))` were described as middle or higher SES exclusively. Given that most countries represented in CHILDES are in the OECD (`r sum(annotations$oecd)` out of the `r dim(annotations)[1]` corpora), we can compare this proportion with the proportion of the population in these countries that are middle class. According to a 2016 report, "Almost two-thirds of people live in middle-income households in OECD countries", for whom "household net income [is] between 0.75 and 2 times the median". Thus, middle and higher class participants appear to be over-represented in CHILDES data, composing a majority of available data.
 <!-- https://www.oecd.org/inclusive-growth/about/centre-for-opportunity-and-equality/Issues-note-Middle-Class-squeeze.pdf -->
 
-Professions were overall varied, but it should be noted that `r round(length(grep("stud|prof|ling|investig|resear|sociol|academ|scienti",annotations$Parental.profession))/sum(!is.na(annotations$Parental.profession))*100)`% of the samples contained parents who were described as (Masters or PhD) students, professors, linguists, researchers, scientists, or academics. To give an idea of the extent to which this is not representative, consider the fact that in 2020, 47,000 people were scientists in the USA (including both in academia and the private sector), 135,000 were professors, 20 million were Masters students, and 3 million were PhD students. Given that USA's population is 392 million, so that `r round((47000 +135000+20000000+3000000)/392000000*100)`% of the American population would be included in that list of professions. Similar data is hard to find for all countries represented in CHILDES, but we suspect that the proportion of scientists, professors, Masters and PhD students found in most other countries will be lower.
+Information about parents' profession or activity was also missing for the majority of the corpora (see Table 2). Professions were overall varied, but it should be noted that `r round(length(grep("stud|prof|ling|investig|resear|sociol|academ|scienti",annotations$Parental.profession))/sum(!is.na(annotations$Parental.profession))*100)`% of the samples contained parents who were described as (Masters or PhD) students, professors, linguists, researchers, scientists, or academics. To give an idea of the extent to which this is not representative, consider the fact that in 2020, 47,000 people were scientists in the USA (including both in academia and the private sector), 135,000 were professors, 20 million were Masters students, and 3 million were PhD students. Given that USA's population is 392 million, so that `r round((47000 +135000+20000000+3000000)/392000000*100)`% of the American population would be included in that list of professions. Similar data is hard to find for all countries represented in CHILDES, but we suspect that the proportion of scientists, professors, Masters and PhD students found in most other countries will be lower.
  
 
-Samples were also very homogeneous in terms of the type of community represented. Setting aside `r sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` missing values (`r round(sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/length(annotations$Type.of.community.at.the.time.of.the.recordings)*100)`%), and focusing on the remaining `r sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples,  `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was available) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural. In those same countries, the proportion of the population residing in urban settings was `r round(mean(annotations$SP.URB.TOTL.ZS, na.rm=T))`%) in 2011, suggesting that samples were not representative of their countries in terms of rural versus urban settings either.
+Only about a third of the samples had information about whether the community was rural or urban (see Table 2), and the remaining ones were very homogeneous. Setting aside `r sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` missing values (`r round(sum(is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/length(annotations$Type.of.community.at.the.time.of.the.recordings)*100)`%), and focusing on the remaining `r sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples,  `r sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` (`r round(sum(annotations$Type.of.community.at.the.time.of.the.recordings=="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))/sum(!is.na(annotations$Type.of.community.at.the.time.of.the.recordings))*100)`% of the samples for which this variable was available) were described as industrialized or urban, and one additional one as both rural and urban. Only `r sum(annotations$Type.of.community.at.the.time.of.the.recordings!="urban" & !is.na(annotations$Type.of.community.at.the.time.of.the.recordings))` samples were described as farming or rural. In those same countries, the proportion of the population residing in urban settings was `r round(mean(annotations$SP.URB.TOTL.ZS, na.rm=T))`%) in 2011, suggesting that samples were not representative of their countries in terms of rural versus urban settings either.
 
 
 
@@ -688,20 +718,11 @@ As for household structure, there was a great deal of missing data, with only `r
 
 
 
-Whether the children had siblings or not was an information that was missing for `r sum(is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(is.na(annotations$Proportion.With.Siblings))/length(annotations$Proportion.With.Siblings)*100)`% of included samples). For the remaining `r sum(!is.na(annotations$Proportion.With.Siblings))` samples, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling. As a comparison point, `r round(mean(nkids$single,na.rm=T))`% of children had no siblings in OECD countries according to 2015 data. In this sense, children with multiple siblings appear to be over-represented in CHILDES. Note that this could emerge from a bias in reporting, with corpora creators more often reporting the number of siblings when there are some than when there are none.
+We had information about whether the children had siblings or not for more than half of the samples (see Table 2). Out of the `r sum(!is.na(annotations$Proportion.With.Siblings))` samples with this information, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling, with the overall average being `r mean(annotations$Average.number.of.siblings,na.rm=T)` siblings. As a comparison point, `r round(mean(nkids$single,na.rm=T))`% of children had no siblings in OECD countries according to 2015 data. In this sense, children with multiple siblings appear to be over-represented in CHILDES. Note that this could emerge from a bias in reporting, with corpora creators more often reporting that there are siblings and their number when there are some than when there are none.
 
 
 
 <!-- https://www.oecd.org/els/family/database.htm -->
 
 
-```{r, eval=F}
-table(annotations$Education.ac,annotations$SES.Naomi)
-#,annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings)
-#annotations$Type.of.community.at.the.time.of.the.recordings,annotations$Household.structure,
-
-
-table(is.na(annotations$Education.ac),is.na(annotations$Household.structure))
-```
-
-
+## Discussion
