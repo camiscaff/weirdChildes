@@ -1,8 +1,14 @@
 ---
-title: "Supplementary to How WEIRD is what we know about children's linguistic input from CHILDES? \\ Appendix 1: Knitted analyses and supplementary analyses with a different implementation of Education"
-output: 
+title: "Supplementary to How WEIRD is what we know about children's linguistic input
+  from CHILDES? Appendix 1: Knitted analyses and supplementary analyses with a different 
+  implementation of Education"
+output:
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
   pdf_document:
-    toc: true
+    toc: yes
     toc_depth: 2
 ---
 
@@ -524,10 +530,11 @@ annotations$oecd<-annotations$country_l %in% countries$V1
 ```
 
 ## Introduction
+### Footnote 1
+
+We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
 
 ### Figures 1 & 2
-
-
 
 ```{r confounds2, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing lower secondary school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility."}
 
@@ -593,7 +600,7 @@ dev.off()
 
 ```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility."}
 
-p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. lower secondary school","% urban","GDP (log 10)","Fert. (log 2)"), 
+p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="",columnLabels=c("% compl. LSS","% urban","GDP (log 10)","Fert. (log 2)"), 
                lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
   theme_bw()
 p
@@ -603,11 +610,42 @@ p
 dev.off()
 ```
 
+
+### Causal links between Rich/Educated parents and language outcomes
+
+The ways in which SES relates to children's linguistic input are manifold. Some evidence suggests that SES correlates with maternal speech generally, as differences in quantity of speech, complexity of the lexicon, and sentence length are found not only in their speech to infants but also in speech to a researcher (Hoff-Ginsberg, 1991). Additionally, Hoff (2003) proposes SES may affect children's language input through other causal pathways, including cultural ones like parental beliefs (e.g., regarding the importance of talking to the child and the desirability of talkativeness in the child, which we discuss below under the Industrialized subsection), and practical ones like the amount of time and energy mothers may have to dedicate to one-on-one interactions, which may be related to income issues discussed below in this subsection. Even more complex causal models can be posited, particularly when attempting to integrate multi-cultural data (Hoff et al., 2012).
+
+Some of this complexity relates to the fact that SES is a composite concept. Education, wealth, and occupation, although often confounded in natural samples, are not conceptually identical and can be decorrelated in certain cases. For example, Calzada et al. (2014) documented the divergence in education and wealth found among Spanish-speaking immigrants to the USA: nearly 62% of Mexican-born mothers had less than a high school education, and 84% of those families lived in poverty, whereas only 18% of Dominican-born mothers had not completed high school, and 61% of those families lived in poverty. In general terms, then, some Dominican-born mothers may be highly educated, but may still receive low wages and work in a white collar job as do other Spanish-speaking immigrants. 
+
+Of the different components of SES, parental education is the most commonly used in language acquisition and more broadly developmental research (Hoff et al., 2012; see Dailey and Bergelson (2021) for a meta-analysis). There may be a few reasons why education is so frequently used, including higher stability (it is more stable over the child's early years than income and occupation) and lower sensitivity (in some countries, it is not culturally appropriate to ask for information about income). Moreover, some have made the case that education is empirically more relevant (i.e., explains more of the variance)  in the context of early language acquisition (Hoff, 2003; Bornstein et al., 2003), although this was based on a small number of American samples, and thus it may not generalize to other populations. Regarding the precise causal pathways whereby variation in education relates to variation in children's linguistic input, it is likely that more educated mothers have more exposure to formal school environments, which may socialize individuals to communicate using more literary registers. It may also increase the likelihood that parents read, so that parents who have had longer schooling experiences are more likely to draw on those experiences when they communicate with their children, leading to more diverse lexicons and longer phrases. To note, both maternal education and measures of language and literacy predicted variation in child-directed speech in a large sample of low-SES American mothers (Rowe et al., 2005).
+
+Although much attention has been focused on education, as opposed to income, we think it is worthwhile to consider potential ways in which income may relate to children's language input, for both conceptual and empirical reasons. Conceptually, parents’ income may affect children’s verbal environments through a different set of routes than parental education. To begin with, low income families might live in denser homes, a factor which has been found to be related to children’s language experience - caregivers in more crowded homes being less responsive to their children than parents in less crowded homes (Evans et al., 1999, 2010). Parents with low levels of income may also experience daily hardships such as food and medical insecurity. A recent paper makes the case for considering the impact of (financial) scarcity on caregivers’ quantity of speech to their children (Ellwood-Lowe, et al., 2022), and scarcity could also lead to indirect effects. Indeed, lower-income parents live in harsher situations and are more likely than higher-income parents to be depressed (Berger, Paxson, & Waldfogel, 2009). Controlling for SES, depressed mothers direct less talk to their children (e.g., Porritt, Zinser, Bachorowski, & Kaplan, 2014), use less diverse words (Rowe et al., 2005), and are less likely to adjust their speech to their babies than non-depressed mothers (Reissland, Shepherd, & Herrera, 2003). 
+	
+Empirical evidence also suggests parents' wealth may matter, above and beyond education. For example, McNally, McCrory, Quigley, and Murray (2019) found that the correlations between maternal education and children's vocabulary outcomes in an Irish sample was statistically mediated by various resources, saliently household income. Additionally, intervention studies and studies of child outcomes associated with changes in national welfare reforms also indicate that increasing income for poor families is related to improvements in children’s outcomes (Duncan & Magnuson, 2012). 
+
+
+Calzada, E. J., Huang, K. Y., Linares-Torres, H., Singh, S. D., & Brotman, L. (2014). Maternal familismo and early childhood functioning in Mexican and Dominican immigrant families. Journal of Latina/o Psychology, 2(3), 156.
+
+### More information on theories bearing on industrialization
+
+One may wonder why parents behave differently. A framework from evolutionary psychology argues that different modes of societal organization may lead to diverse ideal parental investment strategies. For example, LeVine and collaborators (e.g., Sharma & Levine, 1998; Richman et al., 1998) highlight the complex set of factors leading to differences between families in (post-)industrial and rural settings. Urban, (post-)industrial societies tend to have a great deal of inequality of resources paired with an assumption that it is possible to change one's place in the socioeconomic ladder via education, leading to parents who hope that their children will succeed in school, to have a chance at better-paying jobs, and who may therefore be interested in boosting their children's verbal skills. In LeVine et al. (1994), the authors describe farming parents as employing a "pediatric model" emphasizing contact behaviors with the child, whereas industrialist parents employ a "pedagogical model", prioritizing distal verbal behaviors. 
+
+Parental investment may also vary among non-industrial societies, as argued, for instance, in Draper and Harpending XXX. Those authors believed that the optimal parental investment strategy among foragers involved high levels of parental investment on each individual child, including father involvement, whereas among farmers overall levels of investment should be lower, with much of the care being provided by siblings. These descriptions lead to predictions in terms of both quantity and composition of the input. In particular, LeVine et al. (1994)'s description predicts more child-directed speech in urban than rural settings, a prediction which was born out in a recent systematic review (Cristia, 2022). Although fathers have been observed to, for instance, hold their infants more frequently in foraging than farming societies (e.g., see a summary on paternal investment in Hewlett & MacFarlan Chapter 14), to our knowledge, no study has specifically checked whether fathers' speech is more prevalent in foraging than farming communities. 
+
 ### Table 2
 
 ```{r tab2}
 
-colSums(!is.na(annotations[,c("country","Education.Naomi","SES.Naomi","Parental.profession","Language.or.Languages.spoken.in.recordings",
+colSums(!is.na(annotations[,c("country","Compl.LS","SP.URB.TOTL.ZS","log_gdp","log2_fert")]))
+
+
+```
+
+### Table 3
+
+```{r tab3}
+
+colSums(!is.na(annotations[,c("Education.Naomi","SES.Naomi","Parental.profession","Language.or.Languages.spoken.in.recordings","Bilingualism.Multilingualism.in.corpus",
                     "Minority","Type.of.community.at.the.time.of.the.recordings", "Household.structure","Proportion.With.Siblings","Average.number.of.siblings")]))
 
 
@@ -627,24 +665,22 @@ x$tfr<-(x$X1+x$X2*2+x$X3*3+x$X4*4)/100
 
 ## Methods info
 
-We had WDI information for `r dim(ind_all)[1]` countries, of which  `r dim(ind)[1]` were present in CHILDES. GDP data was available for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries overall, and `r sum(!is.na(ind$NY.GDP.PCAP.PP.KD))` countries in CHILDES.  Information on the proportion of the population that was urban was available for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries overall, and `r sum(!is.na(ind$SP.URB.TOTL.ZS))` countries in CHILDES. 
-
-Our World in Data was our source of fertility data and type of political regime, with data available for `r sum(!is.na(cpw$Fertility))` countries overall for the selected year,  `r sum(!is.na(ind$Fertility))` of which were represented in CHILDES.  Education information was also drawn from this source; by allowing data between 2007 and 2014, we could find the proportion of the population having completed lower secondary school for `r sum(!is.na(ind_all$Compl.LS))` countries overall, and `r sum(!is.na(ind$Compl.LS))` countries in CHILDES. In all other cases, data was always from 2011.
-
-
-## Results
-
-
-
 A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only child transcribed"]` because only the child was transcribed; `r excl["Diary"]` because they were diary studies; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults. After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
 
 
 
-### Comparison between corpora and world data in terms of education, income, urbanity and family size
+
+## Results
 
 The samples are varied in geographic terms, with corpora for every populated continent. Specifically, `r sum(annotations$continent=="Africa")` corpora were collected in Africa; `r sum(annotations$continent=="Asia")` in Asia; `r sum(annotations$continent=="Western Europe")` in Western Europe, and a further `r sum(annotations$continent=="Non-Western Europe")` in Non-Western Europe; `r sum(annotations$continent=="North America")` in North America and `r sum(annotations$continent=="Western Europe")` in Latin America. Only `r sum(annotations$continent=="Oceania")` was collected in Oceania.
 
-The samples, however, over-represent richer countries, with relatively educated populations, living mostly in urban settings, and having relatively small families (Figure 3).
+
+
+
+### Country-level variables
+
+
+
 
 
 
@@ -652,14 +688,14 @@ The samples, however, over-represent richer countries, with relatively educated 
 ```{r figcomp, fig.cap="Figure 3: Density plots showing the distribution of country-level descriptors for all countries (dark gray) versus countries represented in CHILDES (orange). GDP stands for Gross Domestic Product. Percent completed lower secondary school is the percent of the country's population completing lower secondary school. Percent urban is the percent of the country's population residing in urban (as opposed to rural) locations. Total fertility rate is the average number of children a woman has over her whole reproductive period."}
 
 
-
 #  rich
 dens_dat=data.frame(rbind(cbind(ind_all$log_gdp[!is.na(ind_all$log_gdp)],0),
                cbind(ind$log_gdp[!is.na(ind$log_gdp)],1) ))
 colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+gdpt = t.test(dens_dat[,1]~dens_dat$in.childes)
 
-rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita (log)")+ scale_fill_colorblind()
+rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita (log 10)")+ scale_fill_colorblind()
 
 
 #Educated
@@ -667,8 +703,9 @@ dens_dat=data.frame(rbind(cbind(ind_all$Compl.LS[!is.na(ind_all$Compl.LS)],0),
                cbind(ind$Compl.LS[!is.na(ind$Compl.LS)],1) ))
 colnames(dens_dat)<-c("completed.LSS","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+edt = t.test(dens_dat[,1]~dens_dat$in.childes)
 
-ed <- ggplot(dens_dat, aes(x = completed.LSS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "Percent completed lower secondary school")+ scale_fill_colorblind()
+ed <- ggplot(dens_dat, aes(x = completed.LSS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "% compl. LSS")+ scale_fill_colorblind()
 
 
 
@@ -677,16 +714,18 @@ dens_dat=data.frame(rbind(cbind(ind_all$SP.URB.TOTL.ZS[!is.na(ind_all$SP.URB.TOT
                cbind(ind$SP.URB.TOTL.ZS[!is.na(ind$SP.URB.TOTL.ZS)],1) ))
 colnames(dens_dat)<-c("pc.urban","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+urbt = t.test(dens_dat[,1]~dens_dat$in.childes)
 
-urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent urban")+ scale_fill_colorblind()
+urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "% urban")+ scale_fill_colorblind()
 
 #Fertility
-dens_dat=data.frame(rbind(cbind(ind_all$Fertility[!is.na(ind_all$Fertility)],0),
-               cbind(ind$Fertility[!is.na(ind$Fertility)],1) ))
+dens_dat=data.frame(rbind(cbind(ind_all$log2_fert[!is.na(ind_all$log2_fert)],0),
+               cbind(ind$log2_fert[!is.na(ind$log2_fert)],1) ))
 colnames(dens_dat)<-c("N.children.woman","in.childes_T")
 dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+fertt = t.test(dens_dat[,1]~dens_dat$in.childes)
 
-fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Total fertility rate")+ scale_fill_colorblind()
+fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Fertility (log 2)")+ scale_fill_colorblind()
 
 # combined
 
@@ -700,6 +739,12 @@ x
 dev.off()
 ```
 
+
+The means for each of the variables differed for the countries in CHILDES versus overall using unpaired samples t-tests without assuming equality of variance: 
+% compl. LSS t(`r round(edt$parameter,2)`)=`r round(edt$statistic,2)`, p = `r round(edt$p.value,2)`;
+% urban t(`r round(urbt$parameter,2)`)=`r round(urbt$statistic,2)`, p = `r round(urbt$p.value,2)`; 
+log GDP per capita t(`r round(gdpt$parameter,2)`)=`r round(gdpt$statistic,2)`, p = `r round(gdpt$p.value,2)`; 
+ and log fertility rate t(`r round(fertt$parameter,2)`)=`r round(fertt$statistic,2)`, p = `r round(fertt$p.value,2)`. 
 
 
 ### Description of included families
@@ -728,7 +773,7 @@ As for household structure, there was a great deal of missing data, with only `r
 
 
 
-We had information about whether the children had siblings or not for more than half of the samples (see Table 2). Out of the `r sum(!is.na(annotations$Proportion.With.Siblings))` samples with this information, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling, with the overall average being `r mean(annotations$Average.number.of.siblings,na.rm=T)` siblings. As a comparison point, `r round(mean(nkids$single,na.rm=T))`% of children had no siblings in OECD countries according to 2015 data. In this sense, children with multiple siblings appear to be over-represented in CHILDES. Note that this could emerge from a bias in reporting, with corpora creators more often reporting that there are siblings and their number when there are some than when there are none.
+We had information about whether the children had siblings or not for more than half of the samples (see Table 2). Out of the `r sum(!is.na(annotations$Proportion.With.Siblings))` samples with this information, most contained data from multi-child families. In fact, only `r sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))` samples (`r round(sum(annotations$Proportion.With.Siblings==0 & !is.na(annotations$Proportion.With.Siblings))/sum(!is.na(annotations$Proportion.With.Siblings))*100)`% of samples having information on siblings) were constituted exclusively by children with no siblings, and the remaining had at least one sibling, with the overall average being `r mean(annotations$Average.number.of.siblings,na.rm=T)` siblings. Since a majority of countries in CHILDES are in the OECD (`r round(sum(annotations$oecd)/length(annotations$oecd)*100)`% to be precise), we draw a comparison point for such countries: `r round(mean(nkids$single,na.rm=T))`% of children had no siblings in OECD countries according to 2015 data. In this sense, children with multiple siblings appear to be over-represented in CHILDES. Note that this could emerge from a bias in reporting, with corpora creators more often reporting that there are siblings and their number when there are some than when there are none.
 
 
 
@@ -737,9 +782,9 @@ We had information about whether the children had siblings or not for more than 
 
 ## Discussion
 
-Table 3. Low variability makes it difficult to tease apart empirically dimensions like family size and parental education: It may be reasonable to compare the input afforded to children who have at least one sibling (1+) versus none for samples consisting of parents with a completed college education, but families with lower levels of education are too under-represented to allow a meaningful study. NA indicates missing values for this variable.
+Table 4. Low variability makes it difficult to tease apart empirically dimensions like family size and parental education: It may be reasonable to compare the input afforded to children who have at least one sibling (1+) versus none for samples consisting of parents with a completed college education, but families with lower levels of education are too under-represented to allow a meaningful study. NA indicates missing values for this variable.
 
-```{r tab3}
+```{r tab4}
 
 annotations$ed_all<-as.character(annotations$Education.ac)
 annotations$ed_all[is.na(annotations$ed_all)]<-"NA"
