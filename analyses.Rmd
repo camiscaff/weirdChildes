@@ -1,6 +1,6 @@
 ---
 title: "Supplementary to How WEIRD is what we know about children's linguistic input
-  from CHILDES? Appendix 1: Knitted analyses and supplementary analyses with a different 
+  from CHILDES? Appendix 1: Further acknowledgments, knitted analyses and supplementary analyses with a different 
   implementation of Education"
 output:
   html_document:
@@ -919,4 +919,34 @@ ggarrange(ed, urb, rich, fert,
 ```
 
 
+
+
+
+# Further acknowledgments
+
+
+
+```{r}
+read.csv("CHILDES corpora contacts - Foglio1.csv")->x
+
+
+y=NULL
+for(i in 1:length(x$name)) y=c(y,unlist(strsplit(as.character(x$name[i]),"    ")))
+
+z=unique(sort(y))
+
+q=z[1]
+for(i in 2:(length(z)-1)) q=paste0(q,", ",z[i])
+q=paste0(q,", and ",z[i])
+```
+
+We would like to thank the curators of the corpora who replied to our email: `r q`
+
+
+## Document version
+
+```{r}
+
+sessionInfo()
+```
 
