@@ -109,7 +109,7 @@ annotations$Average.number.of.siblings=as.numeric(as.character(gsub(",",".",anno
 ```
 
 
-```{r group_by inclusion}
+```{r group_by inclusion, echo=F,message=F}
 
 # include<- annotations %>%
 #   mutate(inclusion=tolower(Inclusion)) %>%
@@ -136,7 +136,7 @@ table(all_annotations$why_exclude)->excl
 
 
 
-```{r group_by location_cleaning}
+```{r group_by location_cleaning, echo=F,message=F}
 
 annotations$country <-NA
 annotations$continent <-NA
@@ -235,7 +235,7 @@ annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotati
 
 ```
 
-```{r cleaning language}
+```{r cleaning language, echo=F,message=F}
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="British English"]<-"English"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Catalan (and the variant of Spanish spoken in Barcelona)"]<-"Catalan/Spanish"
 annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Japanese (Kyoto dialect)"]<-"Japanese"
@@ -270,7 +270,7 @@ annotations$Bilingualism.Multilingualism.in.corpus[grep("trilinguism",annotation
 ```
 
 
-```{r cleaning type}
+```{r cleaning type, echo=F,message=F}
 
 annotations$Type.of.community.at.the.time.of.the.recordings[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]<-annotations$Naomi.community.type[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]
 
@@ -291,7 +291,7 @@ annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.
 
 
 
-```{r continent}
+```{r continent, echo=F,message=F}
 byPart<- annotations %>%
   select(Language.or.Languages.spoken.in.recordings, Number.of.participants) %>%
    filter(!is.na(Number.of.participants)) %>%
@@ -320,7 +320,7 @@ annotations$continent <-factor(annotations$continent)
 
 ```
 
-```{r ancillary data: wdi}
+```{r ancillary data: wdi, echo=F,message=F}
 read.csv("wdi-data.csv")->wdi_all
 
 #remove areas
@@ -374,17 +374,10 @@ wdi_all$country<-gsub("Slovak Republic","Slovakia",wdi_all$country,fixed=T)
 
 ```
 
-```{r ancillary data: languages, eval=F}
-#beginning to think this is too complicated for what we want
-#https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json
-jsonfile <- "https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json"
-langs=fromJSON(paste(readLines(jsonfile), collapse=""))
-
-```
 
 
 
-```{r ancillary data: owid}
+```{r ancillary data: owid, echo=F,message=F}
 # https://ourworldindata.org/primary-and-secondary-education
 read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->ed_basic
 ed_basic[ed_basic$Year>2006 & ed_basic$Year<2015,]->ed_basic
@@ -510,7 +503,7 @@ annotations=merge(annotations,ind_all,by="country",all.x=T)
 ```
 
 
-```{r oecd-kidsNhousehold-data}
+```{r oecd-kidsNhousehold-data, echo=F,message=F}
 read.csv("Households-by-number-of-children-2015-OECD-20220217.csv",sep=";")->nkids
 for(i in 2:dim(nkids)[2]) nkids[,c(i)]<-as.numeric(as.character(nkids[,c(i)]))
 nkids[grep("average",nkids$country,invert=T),]->nkids
@@ -532,7 +525,8 @@ annotations$oecd<-annotations$country_l %in% countries$V1
 ## Introduction
 ### Footnote 1
 
-We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
+We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
+We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
 
 ### Figures 1 & 2
 
@@ -611,26 +605,6 @@ dev.off()
 ```
 
 
-### Causal links between Rich/Educated parents and language outcomes
-
-The ways in which SES relates to children's linguistic input are manifold. Some evidence suggests that SES correlates with maternal speech generally, as differences in quantity of speech, complexity of the lexicon, and sentence length are found not only in their speech to infants but also in speech to a researcher (Hoff-Ginsberg, 1991). Additionally, Hoff (2003) proposes SES may affect children's language input through other causal pathways, including cultural ones like parental beliefs (e.g., regarding the importance of talking to the child and the desirability of talkativeness in the child, which we discuss below under the Industrialized subsection), and practical ones like the amount of time and energy mothers may have to dedicate to one-on-one interactions, which may be related to income issues discussed below in this subsection. Even more complex causal models can be posited, particularly when attempting to integrate multi-cultural data (Hoff et al., 2012).
-
-Some of this complexity relates to the fact that SES is a composite concept. Education, wealth, and occupation, although often confounded in natural samples, are not conceptually identical and can be decorrelated in certain cases. For example, Calzada et al. (2014) documented the divergence in education and wealth found among Spanish-speaking immigrants to the USA: nearly 62% of Mexican-born mothers had less than a high school education, and 84% of those families lived in poverty, whereas only 18% of Dominican-born mothers had not completed high school, and 61% of those families lived in poverty. In general terms, then, some Dominican-born mothers may be highly educated, but may still receive low wages and work in a white collar job as do other Spanish-speaking immigrants. 
-
-Of the different components of SES, parental education is the most commonly used in language acquisition and more broadly developmental research (Hoff et al., 2012; see Dailey and Bergelson (2021) for a meta-analysis). There may be a few reasons why education is so frequently used, including higher stability (it is more stable over the child's early years than income and occupation) and lower sensitivity (in some countries, it is not culturally appropriate to ask for information about income). Moreover, some have made the case that education is empirically more relevant (i.e., explains more of the variance)  in the context of early language acquisition (Hoff, 2003; Bornstein et al., 2003), although this was based on a small number of American samples, and thus it may not generalize to other populations. Regarding the precise causal pathways whereby variation in education relates to variation in children's linguistic input, it is likely that more educated mothers have more exposure to formal school environments, which may socialize individuals to communicate using more literary registers. It may also increase the likelihood that parents read, so that parents who have had longer schooling experiences are more likely to draw on those experiences when they communicate with their children, leading to more diverse lexicons and longer phrases. To note, both maternal education and measures of language and literacy predicted variation in child-directed speech in a large sample of low-SES American mothers (Rowe et al., 2005).
-
-Although much attention has been focused on education, as opposed to income, we think it is worthwhile to consider potential ways in which income may relate to children's language input, for both conceptual and empirical reasons. Conceptually, parents’ income may affect children’s verbal environments through a different set of routes than parental education. To begin with, low income families might live in denser homes, a factor which has been found to be related to children’s language experience - caregivers in more crowded homes being less responsive to their children than parents in less crowded homes (Evans et al., 1999, 2010). Parents with low levels of income may also experience daily hardships such as food and medical insecurity. A recent paper makes the case for considering the impact of (financial) scarcity on caregivers’ quantity of speech to their children (Ellwood-Lowe, et al., 2022), and scarcity could also lead to indirect effects. Indeed, lower-income parents live in harsher situations and are more likely than higher-income parents to be depressed (Berger, Paxson, & Waldfogel, 2009). Controlling for SES, depressed mothers direct less talk to their children (e.g., Porritt, Zinser, Bachorowski, & Kaplan, 2014), use less diverse words (Rowe et al., 2005), and are less likely to adjust their speech to their babies than non-depressed mothers (Reissland, Shepherd, & Herrera, 2003). 
-	
-Empirical evidence also suggests parents' wealth may matter, above and beyond education. For example, McNally, McCrory, Quigley, and Murray (2019) found that the correlations between maternal education and children's vocabulary outcomes in an Irish sample was statistically mediated by various resources, saliently household income. Additionally, intervention studies and studies of child outcomes associated with changes in national welfare reforms also indicate that increasing income for poor families is related to improvements in children’s outcomes (Duncan & Magnuson, 2012). 
-
-
-Calzada, E. J., Huang, K. Y., Linares-Torres, H., Singh, S. D., & Brotman, L. (2014). Maternal familismo and early childhood functioning in Mexican and Dominican immigrant families. Journal of Latina/o Psychology, 2(3), 156.
-
-### More information on theories bearing on industrialization
-
-One may wonder why parents behave differently. A framework from evolutionary psychology argues that different modes of societal organization may lead to diverse ideal parental investment strategies. For example, LeVine and collaborators (e.g., Sharma & Levine, 1998; Richman et al., 1998) highlight the complex set of factors leading to differences between families in (post-)industrial and rural settings. Urban, (post-)industrial societies tend to have a great deal of inequality of resources paired with an assumption that it is possible to change one's place in the socioeconomic ladder via education, leading to parents who hope that their children will succeed in school, to have a chance at better-paying jobs, and who may therefore be interested in boosting their children's verbal skills. In LeVine et al. (1994), the authors describe farming parents as employing a "pediatric model" emphasizing contact behaviors with the child, whereas industrialist parents employ a "pedagogical model", prioritizing distal verbal behaviors. 
-
-Parental investment may also vary among non-industrial societies, as argued, for instance, in Draper and Harpending XXX. Those authors believed that the optimal parental investment strategy among foragers involved high levels of parental investment on each individual child, including father involvement, whereas among farmers overall levels of investment should be lower, with much of the care being provided by siblings. These descriptions lead to predictions in terms of both quantity and composition of the input. In particular, LeVine et al. (1994)'s description predicts more child-directed speech in urban than rural settings, a prediction which was born out in a recent systematic review (Cristia, 2022). Although fathers have been observed to, for instance, hold their infants more frequently in foraging than farming societies (e.g., see a summary on paternal investment in Hewlett & MacFarlan Chapter 14), to our knowledge, no study has specifically checked whether fathers' speech is more prevalent in foraging than farming communities. 
 
 ### Table 2
 
