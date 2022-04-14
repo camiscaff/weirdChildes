@@ -1,15 +1,13 @@
 ---
-title: "Supplementary to How WEIRD is what we know about children's linguistic input
-  from CHILDES? Appendix 1: Further acknowledgments, knitted analyses and supplementary analyses with a different 
-  implementation of Education"
+title: "Supplementary to How WEIRD-biased is CHILDES\\' data on children\\'s linguistic input? Appendix 1: Further acknowledgments, knitted analyses and supplementary analyses with a different implementation of Education"
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
   html_document:
     toc: yes
     toc_depth: '2'
     df_print: paged
-  pdf_document:
-    toc: yes
-    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
