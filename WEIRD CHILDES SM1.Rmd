@@ -1,0 +1,210 @@
+---
+title: "How WEIRD-biased is CHILDES data on childrens linguistic input? Supplementary Materials 1"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+## Supplementary recommendations for CHILDES
+
+As represented in  Figure 1, CHILDES corpora can have two levels of metadata, one at the speaker level and the other at the level of the corpus as a whole. At present, nearly none of the fields are mandatory and seldom filled in. The standardized (yet optional) fields in speaker-level metadata include several fields that would be relevant to the study of diversity in CHILDES, including: language, age, sex, socioeconomic status (WC for working class, UC for upper class, MC for middle class, LI for limited income), role (relationship to the child), and education (in years). At the corpus level, there are already variables to encode the type of activity recorded (interactivity, planning type, involvement, social context, event structure, and task) as well as information about location (at the continent and country levels). There is, at present, no way to signal the geographic origin of CHILDES data more finely, but if this information were added, then we could assess the extent to which localities where education is widespread are over-represented; and the extent to which unusually well-educated parents are over-represented. Perhaps a reasonable goal is to attempt to match the world's distribution in terms of simple educational metrics, like having completed lower secondary school.
+ 
+
+![Metadata found in CHILDES corpora. The left panel shows a selection of speaker-level metadata fields (reproduced from p. 35 of the CHAT Manual, MacWhinney, 2000). The variable Group can contain any grouping relevant to the corpus producers. The right panel shows corpus-level metadata for Sarvasy (2017).](metadata.jpg)
+
+
+Incorporating these other metrics would require not only adding fields to the CHILDES' metadata system, but also developing training materials to ensure that all CHILDES contributors provide information in a standardized way. The extra effort required to implement this could be measured with a small number of volunteers before making it a requirement for data deposit, to both check for feasibility and ensure that the benefits of considering and tracking this information outweigh the costs.
+
+
+
+## Further acknowledgments
+
+```{r, echo=F}
+read.csv("CHILDES corpora contacts - Foglio1.csv")->x
+
+
+y=NULL
+for(i in 1:length(x$name)) y=c(y,unlist(strsplit(as.character(x$name[i]),"    ")))
+y=gsub("^ *","",y)
+y[y!=""]->y
+y[y!="404 Not Found"]->y
+z=unique(sort(y))
+
+q=z[1]
+for(i in 2:(length(z)-1)) q=paste0(q,", ",z[i])
+q=paste0(q,", and ",z[i])
+```
+
+We would like to thank the curators of the corpora who replied to our email: `r q`.
+
+## Additional analyses
+
+The following figures on education use WDI's proportion of the population completing high school (rather than Our world in data's proportion of the population completing lower secondary school).
+
+```{r libraries, message=FALSE, warning=FALSE, echo=F}
+
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
+require(scales)
+library(stringr)
+library(kableExtra)
+library(ggpubr)
+library(plotly)
+library(GGally)
+library(ggthemes)
+library(rjson)
+
+
+library(RColorBrewer)
+myPalette <- brewer.pal(5, "Set2") 
+
+
+group_count <-function(data_, column_){
+data_<- data_ %>%
+  group_by({{column_}}) %>%
+    count() 
+      return(data_)
+}
+
+group_select<-function(data_, column_){
+data_ <- data_%>%
+    group_by(!!column_) %>%
+      select(Corpus, !!column_)
+data_ <- data_[ order( data_[,3] ),]
+return(data_)
+}
+```
+
+```{r data-processing, echo=F,message=F, warning=FALSE}
+source("data-processing.R")
+```
+
+
+
+```{r confounds2b, echo=FALSE, out.height="200%", fig.cap="Equivalent to Figure 1 in the main manuscript, only the education variable has changed.", message=FALSE, warning=FALSE, echo=F}
+
+
+ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. HS") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+urb <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% urban") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+rich <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("GDP (log 10)") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+
+fert <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Western") +  ylab("Fert. (log 2)") 
+
+
+
+
+ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t) & ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+urb_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+rich_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+
+fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Political regime") +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+ggarrange( ed, ed_d,  rich,rich_d,   
+          urb, urb_d,   fert, fert_d,
+           ncol = 2, nrow = 4)
+
+```
+
+
+
+```{r scatterplot matrix2, fig.cap="Equivalent to Figure 2  in the main manuscript, only the education variable has changed.", message=FALSE, warning=FALSE, echo=F}
+
+p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. high school","% urban","GDP (log 10)","Fert. (log 2)"), 
+               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
+  theme_bw()
+p
+
+
+```
+
+```{r figcomp2, fig.cap="Equivalent to Figure 3 in the main manuscript, only the education variable has changed.", message=FALSE, warning=FALSE, echo=F}
+
+#  rich
+dens_dat=data.frame(rbind(cbind(ind_all$log_gdp[!is.na(ind_all$log_gdp)],0),
+               cbind(ind$log_gdp[!is.na(ind$log_gdp)],1) ))
+colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita (log)")+ scale_fill_colorblind()
+
+
+#Educated
+dens_dat=data.frame(rbind(cbind(ind_all$SE.SEC.CUAT.UP.ZS[!is.na(ind_all$SE.SEC.CUAT.UP.ZS)],0),
+               cbind(ind$SE.SEC.CUAT.UP.ZS[!is.na(ind$SE.SEC.CUAT.UP.ZS)],1) ))
+colnames(dens_dat)<-c("completed.HS","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "Percent completed high school")+ scale_fill_colorblind()
+
+
+
+#urban
+dens_dat=data.frame(rbind(cbind(ind_all$SP.URB.TOTL.ZS[!is.na(ind_all$SP.URB.TOTL.ZS)],0),
+               cbind(ind$SP.URB.TOTL.ZS[!is.na(ind$SP.URB.TOTL.ZS)],1) ))
+colnames(dens_dat)<-c("pc.urban","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent urban")+ scale_fill_colorblind()
+
+#Fertility
+dens_dat=data.frame(rbind(cbind(ind_all$Fertility[!is.na(ind_all$Fertility)],0),
+               cbind(ind$Fertility[!is.na(ind$Fertility)],1) ))
+colnames(dens_dat)<-c("N.children.woman","in.childes_T")
+dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
+
+fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Total fertility rate")+ scale_fill_colorblind()
+
+# combined
+
+#W E I R D
+ggarrange(ed, urb, rich, fert,  
+          labels = c("A", "B", "C", "D"),
+          ncol = 2, nrow = 2)
+```
+
+
+

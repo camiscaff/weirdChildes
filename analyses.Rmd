@@ -1,21 +1,20 @@
 ---
-title: "Supplementary to How WEIRD-biased is CHILDES\\' data on children\\'s linguistic input? Appendix 1: Further acknowledgments, knitted analyses and supplementary analyses with a different implementation of Education"
+title: "How WEIRD-biased is CHILDES data on childrens linguistic input? Supplementary Materials 4"
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+    extra_dependencies: ["float"]
   html_document:
     toc: yes
     toc_depth: '2'
     df_print: paged
-  pdf_document:
-    toc: yes
-    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE)
 
 ```
-
-
 
 ```{r libraries, message=FALSE, warning=FALSE}
 
@@ -54,500 +53,22 @@ return(data_)
 }
 ```
 
-# Load annotations 
-
-```{r load annotations, echo=F,message=F}
-
-annotations<- read.csv("Table for authors - annotations.csv") 
-colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
-colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
-colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
-colnames(annotations)[colnames(annotations)=="Our.coding.of"]<-"Our.coding.of.community.type"
-
-annotations$Number.of.participants[annotations$Number.of.participants=="1 or 5"]<-NA
-annotations$Number.of.participants[annotations$Number.of.participants=="1 CHI + MOT/FAT/INV"]<-1
-annotations$Number.of.participants[annotations$Number.of.participants=="4 CHI + MOTs, some FATs, some SIBs"]<-4
-annotations$Number.of.participants=as.numeric(as.character(annotations$Number.of.participants))
-
-annotations$Nb.of.children.with.siblings=as.numeric(as.character(annotations$Nb.of.children.with.siblings))
-
-annotations$Proportion.With.Siblings=annotations$Nb.of.children.with.siblings/annotations$Number.of.participants
-
-annotations$Parental.profession=tolower(annotations$Parental.profession)
-annotations$is.academic=annotations$is.health=annotations$is.teacher=NA
-annotations$is.academic[grep("stud|prof|ling|investig|resear|sociol|academ|scienti|university|universities",annotations$Parental.profession)]<-"yes"
-annotations$is.health[grep("psychology|doctor|therapist|nurse",annotations$Parental.profession)]<-"yes"
-annotations$is.health[grep("teacher",annotations$Parental.profession)]<-"yes"
-annotations$is.academic[annotations$Parental.profession=="pi"]<-"yes"
-annotations$Parental.profession[annotations$Parental.profession %in% c("don't know")]<-NA
-
-#table(annotations$Household.structure)
-annotations$Household.structure=tolower(annotations$Household.structure)
-annotations$Household.structure[grep("different|diverse|varied",annotations$Household.structure)] <- NA #turn to NA?
-annotations$Household.structure[annotations$Household.structure %in% c("nuclear, extended","extended/nuclear")]<-"varied"
-annotations$Household.structure[grep("nuclear|nucear|single",annotations$Household.structure)]<-"nuclear" # including single parent
-annotations$Household.structure[grep("extended",annotations$Household.structure)]<-"extended"
-annotations$Household.structure[annotations$Household.structure==""]<-NA
-
-
-# Education & SES cleaning
-annotations$Education.STDZD[annotations$Education.STDZD==""]<-NA
-annotations$Education.STDZD[annotations$Education.STDZD=="4-6"]<-"4-5" #fix typo
-annotations$Education.min<-as.numeric(as.character(gsub("-.*","",annotations$Education.STDZD)))
-annotations$Education.max<-as.numeric(as.character(gsub(".*-","",annotations$Education.STDZD)))
-annotations$Education.mid<-annotations$Education.min+(annotations$Education.max-annotations$Education.min)/2
-# 1 = primary
-# 2 = secondary school
-# 3 = some college
-# 4 = university
-# 5 = postgraduate
-
-annotations$Education.ac=NA
-annotations$Education.ac[annotations$Education.min==1 & !is.na(annotations$Education.min)]<-"Some primary"
-annotations$Education.ac[annotations$Education.min==2 & !is.na(annotations$Education.min)]<-"Some secondary"
-annotations$Education.ac[annotations$Education.min==3 & !is.na(annotations$Education.min)]<-"Some college"
-annotations$Education.ac[annotations$Education.min>3 & !is.na(annotations$Education.min)]<-"College and above"
-
-annotations$SES.STDZD[annotations$SES.STDZD==""]<-NA
-annotations$SES.STDZD[annotations$SES.STDZD=="middle class"]<-2
-
-annotations$Average.number.of.siblings=as.numeric(as.character(gsub(",",".",annotations$Average.number.of.siblings)))
+```{r data-processing, echo=F,message=F, warning=FALSE}
+source("data-processing.R")
 ```
 
 
-```{r group_by inclusion, echo=F,message=F}
-
-# include<- annotations %>%
-#   mutate(inclusion=tolower(Inclusion)) %>%
-#   mutate(inclusion = ifelse(str_detect(inclusion, "yes"), "yes", "no")) %>%
-#   group_by(inclusion) %>%
-#   count() 
-
-# ggplot(include,aes(y=n, x=inclusion)) +
-#   geom_bar(stat="identity", width=1, color="white") +
-#   theme_minimal() + 
-#   ggtitle("Corpus inclusion") 
-
-all_annotations <- annotations
-
-annotations <- all_annotations %>%
-  filter(Inclusion=="yes"|Inclusion=="Yes")
-
-table(all_annotations$why_exclude)->excl
-
-```
-
-
-
-
-
-
-```{r group_by location_cleaning, echo=F,message=F}
-
-annotations$country <-NA
-annotations$continent <-NA
-
-
-annotations$country[grep("Ireland", annotations$Location)]  <- "Ireland"
-annotations$country[grep("England|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Wales|Cambridge, UK", annotations$Location)]  <- "United Kingdom"
-annotations$country[grep("Portugal", annotations$Location)]  <- "Portugal"
-annotations$country[grep("Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Alt penedes, region of catalonia|spain| Lloret de mar|Barcelona| SPAIN|Salamanca|Lugo", annotations$Location)]  <- "Spain"
-annotations$country[grep("France|France (Normandy, Marseille, + places visited)", annotations$Location)]  <- "France"
-annotations$country[grep("Naples|italy|Roma|Italy", annotations$Location)]  <- "Italy"
-annotations$country[grep("Switzerland", annotations$Location)]  <- "Switzerland"
-annotations$country[grep("Belgium", annotations$Location)]  <- "Belgium"
-annotations$country[grep("Germany", annotations$Location)]  <- "Germany"
-annotations$country[grep("Netherlands", annotations$Location)]  <- "Netherlands"
-annotations$country[grep("Austria", annotations$Location)]  <- "Austria"
-
-#Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
-annotations$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations$country)]  <- "Western Europe"
-
-
-annotations$country[grep("Poznań, Poland", annotations$Location)]  <- "Poland"
-annotations$country[grep("Estonia|Tartu, Estonia ; Rapla, Estonia|Southern Estonia|Tartu, Estonia", annotations$Location)]  <- "Estonia"
-annotations$country[grep("Hungary", annotations$Location)]  <- "Hungary"
-annotations$country[grep("Czech Republic", annotations$Location)]  <- "Czech Republic"
-annotations$country[grep("Bucharest, Romania|Romania", annotations$Location)]  <- "Romania"
-annotations$country[grep("Serbia", annotations$Location)]  <- "Serbia"
-annotations$country[grep("Croatia", annotations$Location)]  <- "Croatia"
-annotations$country[grep("Slovenia", annotations$Location)]  <- "Slovenia"
-
-annotations$country[grep("Sweden", annotations$Location)]  <- "Sweden"
-annotations$country[grep("Iceland", annotations$Location)]  <- "Iceland"
-annotations$country[grep("Norway", annotations$Location)]  <- "Norway"
-annotations$country[grep("Denmark", annotations$Location)]  <- "Denmark"
-
-annotations$country[grep("Athens, Greece", annotations$Location)]  <- "Greece"
-
-annotations$country[grep("Moscow, Russia", annotations$Location)]  <- "Russia"
-
-annotations$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations$country)]  <- "Non-Western Europe"
-
-
-annotations$country[grep("Turkey", annotations$Location)]  <- "Turkey"
-annotations$country[grep("Iran", annotations$Location)]  <- "Iran"
-annotations$country[grep("Israel|Yahud, Israel", annotations$Location)]  <- "Israel"
-annotations$country[grep("Kuwait", annotations$Location)]  <- "Kuwait"
-
-annotations$country[grep("Bombay, India", annotations$Location)]  <- "India"
-
-annotations$country[grep("China", annotations$Location)]  <- "China"
-
-annotations$country[grep("Singapore", annotations$Location)]  <- "Singapore"
-annotations$country[grep("Indonesia", annotations$Location)]  <- "Indonesia"
-annotations$country[grep("Bangkok, Thailand", annotations$Location)]  <- "Thailand"
-annotations$country[grep("Osaka|Tokyo|Nagoya|osaka|Kusatsu City, Shiga Pref", annotations$Location)]  <- "Japan"
-annotations$country[grep("Korea", annotations$Location)]  <- "Korea" #NOTE: one corpus just says "Korea", data collected in 2009-2011, assuming it's South Korean
-annotations$country[grep("Hong-Kong", annotations$Location)]  <- "Hong Kong"
-annotations$country[grep("Hong Kong", annotations$Location)]  <- "Hong Kong"
-annotations$country[grep("Taiwan", annotations$Location)]  <- "Taiwan"
-
-annotations$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|Korea|Hong Kong|Taiwan", annotations$country)]  <- "Asia"
-
-
-annotations$country[grep("Papua-New Guinea", annotations$Location)]  <- "Papua New Guinea"
-annotations$continent[grep("Papua New Guinea", annotations$country)]  <- "Oceania"
-
-
-annotations$country[grep("Alexandria, Egypt", annotations$Location)]  <- "Egypt"
-annotations$country[grep("Mokhotlong, Lesotho", annotations$Location)]  <- "Lesotho"
-annotations$country[grep("South Africa", annotations$Location)]  <- "South Africa"
-annotations$continent[grep("Egypt|Lesotho|Africa", annotations$country)]  <- "Africa"
-
-
-annotations$country[grep("Rio Cuarto, Cordoba, Argentina", annotations$Location)]  <- "Argentina"
-annotations$country[grep("Sao Paulo", annotations$Location)]  <- "Brazil"
-annotations$country[grep("Mexico", annotations$Location)]  <- "Mexico"
-annotations$country[grep("Jamaica", annotations$Location)]  <- "Jamaica"
-annotations$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations$country)]  <- "Latin America"
-
-annotations$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran|Cambridge MA|Honolulu, HI|usa|UCLA", annotations$Location)]  <- "United States"
-annotations$country[grep("Canada|Montreal", annotations$Location)]  <- "Canada"
-annotations$continent[grep("United States|Canada", annotations$country)]  <- "North America"
-
-
-#Special cases
-annotations$country[grep("Sweden ; Portugal", annotations$Location)]  <- "Sweden & Portugal"
-annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotations$Location)]  <- "Spain & Hungary"
-#We are leaving continent as NA (because one country is Western & the other Eastern Europe)
-
-
-#to check if any left
-#annotations[is.na(annotations$country),"Location"]
-#annotations[is.na(annotations$continent),"Location"]
-
-
-
-
-
-```
-
-```{r cleaning language, echo=F,message=F}
-
-#we rewrite some of the cases in which multiple subgroups exist so that all combinations are represented
-#unique(sort(annotations$Language.or.Languages.spoken.in.recordings))
-
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings%in% c("British English","American English (Middle Atlantic mother, Texas father)")]<-"English"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Catalan (and the variant of Spanish spoken in Barcelona)"]<-"Catalan/Spanish"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Japanese (Kyoto dialect)"]<-"Japanese"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Mandarin Chinese, influenced by the dialects of Jianghuai Mandarin and Cantonese to a minor degree"]<-"Mandarin"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Norwegian (Children: mostly trøndersk, parents/care-takers: trøndersk, vestnorsk, nordnorsk, austnorsk)"]<-"Norwegian"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Spanish Spain"]<-"Spanish"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("European Portuguese","Brazilian Portuguese")]<-"Portuguese (Brazilian or European)"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Kuwaiti Arabic","Egyptian Arabic")]<-"Arabic (Egyptian or Kuwaiti)"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Spanish & Spanish/English")]<-"Spanish/English"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Dutch/French (N=31) and Dutch/English (N=3)")]<-"Dutch/English, Dutch/French"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Dutch/French & Dutch/Italian")]<-"Dutch/Italian"
-
-
-lang_temp=levels(factor(annotations$Language.or.Languages.spoken.in.recordings))
-
-#split up &
-lang_temp2=NULL
-for(x in lang_temp) lang_temp2=c(lang_temp2,unlist(strsplit(x," & ")))
-lang_temp2=levels(factor(lang_temp2))
-
-#put mono separately from multi
-mono=lang_temp2[grep("/",lang_temp2, invert=T)]
-multi=lang_temp2[grep("/",lang_temp2)]
-
-mono_langs=mono[1]
-for(x in 2:length(mono)) mono_langs=paste0(mono_langs,", ",mono[x])
-
-multi_langs=multi[1]
-for(x in 2:length(multi)) multi_langs=paste0(multi_langs,", ",multi[x])
-
-annotations$Bilingualism.Multilingualism.in.corpus<-tolower(annotations$Bilingualism.Multilingualism.in.corpus)
-annotations$Bilingualism.Multilingualism.in.corpus[grep("yes",annotations$Bilingualism.Multilingualism.in.corpus)]<-"yes"
-annotations$Bilingualism.Multilingualism.in.corpus[grep("trilinguism",annotations$Bilingualism.Multilingualism.in.corpus)]<-"yes"
-annotations$Bilingualism.Multilingualism.in.corpus[grep("no; a few words of yiddish and spanish interjected, less than once per session.",annotations$Bilingualism.Multilingualism.in.corpus)]<-"no"
-annotations$Bilingualism.Multilingualism.in.corpus[annotations$Bilingualism.Multilingualism.in.corpus==""]<-NA
-```
-
-
-```{r cleaning type, echo=F,message=F}
-
-annotations$Type.of.community.at.the.time.of.the.recordings[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]<-annotations$STDZD.community.type[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]
-
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
-                                                                                                                               "industrial & service &trade activities...","industrial city (3.000.000 inhabitants",
-                                                                                                                               "Industrial city (population: around 272,000 inhabitants)",
-                                                                                                                               "Mediterranean city of 1.6 million inhabitants",
-                                                                                                                               "modern city families, usually both working parents",
-                                                                                                                               "Orthodox Jews",
-                                                                                                                               "Seaside tourist town",
-                                                                                                                               "work-for-pay/industrial","industrial","Northeastern US urban","urban western")]<-"urban"
-
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("farmer","rural","rural farming village")]<-"rural"
-
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("industrial, farmers","mainly urban")]<-"both"
-annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings==""]<-NA
-#table(annotations$Type.of.community.at.the.time.of.the.recordings)
-```
-
-
-
-```{r continent, echo=F,message=F}
-byPart<- annotations %>%
-  select(Language.or.Languages.spoken.in.recordings, Number.of.participants) %>%
-   filter(!is.na(Number.of.participants)) %>%
-     group_by(Language.or.Languages.spoken.in.recordings) %>%
-       summarise(numpar = sum(as.numeric(Number.of.participants))) 
-
-read.csv("country_iso.csv")->iso_lookup
-codes=iso_lookup$Code
-iso_lookup$Name<-as.character(iso_lookup$Name)
-iso_lookup$Name=gsub(", Islamic Republic of","",iso_lookup$Name)
-iso_lookup$Name=gsub("Russian Federation","Russia",iso_lookup$Name)
-iso_lookup$Name=gsub(", Province of China","",iso_lookup$Name)
-iso_lookup$Name=gsub(", Republic of","",iso_lookup$Name)
-iso_lookup$Name=gsub("Congo, the Democratic Republic of the","Democratic Republic of Congo",iso_lookup$Name)
-
-names(codes)<-iso_lookup$Name
-
-
-annotations$country_WB<-codes[annotations$country]
-
-annotations$country_WB <-factor(annotations$country_WB)
-#annotations[is.na(annotations$country_WB),"country"]
-#check - this one is NA bec it's data from 2 countries
-
-annotations$continent <-factor(annotations$continent)
-
-```
-
-```{r ancillary data: wdi, echo=F,message=F}
-read.csv("wdi-data.csv")->wdi_all
-
-#remove areas
-wdi_all=wdi_all[!(wdi_all$country %in% c( "Africa Eastern and Southern" ,"Africa Western and Central",
-                                   "Arab World", "Caribbean small states", "Central Europe and the Baltics" ,
-                                  "European Union", "Fragile and conflict affected situations",
-                                  "OECD members", "West Bank and Gaza",
-                                 "Small states"  , "Pacific island small states" 
-                                  , "Caribbean small states" , "Other small states",
-                                  "Latin America & the Caribbean (IDA & IBRD countries)", "Middle East & North Africa (IDA & IBRD countries)"  ,
- "East Asia & Pacific (IDA & IBRD countries)"     ,      "South Asia (IDA & IBRD)"    ,                        
- "Sub-Saharan Africa (IDA & IBRD countries)"    ,        "Europe & Central Asia (IDA & IBRD countries)" ,
-                                  "Turks and Caicos Islands", 
-                                  "Euro area"      ,                                     
- "High income"                               ,           "Heavily indebted poor countries (HIPC)"              
-, "IBRD only"                                ,            "IDA total"                                           
-, "IDA blend"                               ,            "IDA only"                                            
-, "Latin America & Caribbean (excluding high income)",
-                          "Middle East & North Africa"                          
-, "IDA & IBRD total"  ,
-                                  "Europe & Central Asia"  ,  "Sub-Saharan Africa (excluding high income)"  ,"Sub-Saharan Africa"    ,                               "Africa Eastern and Southern",
-                                  "Least developed countries: UN classification"   ,      "Low income"                                          
-, "Lower middle income"      ,                            "Low & middle income"                                 
-, "Middle income"          ,                              "Middle East & North Africa (excluding high income)"  
-, "Upper middle income"     ,                             "North America"                                       
-, "Not classified"                                             
-, "East Asia & Pacific", "Pre-demographic dividend" , "Early-demographic dividend" ,"Late-demographic dividend"       , "Post-demographic dividend" , "World","East Asia & Pacific (excluding high income)"  , "Europe & Central Asia (excluding high income)","Latin America & Caribbean","Western Sahara","World" ,"South Asia"
-                                  )),]
-#cleanup
-wdi_all$country[wdi_all$country=="Congo, Dem. Rep."]<-"Democratic Republic of Congo"
-wdi_all$country[wdi_all$country=="Congo, Rep."]<-"Congo"
-wdi_all$country[wdi_all$country=="Lao PDR"]<-"Laos"
-wdi_all$country[wdi_all$country=="Virgin Islands (U.S.)"]<-"United States Virgin Islands"
-wdi_all$country<-gsub(", The","",wdi_all$country)
-wdi_all$country<-gsub(", RB","",wdi_all$country)
-wdi_all$country<-gsub(", Arab Rep.","",wdi_all$country)
-wdi_all$country<-gsub(", Islamic Rep.","",wdi_all$country)
-wdi_all$country<-gsub(" SAR, China","",wdi_all$country)
-wdi_all$country<-gsub("St.","Saint",wdi_all$country,fixed=T)
-wdi_all$country<-gsub(", Fed. Sts.","",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Kyrgyz Republic","Kyrgyzstan",wdi_all$country,fixed=T)
-wdi_all$country<-gsub(" Darussalam","",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Cabo Verde","Cape Verde",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Czech Republic","Czechia",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Korea, Dem. People's Rep.","North Korea",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Korea, Rep.","South Korea",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Yemen, Rep.","Yemen",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Syrian Arab Republic","Syria",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Russian Federation","Russia",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Slovak Republic","Slovakia",wdi_all$country,fixed=T)
-
-```
-
-
-
-
-```{r ancillary data: owid, echo=F,message=F}
-# https://ourworldindata.org/primary-and-secondary-education
-read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->ed_basic
-ed_basic[ed_basic$Year>2006 & ed_basic$Year<2015,]->ed_basic
-ed_basic[!duplicated(ed_basic$Entity),]->ed_basic
-colnames(ed_basic)[colnames(ed_basic)=="Lower.secondary.completion.rate..total....of.relevant.age.group."]<-"Compl.LS"
-ed_basic$Compl.LS[ed_basic$Compl.LS>100]<-100  #cap to 100%
-
-
-
-#https://ourworldindata.org/grapher/political-regimes
-read.csv("political-regimes-OWID-20220215.csv")->democr
-democr[democr$Year==2011,]->democr
-
-#https://ourworldindata.org/grapher/population-past-future
-read.csv("population-past-future-OWID-20220217.csv")->pop
-pop[pop$Year==2011,]->pop
-colnames(pop)[colnames(pop)=="Population..historical.estimates.and.future.projections."]<-"Population"
-
-#https://ourworldindata.org/tertiary-education
-read.csv("share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->ed
-ed[ed$Year==2010,]->ed #note, no data for 2011, data only every 10 years
-colnames(ed)[colnames(ed)=="Barro.Lee..Percentage.of.population.age.15..with.tertiary.schooling..Completed.Tertiary"]<-"College"
-
-
-
-
-read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
-cpw[cpw$Year==2011,]->cpw
-colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
-cpw$Entity<-gsub("Slovak Republic","Slovakia",cpw$Entity,fixed=T)
-
-merge(ed_basic,democr[,c("Entity","Political.regime")],all=T)->owid
-merge(owid,pop[,c("Entity","Population")],all=T)->owid
-merge(owid,ed[,c("Entity","College")],all=T)->owid
-merge(owid,cpw[,c("Entity","Fertility")],all=T)->owid
-
-#clean up
-owid=owid[grep("(Urban)",owid$Entity,invert=T),]
-owid=owid[grep("(Rural)",owid$Entity,invert=T),]
-owid=owid[!(owid$Entity%in% c("World","Western Sahara","Africa" ,"Asia","Oceania","South America",
-                   "Europe", "North America"  , "Arab World" ,"Caribbean Small States"  , "Central Europe and the Baltics" ,"Early-demographic dividend", "East Asia & Pacific" ,
-                   "East Asia & Pacific (excluding high income)", "East Asia & Pacific (IDA & IBRD)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (excluding high income)",
-                  "Europe & Central Asia (IDA & IBRD)", "European Union",
-                  "Fragile and conflict affected situations" , "Heavily indebted poor countries (HIPC)","High income" , "IBRD only"    ,                                     
- "IDA & IBRD total"    ,                              
- "IDA blend"           ,                              
- "IDA only"           ,                               
- "Late-demographic dividend"              ,           
- "Latin America & Caribbean"     ,                    
- "Latin America & Caribbean (excluding high income)" ,
- "Latin America & Caribbean (IDA & IBRD)"       ,     
- "Least developed countries: UN classification"      ,
- "Low & middle income"         ,                      
- "Low income"             ,                           
- "Lower middle income"     ,
- "Middle East & North Africa"        ,                
- "Middle East & North Africa (excluding high income)",
-"Middle East & North Africa (IDA & IBRD)"           ,
- "Middle income",
-"OECD members"   ,                                   
- "Other small states"       ,                         
- "Pacific island small states"    , "Post-demographic dividend"    ,                     
- "Pre-demographic dividend"     ,
- "South Asia"   ,                                     
- "South Asia (IDA & IBRD)"       ,                    
- "Sub-Saharan Africa"    ,                            
-"Sub-Saharan Africa (excluding high income)"        ,
-"Sub-Saharan Africa (IDA & IBRD)"  ,   
-                  "Upper middle income" 
-                   )),]
-
-owid$Political.regime_t<-NA
-owid$Political.regime_t[owid$Political.regime %in% c(0,1)]<-"autocracies"
-#owid$Political.regime_t[owid$Political.regime==1]<-"electoral \n autocracies"
-owid$Political.regime_t[owid$Political.regime%in% c(2,3)]<-"democracies"
-#owid$Political.regime_t[owid$Political.regime==3]<-"liberal \n democracies"
-  
-  
-# check no missing countries across WB & OWID merge
-#owid$Entity[!(owid$Entity %in% levels(factor(wdi_all$country)))]
-#lots of dependencies; but also Palestine -- unclear how to merge
-# note: ,"Palestine/Gaza","Palestine/West Bank" -- we are leaving them in and not matching them with other OWID data, which has just Palestine
-
-#2 data points lost: Channel Islands & Kosovo
-wdi_all$country[!(wdi_all$country %in% levels(factor(owid$Entity)))]
-
-
-ind_all = merge(wdi_all,owid,by.x="country",by.y="Entity",all=T)
-#ind_all$country
-
-#https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions
-
-ind_all=merge(ind_all,regions,by.x="iso2c",by.y="alpha.2")
-
-ind_all$simple_region=ind_all$sub.region
-ind_all$simple_region[ind_all$sub.region%in% c("Australia and New Zealand","Melanesia","Micronesia","Polynesia")]<-"Oceania"
-
-ind_all$simple_region[grep("Asia",ind_all$sub.region)]<-"Asia"
-ind_all$simple_region[grep("Africa",ind_all$sub.region)]<-"Africa"
-
-ind_all$simple_region[ind_all$sub.region%in% c("Southern Europe","Eastern Europe","Northern Europe")]<-"Non-Western Europe"
-
-ind_all$simple_region[ind_all$country%in% c("Spain","Italy","Portugal")]<-"Western Europe"
-
-ind_all$log_gdp=log(ind_all$NY.GDP.PCAP.PP.KD,10)
-ind_all$log2_fert=log(ind_all$Fertility,2)
-ind_all$log_pop=log(ind_all$Population,10)
-
-ind_all$western<-"non-Western"
-ind_all$western[ind_all$simple_region %in% c('Western Europe',"Northern America")]<-"Western"
-ind_all$western[ind_all$country %in% c('Norway',"Australia","New Zealand","Iceland","Sweden","Denmark")]<-"Western"
-ind_all$western[ind_all$country %in% c('Bermuda',"Greenland")]<-"non-Western"
-ind_all$western=factor(ind_all$western)
-ind = ind_all[ind_all$iso2c %in% levels(annotations$country_WB),]
-
-#final check
-#levels(factor(ind_all$country))
-
-
-annotations=merge(annotations,ind_all,by="country",all.x=T)
-
-```
-
-
-```{r oecd-kidsNhousehold-data, echo=F,message=F}
-read.csv("Households-by-number-of-children-2015-OECD-20220217.csv",sep=";")->nkids
-for(i in 2:dim(nkids)[2]) nkids[,c(i)]<-as.numeric(as.character(nkids[,c(i)]))
-nkids[grep("average",nkids$country,invert=T),]->nkids
-nkids$anychildren<-rowSums(nkids[,c("X1.child","X2.children","X3.or.more.children")],na.rm=T)
-nkids$total=nkids$X0.children+nkids$anychildren # this mostly checks out -- total is 100%
-#% of single kids' household, out of households with any children
-nkids$single=(nkids$X1.child/nkids$anychildren)*100
-#summary(nkids)
-
-#https://www.oecd.org/about/document/ratification-oecd-convention.htm
-read.csv("oecd.txt",sep="\t",header=F, skip=1)->countries
-countries$V1=tolower(gsub("^ ","", countries$V1))
-
-annotations$country_l=tolower(annotations$country)
-
-annotations$oecd<-annotations$country_l %in% countries$V1
-```
+In this document, we provide code that allows readers to reproduce information provided in the main text that depend on calculations computed here.
 
 ## Introduction
 
 
-We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
-We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
 
-### Figures 1 & 2
+### Code to reproduce Figure 1
 
-```{r confounds2, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing lower secondary school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility."}
+Note that this Figure appears in a different page.
+
+```{r confounds2, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing lower secondary school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", echo=F,message=F, warning=F, results='hide'}
 
 
 ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. LSS") +
@@ -608,14 +129,23 @@ dev.off()
 ```
 
 
+### Code to reproduce information in the caption to Figure 1
 
-```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility."}
+We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
+We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
+
+
+### Code to reproduce Figure 2
+
+Note that this Figure appears in a different page.
+
+```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", results='hide'}
 
 p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="",columnLabels=c("% compl. LSS","% urban","GDP (log 10)","Fert. (log 2)"), 
                lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
   theme_bw()
-p
 
+p
 pdf("Fig2.pdf")
 p
 dev.off()
@@ -623,9 +153,9 @@ dev.off()
 
 
 
-### Text
+### Code to reproduce text on p. 13
 
-The answer to the question of who surrounds the child may also depend on how large the nuclear family is. There is considerable cross-population variation in terms of the average number of children a woman has in her reproductive lifetime, varying between a little over 1 (`r ind_all[which(ind_all$Fertility==min(ind_all$Fertility,na.rm=T)),c("country","Fertility")]`) to over 6 (`r ind_all[which(ind_all$Fertility==max(ind_all$Fertility,na.rm=T)),c("country","Fertility")]`). 
+The answer to the question of who surrounds the child may also depend on how large the nuclear family is. There is considerable cross-population variation in terms of the average number of children a woman has in her reproductive lifetime, varying between a little over 1 (`r paste0(ind_all[which(ind_all$Fertility==min(ind_all$Fertility,na.rm=T)),"Fertility"],", ",ind_all[which(ind_all$Fertility==min(ind_all$Fertility,na.rm=T)),"country"])`) to over 6 (`r paste0(ind_all[which(ind_all$Fertility==max(ind_all$Fertility,na.rm=T)),"Fertility"],", ",ind_all[which(ind_all$Fertility==max(ind_all$Fertility,na.rm=T)),"country"])`). 
 
 ```{r}
 #https://submissions2.mirasmart.com/Verify/PAA2021/Submission/Temp/radd1gjhtkk.pdf
@@ -636,24 +166,26 @@ x$tfr<-(x$X1+x$X2*2+x$X3*3+x$X4*4)/100
 
 
 
-## Methods info
+## Methods
+
+### Code to reproduce text on p. 16
 
 A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only child transcribed"]` because only the child was transcribed; `r excl["Diary"]` because they were diary studies; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults. After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
 
 
 
-### Table 2
+### Code to reproduce information on Table 2
 
-```{r tab2}
+```{r tab2, eval=F}
 
 colSums(!is.na(annotations[,c("country","Compl.LS","SP.URB.TOTL.ZS","log_gdp","log2_fert")]))
 
 
 ```
 
-### Table 3
+### Code to reproduce information on Table 3
 
-```{r tab3}
+```{r tab3, eval=F}
 colSums(!is.na(annotations[,c("Education.STDZD","SES.STDZD","Parental.profession","Language.or.Languages.spoken.in.recordings","Bilingualism.Multilingualism.in.corpus",
                     "Type.of.community.at.the.time.of.the.recordings", "Household.structure","Proportion.With.Siblings","Average.number.of.siblings")]))
 
@@ -661,21 +193,17 @@ colSums(!is.na(annotations[,c("Education.STDZD","SES.STDZD","Parental.profession
 
 
 
-
-
-
-
-
 ## Results
+
+### Code to reproduce text on p. 20
+
 
 The samples are varied in geographic terms, with corpora for every populated continent. Specifically, `r sum(annotations$continent=="Africa")` corpora were collected in Africa; `r sum(annotations$continent=="Asia")` in Asia; `r sum(annotations$continent=="Western Europe")` in Western Europe, and a further `r sum(annotations$continent=="Non-Western Europe")` in Non-Western Europe; `r sum(annotations$continent=="North America")` in North America and `r sum(annotations$continent=="Western Europe")` in Latin America. Only `r sum(annotations$continent=="Oceania")` was collected in Oceania.
 
-### Country-level variables
+### Code to reproduce Figure 3
+Note that this Figure appears in a different page.
 
-
-
-
-```{r figcomp, fig.cap="Figure 3: Density plots showing the distribution of country-level descriptors for all countries (dark gray) versus countries represented in CHILDES (orange). GDP stands for Gross Domestic Product. Percent completed lower secondary school is the percent of the country's population completing lower secondary school. Percent urban is the percent of the country's population residing in urban (as opposed to rural) locations. Total fertility rate is the average number of children a woman has over her whole reproductive period."}
+```{r figcomp, fig.cap="Figure 3: Density plots showing the distribution of country-level descriptors for all countries (dark gray) versus countries represented in CHILDES (orange). GDP stands for Gross Domestic Product. Percent completed lower secondary school is the percent of the country's population completing lower secondary school. Percent urban is the percent of the country's population residing in urban (as opposed to rural) locations. Total fertility rate is the average number of children a woman has over her whole reproductive period.", results='hide'}
 
 
 #  rich
@@ -729,9 +257,14 @@ x
 dev.off()
 ```
 
+
+### Code to reproduce text on p. 20
+
 Using country-level statistics, we were able to assess the extent to which the countries with data in CHILDES were a representative sample of countries in the world. Density plots are portrayed in Figure 3. The means for each of the variables differed for the countries in CHILDES versus overall in the world using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (% compl. LSS, t(`r round(edt$parameter,2)`)=`r round(edt$statistic,2)`, p = `r round(edt$p.value,2)`); they were more urban (% urban, t(`r round(urbt$parameter,2)`)=`r round(urbt$statistic,2)`, p = `r round(urbt$p.value,2)`);  richer (log GDP per capita, t(`r round(gdpt$parameter,2)`)=`r round(gdpt$statistic,2)`, p = `r round(gdpt$p.value,2)`) and had lower fertility rates (log fertility, t(`r round(fertt$parameter,2)`)=`r round(fertt$statistic,2)`, p = `r round(fertt$p.value,2)`).
 
-### Corpus-level variables
+### Code to reproduce text on p. 22
+
+
 
 Education information was missing for more than half of the corpora (see Table 3); and `r sum(annotations$Education.STDZD=="diverse",na.rm=T)` were described as diverse, without clarifying the range of education covered. Of the remaining `r sum(!is.na(annotations$Education.min))` samples, `r sum(annotations$Education.min==1 & !is.na(annotations$Education.min))` had at least some parents with primary-level education;  `r sum(annotations$Education.min==2 & !is.na(annotations$Education.min))` had parents with secondary school education as the lower bound of the education range, and a further `r sum(annotations$Education.min==3 & !is.na(annotations$Education.min))` had some college as the lower bound. Thus, `r round(sum(annotations$Education.min>3 & !is.na(annotations$Education.min))/sum(!is.na(annotations$Education.min))*100)`% of the samples (N = `r sum(annotations$Education.min>3 & !is.na(annotations$Education.min))`) portrayed children whose parents had at least a graduate, if not a postgraduate, degree. Samples were not representative of the countries they were collected, since in those same countries the proportion of the population with tertiary education was only `r round(mean(annotations$College, na.rm=T))`%.
 
@@ -764,9 +297,10 @@ A majority of corpora in CHILDES include children who have siblings. In fact, on
 
 ## Discussion
 
-Table 4. Low variability makes it difficult to tease apart empirically dimensions like family size and parental education: It may be reasonable to compare the input afforded to children who have at least one sibling (1+) versus none for samples consisting of parents with a completed college education, but families with lower levels of education are too under-represented to allow a meaningful study. NA indicates missing values for this variable.
 
-```{r tab4}
+### Code to reproduce Table 4
+
+```{r tab4, eval=F}
 
 annotations$ed_all<-as.character(annotations$Education.ac)
 annotations$ed_all[is.na(annotations$ed_all)]<-"NA"
@@ -779,165 +313,8 @@ annotations$sib_all=factor(annotations$sib_all,levels=c("None","1+","NA"))
 table(annotations$ed_all,annotations$sib_all)
 ```
 
-## Additional analyses
 
-Figures on education using WDI's proportion of the population completing high school (rather than Our world in data's proportion of the population completing lower secondary school).
-
-
-```{r confounds2b, echo=FALSE, out.height="200%", fig.cap="Equivalent to Fig 1, only the education variable has changed."}
-
-
-ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. HS") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-urb <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% urban") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-rich <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("GDP (log 10)") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-
-fert <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Western") +  ylab("Fert. (log 2)") 
-
-
-
-
-ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t) & ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SE.SEC.CUAT.UP.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-urb_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-rich_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-
-fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Political regime") +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-ggarrange( ed, ed_d,  rich,rich_d,   
-          urb, urb_d,   fert, fert_d,
-           ncol = 2, nrow = 4)
-
-```
-
-
-
-```{r scatterplot matrix2, fig.cap="Equivalent to Fig 2, only the education variable has changed."}
-
-p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('SE.SEC.CUAT.UP.ZS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="Association across vars: all countries",columnLabels=c("% compl. high school","% urban","GDP (log 10)","Fert. (log 2)"), 
-               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
-  theme_bw()
-p
-
-
-```
-
-```{r figcomp2, fig.cap="Equivalent to Fig 3, only the education variable has changed."}
-
-
-
-#  rich
-dens_dat=data.frame(rbind(cbind(ind_all$log_gdp[!is.na(ind_all$log_gdp)],0),
-               cbind(ind$log_gdp[!is.na(ind$log_gdp)],1) ))
-colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-
-rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita (log)")+ scale_fill_colorblind()
-
-
-#Educated
-dens_dat=data.frame(rbind(cbind(ind_all$SE.SEC.CUAT.UP.ZS[!is.na(ind_all$SE.SEC.CUAT.UP.ZS)],0),
-               cbind(ind$SE.SEC.CUAT.UP.ZS[!is.na(ind$SE.SEC.CUAT.UP.ZS)],1) ))
-colnames(dens_dat)<-c("completed.HS","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-
-ed <- ggplot(dens_dat, aes(x = completed.HS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "Percent completed high school")+ scale_fill_colorblind()
-
-
-
-#urban
-dens_dat=data.frame(rbind(cbind(ind_all$SP.URB.TOTL.ZS[!is.na(ind_all$SP.URB.TOTL.ZS)],0),
-               cbind(ind$SP.URB.TOTL.ZS[!is.na(ind$SP.URB.TOTL.ZS)],1) ))
-colnames(dens_dat)<-c("pc.urban","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-
-urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "Percent urban")+ scale_fill_colorblind()
-
-#Fertility
-dens_dat=data.frame(rbind(cbind(ind_all$Fertility[!is.na(ind_all$Fertility)],0),
-               cbind(ind$Fertility[!is.na(ind$Fertility)],1) ))
-colnames(dens_dat)<-c("N.children.woman","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-
-fert <- ggplot(dens_dat, aes(x = N.children.woman, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Total fertility rate")+ scale_fill_colorblind()
-
-# combined
-
-#W E I R D
-ggarrange(ed, urb, rich, fert,  
-          labels = c("A", "B", "C", "D"),
-          ncol = 2, nrow = 2)
-```
-
-
-
-### Supplementary recommendations for CHILDES
-
-As represented in the Figure below, CHILDES corpora can have two levels of metadata, one at the speaker level and the other at the level of the corpus as a whole. At present, nearly none of the fields are mandatory and seldom filled in. The standardized (yet optional) fields in speaker-level metadata include several fields that would be relevant to the study of diversity in CHILDES, including: language, age, sex, socioeconomic status (WC for working class, UC for upper class, MC for middle class, LI for limited income), role (relationship to the child), and education (in years). At the corpus level, there are already variables to encode the type of activity recorded (interactivity, planning type, involvement, social context, event structure, and task) as well as information about location (at the continent and country levels). There is, at present, no way to signal the geographic origin of CHILDES data more finely, but if this information were added, then we could assess the extent to which localities where education is widespread are over-represented; and the extent to which unusually well-educated parents are over-represented. Perhaps a reasonable goal is to attempt to match the world's distribution in terms of simple educational metrics, like having completed lower secondary school.
- 
-
-![Metadata found in CHILDES corpora. The left panel shows a selection of speaker-level metadata fields (reproduced from p. 35 of the CHAT Manual, MacWhinney, 2000). The variable Group can contain any grouping relevant to the corpus producers. The right panel shows corpus-level metadata for Sarvasy (2017).](metadata.jpg)
-
-
-
-
-Incorporating these other metrics would require not only adding fields to the CHILDES' metadata system, but also developing training materials to ensure that all CHILDES contributors provide information in a standardized way. The extra effort required to implement this could be measured with a small number of volunteers before making it a requirement for data deposit, to both check for feasibility and ensure that the benefits of considering and tracking this information outweigh the costs.
-
-
-
-## Further acknowledgments
-
-
-
-```{r}
-read.csv("CHILDES corpora contacts - Foglio1.csv")->x
-
-
-y=NULL
-for(i in 1:length(x$name)) y=c(y,unlist(strsplit(as.character(x$name[i]),"    ")))
-
-z=unique(sort(y))
-
-q=z[1]
-for(i in 2:(length(z)-1)) q=paste0(q,", ",z[i])
-q=paste0(q,", and ",z[i])
-```
-
-We would like to thank the curators of the corpora who replied to our email: `r q`.
-
-
-## Document version
+## Package and environment version
 
 ```{r}
 
