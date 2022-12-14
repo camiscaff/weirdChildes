@@ -1,5 +1,20 @@
+#Script for reading the different tables of the Short report titled "XX"
+#authors : Georgia Loukatou | Alex Cristia | Naomi Havron| Camila Scaff 
+#last date: "12/11/2022"
+#RStudio 2022.07.1+554 "Spotted Wakerobin" Release (7872775ebddc40635780ca1ed238934c3345c5de, 2022-07-22) for macOS Mozilla/5.0 (Macintosh; Intel Mac OS X 11_6_1) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.10 Chrome/69.0.3497.128 Safari/537.36
+#R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 
+## LOAD PACKAGES ####
+library(dplyr)
+library(readxl)
+library(stringr)
+
+
+## READ IN DATA AND ORGANIZE ####
+# Read in data of CHILDES annotations
 annotations<- read.csv("Table for authors - annotations.csv") 
+
+#Clean columns
 colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
 colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
 colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
