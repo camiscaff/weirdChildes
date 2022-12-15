@@ -1,0 +1,427 @@
+Corpus,status,Language_group,Languages
+Almeida,include,Bilingual,Portuguese; French
+Amsterdam ,include,Bilingual,French; Dutch; Italian
+Bailleul,include,Bilingual,French; Russian
+Biro,include,Bilingual,Spanish; Catalan; Hungarian
+BiSLI,include,Bilingual,Russian; Dutch; Russian
+CHCC,include,Bilingual,Chinese; English
+CUHK,include,Bilingual,Chinese; English
+De Houwer,include,Bilingual,Dutch; English
+De Houwer/Bornstein,include,Bilingual,Dutch; French; English
+Deuchar,include,Bilingual,Spanish; English
+FallsChurch,include,Bilingual,Japanese; English
+FerFuLice,include,Bilingual,Spanish; English
+Gelman,include,Bilingual,Marathi; English
+GNP,include,Bilingual,French; English
+Guthrie,include,Bilingual,Chinese; English
+Hacohen,include,Bilingual,Hebrew; English
+Hayashi,include,Bilingual,Japanese; Danish; English
+Ionin,include,Bilingual,Russian; English
+Klammler,include,Bilingual,Italian; German
+Koroschetz,include,Bilingual,Polish; English
+Krupa,include,Bilingual,Mandarin; English; Cantonese
+Leo,include,Bilingual,Portuguese; English
+LlinasOjea,include,Bilingual,Spanish; English
+MCF,include,Bilingual,Portuguese; Swedish; English
+Navracsics,include,Bilingual,Farsi; Hungarian; English
+Paradis,include,Bilingual,English; Various
+Perez,include,Bilingual,Spanish; English
+PhonBLA,include,Bilingual,German; Spanish
+ProjectS,include,Bilingual,English; Italian; Scottish; Gaelic
+Reyes / Ervin; Tripp,include,Bilingual,Spanish; English
+Roggero,include,Bilingual,Italian; Japanese
+Seba,include,Bilingual,Arabic; English
+Serra,include,Bilingual,Spanish; Catalan
+SilvaCorvalan,include,Bilingual,Spanish; English
+Singapore,include,Bilingual,English; Mandarin
+Ticio,include,Bilingual,Spanish; English
+vanOosten,include,Bilingual,Italian; Dutch
+Vila,include,Bilingual,Spanish; Catalan
+Watkins,include,Bilingual,French; English
+YipMatthews,include,Bilingual,Cantonese; English
+ZAS,include,Bilingual,Russian; German
+Bliss,excluded,Clinical-MOR,NA
+Chiat,excluded,Clinical-MOR,NA
+Chiat-Ruth,excluded,Clinical-MOR,NA
+EisenbergGuo,excluded,Clinical-MOR,NA
+EllisWeismer,excluded,Clinical-MOR,NA
+ENNI,excluded,Clinical-MOR,NA
+Flusberg,excluded,Clinical-MOR,NA
+Flusberg,excluded,Clinical-MOR,NA
+Gillam,excluded,Clinical-MOR,NA
+Hargrove,excluded,Clinical-MOR,NA
+Hooshyar,excluded,Clinical-MOR,NA
+Malakoff / Mayes,excluded,Clinical-MOR,NA
+Nadig,excluded,Clinical-MOR,NA
+POLER,excluded,Clinical-MOR,NA
+QuigleyMcNally,excluded,Clinical-MOR,NA
+Rescorla,excluded,Clinical-MOR,NA
+Rollins,excluded,Clinical-MOR,NA
+TBI,excluded,Clinical-MOR,NA
+UCSD-SLI,excluded,Clinical-MOR,NA
+Ambrose,excluded,Clinical-MOR,NA
+HL,excluded,Clinical-MOR,NA
+TD,excluded,Clinical-MOR,NA
+Conti-Ramsden,excluded,Clinical-MOR,NA
+Conti-Ramsden 1,excluded,Clinical-MOR,NA
+Conti-Ramsden 2,excluded,Clinical-MOR,NA
+Conti-Ramsden 3,excluded,Clinical-MOR,NA
+Conti-Ramsden 4,excluded,Clinical-MOR,NA
+Feldman,excluded,Clinical-MOR,NA
+Narrative,excluded,Clinical-MOR,NA
+Parent-Child,excluded,Clinical-MOR,NA
+Twins,excluded,Clinical-MOR,NA
+Nicholas,excluded,Clinical-MOR,NA
+HL,excluded,Clinical-MOR,NA
+TD,excluded,Clinical-MOR,NA
+Rondal,excluded,Clinical-MOR,NA
+DS,excluded,Clinical-MOR,NA
+TD,excluded,Clinical-MOR,NA
+HKU-70,include,Chinese,Cantonese
+Lee/Wong/Leung,include,Chinese,Cantonese
+PaidoCantonese,include,Chinese,Cantonese
+AcadLang,include,Chinese,Mandarin
+Chang1,include,Chinese,Mandarin
+Chang2,include,Chinese,Mandarin
+ChangPlay,include,Chinese,Mandarin
+ChangPN,include,Chinese,Mandarin
+Erbaugh,include,Chinese,Mandarin
+LiReading,include,Chinese,Mandarin
+LiZhou,include,Chinese,Mandarin
+NSCtoys,include,Chinese,Mandarin
+TCCM-Reading,include,Chinese,Mandarin
+TCCM,include,Chinese,Mandarin
+Tong,include,Chinese,Mandarin
+Xinjiang,include,Chinese,Mandarin
+Zhou1,include,Chinese,Mandarin
+Zhou2,include,Chinese,Mandarin
+Zhou3,include,Chinese,Mandarin
+ZhouAssessment,include,Chinese,Mandarin
+ZhouDinner,include,Chinese,Mandarin
+ZhouNarratives,include,Chinese,Mandarin
+Tsay,include,Chinese,Taiwanese
+Jakarta,include,EastAsian,Indonesian
+Jiwon,include,EastAsian,Korean
+Ko,include,EastAsian,Korean
+Ryu,include,EastAsian,Korean
+CRSLP-MARCS,include,EastAsian,Thai
+Bates,include,Eng-NA,English
+BernsteinRatner,include,Eng-NA,English
+Bliss,include,Eng-NA,English
+Bloom,include,Eng-NA,English
+Bohannon,include,Eng-NA,English
+Braunwald,include,Eng-NA,English
+Brent,include,Eng-NA,English
+Brown,include,Eng-NA,English
+Clark,include,Eng-NA,English
+Demetras - Trevor,include,Eng-NA,English
+Demetras - Working,include,Eng-NA,English
+EllisWeismer,include,Eng-NA,English
+Evans,include,Eng-NA,English
+Feldman (Andrea),include,Eng-NA,English
+Garvey,include,Eng-NA,English
+Gathercole,include,Eng-NA,English
+Gelman,include,Eng-NA,English
+Gillam,include,Eng-NA,English
+Gleason,include,Eng-NA,English
+Haggerty,include,Eng-NA,English
+Hall,include,Eng-NA,English
+Higginson,include,Eng-NA,English
+HSLLD,include,Eng-NA,English
+Kuczaj,include,Eng-NA,English
+MacWhinney,include,Eng-NA,English
+McCune,include,Eng-NA,English
+McMillan,include,Eng-NA,English
+Morisset,include,Eng-NA,English
+Nadig,include,Eng-NA,English
+Nelson,include,Eng-NA,English
+New England,include,Eng-NA,English
+NewmanRatner,include,Eng-NA,English
+Nicholas-TD,include,Eng-NA,English
+Peters/Wilson,include,Eng-NA,English
+POLER-Controls,include,Eng-NA,English
+Post,include,Eng-NA,English
+Rollins,include,Eng-NA,English
+Rondal-TD,include,Eng-NA,English
+Sachs,include,Eng-NA,English
+Sawyer,include,Eng-NA,English
+Snow,include,Eng-NA,English
+Soderstrom,include,Eng-NA,English
+Suppes,include,Eng-NA,English
+Tardif,include,Eng-NA,English
+Valian,include,Eng-NA,English
+Van Houten,include,Eng-NA,English
+Van Kleeck,include,Eng-NA,English
+Warren-Leubecker,include,Eng-NA,English
+Weist,include,Eng-NA,English
+ComptonPater,include,Eng-NA,English
+Davis,include,Eng-NA,English
+Goad,include,Eng-NA,English
+Inkelas,include,Eng-NA,English
+Paidologos-English,include,Eng-NA,English
+Providence,include,Eng-NA,English
+Stanford-English,include,Eng-NA,English
+Narrative,include,Eng-NA,English
+Parent-Child,include,Eng-NA,English
+Twins,include,Eng-NA,English
+Champaud,include,French,french
+Geneva,include,French,french
+GoadRose,include,French,french
+Hammelrath,include,French,french
+Hunkeler,include,French,french
+Kern-French,include,French,french
+Leveillé,include,French,french
+Lyon,include,French,french
+MTLN,include,French,french
+Palasis,include,French,french
+Paris,include,French,french
+Pauline,include,French,french
+Stanford-French,include,French,french
+VionColas,include,French,french
+Yamaguchi,include,French,french
+York,include,French,french
+Hamasaki,include,Japanese,japanese
+Ishii,include,Japanese,japanese
+Miipro,include,Japanese,japanese
+Miyata,include,Japanese,japanese
+NINJAL-Okubo,include,Japanese,japanese
+Noji,include,Japanese,japanese
+Ogawa,include,Japanese,japanese
+Okayama,include,Japanese,japanese
+Ota,include,Japanese,japanese
+PaidoJapanese,include,Japanese,japanese
+StanfordJapanese,include,Japanese,japanese
+Yokoyama,include,Japanese,japanese
+Plunkett,include,Scandinavian,Danish
+Einarsdottir,include,Scandinavian,Icelandic
+Kari,include,Scandinavian,Icelandic
+Garmann,include,Scandinavian,Norwegian
+Ringstad,include,Scandinavian,Norwegian
+Andrén,include,Scandinavian,Swedish
+Lund,include,Scandinavian,Swedish
+Lacerda,include,Scandinavian,Swedish
+Stanford-Swedish,include,Scandinavian,Swedish
+Aguirre,include,Spanish,Spanish
+BecaCESNo,include,Spanish,Spanish
+ColMex,include,Spanish,Spanish
+Diezltza,include,Spanish,Spanish
+FernAguado,include,Spanish,Spanish
+GRERLI,include,Spanish,Spanish
+Hess,include,Spanish,Spanish
+JacksonThal,include,Spanish,Spanish
+Koine,include,Spanish,Spanish
+Linaza,include,Spanish,Spanish
+LlinasOjea,include,Spanish,Spanish
+Marrero,include,Spanish,Spanish
+Montes,include,Spanish,Spanish
+Nieva,include,Spanish,Spanish
+OreaPine,include,Spanish,Spanish
+Ornat,include,Spanish,Spanish
+PAIDUS Spanish,include,Spanish,Spanish
+Remedi,include,Spanish,Spanish
+Romero,include,Spanish,Spanish
+SerraSole,include,Spanish,Spanish
+Shiro,include,Spanish,Spanish
+Vila,include,Spanish,Spanish
+Arabic-AarssenBos,excluded,Frogs,Arabic
+ArabicDutch-AarssenBos,excluded,Frogs,Arabic; Dutch
+Basque-Duguine,excluded,Frogs,Basque
+Chinese-Chang,excluded,Frogs,Chinese
+Chinese-Guo,excluded,Frogs,Chinese
+Chinese-Tardif,excluded,Frogs,Chinese
+Chinese-Zhou,excluded,Frogs,Chinese
+Croatian-TKH,excluded,Frogs,Croatian
+Dutch-AarssenBos,excluded,Frogs,Dutch
+DutchArabic-AarssenBos,excluded,Frogs,Dutch; Arabic
+DutchTurkish-AarssenBos,excluded,Frogs,Dutch; Turkish
+English-Conti4,excluded,Frogs,English
+English-ECSC,excluded,Frogs,English
+English-MiamiMono,excluded,Frogs,English
+English-MiamiBiling,excluded,Frogs,English
+English-Slobin,excluded,Frogs,English
+English-WolfHemp,excluded,Frogs,English
+French-Duguine,excluded,Frogs,French
+French-MTLN,excluded,Frogs,French
+French-Lyon,excluded,Frogs,French
+German-Bamberg,excluded,Frogs,German
+Hebrew-Berman,excluded,Frogs,Hebrew
+Italian-Bologna,excluded,Frogs,Italian
+Italian-Roma,excluded,Frogs,Italian
+Russian-Protassova,excluded,Frogs,Russian
+Spanish-Aguilar,excluded,Frogs,Spanish
+Spanish-MiamiBiling,excluded,Frogs,Spanish
+Spanish-Ornat,excluded,Frogs,Spanish
+Spanish-Sebastian,excluded,Frogs,Spanish
+Thai-Zlatev,excluded,Frogs,Thai
+Turkish-AarssenBos,excluded,Frogs,Turkish
+Turkish-Aksu,excluded,Frogs,Turkish
+TurkishDutch-AarssenBos,excluded,Frogs,Turkish; Dutch
+GRERLI,excluded,Narrative,Catalan
+ZhouNarratives,excluded,Narrative,Chinese
+Chang2,excluded,Narrative,Chinese
+MAIN,excluded,Narrative,Croatian
+Asymmetries,excluded,Narrative,Dutch
+ENNI,excluded,Narrative,English
+Gopnik,excluded,Narrative,English
+Hicks,excluded,Narrative,English
+PetersonMcCabe,excluded,Narrative,English
+VionColas,excluded,Narrative,French
+Batoreo,excluded,Narrative,Portuguese
+Shiro,excluded,Narrative,Spanish
+MacBates1,excluded,Narrative,"English, Hungarian; Italian"
+MacBates2,excluded,Narrative,NA
+Gaeltacht,include,Celtic,Irish
+Guilfoyle,include,Celtic,Irish
+CIG1,include,Celtic,Welsh
+CIG2,include,Celtic,Welsh
+Asymmetries/ASD,excluded,Clinical,Dutch
+Asymmetries/ADHD,excluded,Clinical,Dutch
+Bol/Pool,excluded,Clinical,Dutch
+DS,excluded,Clinical,Dutch
+HL,excluded,Clinical,Dutch
+TD,excluded,Clinical,Dutch
+SLI,excluded,Clinical,Dutch
+Bernhardt,excluded,Clinical,English
+Cummings,excluded,Clinical,English
+McAllisterByun,excluded,Clinical,English
+TorringtonEaton,excluded,Clinical,English
+FoudonReboul,excluded,Clinical,French
+Le Normand,excluded,Clinical,French
+Szagun - CI,excluded,Clinical,German
+Thessaloniki,excluded,Clinical,Greek
+Levy,excluded,Clinical,Hebrew
+Shanghai,excluded,Clinical,Mandarin
+CORDIS,excluded,Clinical,Spanish
+Granada,excluded,Clinical,Spanish
+MOC,excluded,Clinical,Spanish
+Oviedo,excluded,Clinical,Spanish
+PERLA,excluded,Clinical,Spanish
+Asymmetries,include,DutchAfrikaans,Dutch
+AarssenBos,include,DutchAfrikaans,Dutch
+BolKuiken,include,DutchAfrikaans,Dutch
+CLPF,include,DutchAfrikaans,Dutch
+DeHouwer,include,DutchAfrikaans,Dutch
+DeHouwer/Bornstein,include,DutchAfrikaans,Dutch
+Gillis,include,DutchAfrikaans,Dutch
+Groningen,include,DutchAfrikaans,Dutch
+Schaerlaekens,include,DutchAfrikaans,Dutch
+Utrecht,include,DutchAfrikaans,Dutch
+Van Kampen,include,DutchAfrikaans,Dutch
+Van Oosten,include,DutchAfrikaans,Dutch
+Wijnen,include,DutchAfrikaans,Dutch
+Zink,include,DutchAfrikaans,Dutch
+Stellenbosch,include,DutchAfrikaans,Afrikaans
+SouthwoodWhite,include,DutchAfrikaans,Afrikaans
+Barriere,include,Eng-AAE,English
+DELV,include,Eng-AAE,English
+DSLT,include,Eng-AAE,English
+Edwards,include,Eng-AAE,English
+Belfast,include,Eng-UK,English
+Conti-Ramsden 1,include,Eng-UK,English
+Conti-Ramsden 4,include,Eng-UK,English
+Cruttenden,include,Eng-UK,English
+Fletcher,include,Eng-UK,English
+Forrester,include,Eng-UK,English
+Gathercole/Burns,include,Eng-UK,English
+Howe,include,Eng-UK,English
+KellyQuigley,include,Eng-UK,English
+Korman,include,Eng-UK,English
+Lara,include,Eng-UK,English
+Manchester,include,Eng-UK,English
+MPI-EVA-Manchester,include,Eng-UK,English
+Nuffield,include,Eng-UK,English
+QuigleyMcNally,include,Eng-UK,English
+Smith,include,Eng-UK,English
+Thomas,include,Eng-UK,English
+Tommerdahl,include,Eng-UK,English
+Wells,include,Eng-UK,English
+Caroline,include,German,German
+Grimm,include,German,German
+Leo,include,German,German
+Manuela,include,German,German
+Miller,include,German,German
+PAIDUS-German,include,German,German
+Rigol,include,German,German
+Stuttgart,include,German,German
+Szagun,include,German,German
+TAKI,include,German,German
+Wagner,include,German,German
+Weissenborn,include,German,German
+EsteveGibert/Prieto,include,Romance,Catalan
+GRERLI,include,Romance,Catalan
+Jordina,include,Romance,Catalan
+Julia,include,Romance,Catalan
+MireiaEvaPascual,include,Romance,Catalan
+Serra & Sole,include,Romance,Catalan
+Antelmi,include,Romance,Italian
+Calambrone,include,Romance,Italian
+D'Odorico,include,Romance,Italian
+Klammler,include,Romance,Italian
+Roma,include,Romance,Italian
+Tonelli,include,Romance,Italian
+vanOosten,include,Romance,Italian
+AlegreLong,include,Romance,Portuguese
+AlegreX,include,Romance,Portuguese
+Batoreo,include,Romance,Portuguese
+CCF,include,Romance,Portuguese
+Florianopolis,include,Romance,Portuguese
+Freitas,include,Romance,Portuguese
+MCF,include,Romance,Portuguese
+Santos,include,Romance,Portuguese
+Avram,include,Romance,Romanian
+Goga,include,Romance,Romanian
+Kern-Romanian,include,Romance,Romanian
+LabLing,include,Slavic,Bulgarian
+Kovacevic,include,Slavic,Croatian
+MAIN,include,Slavic,Croatian
+Chromá,include,Slavic,Czech
+CDS,include,Slavic,Polish
+Szuman,include,Slavic,Polish
+WeistJarosz,include,Slavic,Polish
+Protassova,include,Slavic,Russian
+Tanja,include,Slavic,Russian
+SCECL,include,Slavic,Serbian
+Zagar,include,Slavic,Slovenian
+Kern,include,Other,Arabic
+Kuwaiti,include,Other,Arabic
+Salama,include,Other,Arabic
+Luque,include,Other,Basque
+Soto,include,Other,Basque
+Lahrouchi,include,Other,Berber
+CCLAS,include,Other,Cree
+Argus,include,Other,Estonian
+Beek,include,Other,Estonian
+Kapanen,include,Other,Estonian
+Kohler,include,Other,Estonian
+Korgesaar,include,Other,Estonian
+Kuett,include,Other,Estonian
+MAIN,include,Other,Estonian
+Vija,include,Other,Estonian
+Zupping,include,Other,Estonian
+Family,include,Other,Farsi
+Samadi,include,Other,Farsi
+Doukas,include,Other,Greek
+Paidologos,include,Other,Greek
+Stephany,include,Other,Greek
+BatEl,include,Other,Hebrew
+Berman Longitudinal,include,Other,Hebrew
+BSF,include,Other,Hebrew
+Levy,include,Other,Hebrew
+Na'ama,include,Other,Hebrew
+Ravid,include,Other,Hebrew
+Bodor,include,Other,Hungarian
+MacWhinney,include,Other,Hungarian
+Réger,include,Other,Hungarian
+DeLisser,include,Other,Jamaican Creole
+Sarvasy,include,Other,Nungon
+Gelman,include,Other,Quechua
+Gildersleeve,include,Other,Quechua
+Demuth,include,Other,Sesotho
+Narasimhan,include,Other,Tamil
+Aksu,include,Other,Turkish
+Altinkamis,include,Other,Turkish
+Croatian MAIN,include,MAIN,Croatian
+Estonian MAIN,include,MAIN,Estonian
+MacBates1,include,XLing,English; Italian; Hungarian
+MacBates2,include,XLing,English; Hungarian
+MDT,include,XLing,English; Japanese; Turkish
