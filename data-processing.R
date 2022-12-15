@@ -14,7 +14,17 @@ library(stringr)
 # Read in data of CHILDES annotations
 annotations<- read.csv("Table for authors - annotations.csv") 
 
-#Clean columns
+##ORGANIZE COLUMNS
+#1st Cluster : Corpus Information
+annotations$Corpus <- as.factor(annotations$Corpus) #310 levels
+xtabs(~Corpus, annotations) 
+colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
+xtabs(~Nb.of.participants, annotations) 
+
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+
+
+#Clean column names 
 colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
 colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
 colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
