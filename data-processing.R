@@ -3,25 +3,114 @@
 #last date: "12/11/2022"
 #RStudio 2022.07.1+554 "Spotted Wakerobin" Release (7872775ebddc40635780ca1ed238934c3345c5de, 2022-07-22) for macOS Mozilla/5.0 (Macintosh; Intel Mac OS X 11_6_1) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.10 Chrome/69.0.3497.128 Safari/537.36
 #R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+#Using current database version: '2021.1' of CHILDES
 
 ## LOAD PACKAGES ####
 library(dplyr)
 library(readxl)
 library(stringr)
+library(childesr)
 
 
 ## READ IN DATA AND ORGANIZE ####
-# Read in data of CHILDES annotations
-annotations<- read.csv("Table for authors - annotations.csv") 
+rm(list=ls()) #clean your environment
+# Read in data
 
-##ORGANIZE COLUMNS
+#1.CHILDES annotations
+annotations<- read.csv("data/Table for authors - annotations.csv") 
+#original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
+#2.CHILDES information about corpora
+total_corpus <- read.csv("data/Childes_corpora - Total CHILDES.csv")
+#Merge
+merge(x= total_corpus,y = annotations, by.x= "Corpus", by.y= "Corpus", all.x = T)-> all
+
+#childesr
+d_participants <- get_participants()
+d_transcripts <- get_transcripts()
+d_corpus <- get_corpora()
+
+## Meta structure of the annotations file
 #1st Cluster : Corpus Information
-annotations$Corpus <- as.factor(annotations$Corpus) #310 levels
-xtabs(~Corpus, annotations) 
+#Corpus
+annotations$Corpus <- as.factor(annotations$Corpus) #310 levels -- repeated corpora name
+all <- all %>%  #create numbered first column
+  mutate(number = 1:n()) %>% 
+  select(number, everything()) 
+#Creating unique key for each row 
+all$key=paste0(all$number,"_",all$Corpus)
+
+#status
+xtabs(~status, all)  #excluded 109 include 339 
+
+#Language_group
+xtabs(~Language_group, all) 
+
+#Number of participants
 colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
 xtabs(~Nb.of.participants, annotations) 
 
+#Language or languages spoken in recordings 
+
+
+
+xtabs(~Corpus, annotations) 
+
 colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+
+
+#2nd Cluster : information about the recording
+#Location
+#Place of recordings (home, nursery...)
+#Mean number of sessions per child
+#Range number of  sessions per child
+#Mean Duration of sessions (in minutes)
+#Range Duration of sessions (in minutes)
+
+#3rd Cluster: information about the language of the recording
+#Language minority
+#Bilingualism/Multilingualism in corpus (yes/ no)
+#Bilingualism/Multilingualism in community (yes/ no)
+#Bilingualism/Multilingualism in family (yes/ no)
+#Number of speakers of the language (e.g. millions for English, 22k for Tsimane’)
+
+#4rd Cluster: information about the recorded children
+#Where children spend their time (home, nursery, playing by the river...)
+#Mean child age at beginning of recordings (in months)
+#Mean child age at end of recordings (in months)
+# of children with siblings
+# of children with older siblings
+#Average number of siblings
+#Average number of older siblings
+#Access to schooling for recorded children (yes/no/only elementary) 
+#Access to health service for recorded children  (yes/no) - (answer ‘yes’ if the answer is an obvious yes, for example a child growing up in a middle-class family in France, or 'no' if the answer is an obvious no, for example a remote village where many people do not have access to health services e.g. the Tsimane')
+#our coding of access to health
+#our coding of access to school
+#Household structure (nuclear, extended)
+
+
+#5th Cluster: information about SES or related measures
+#Parental education
+#Education STDZD
+#Parental socioeconomic status
+#SES STDZD
+#Parental profession
+
+#6th Cluster: Information about the recorded community
+#Type of community at the time of the recordings (hunter/forager/herder/farmer/work-for-pay/industrial/...)
+#STDZD community type
+#Fertility rate of community at the time of the recordings 
+#Interbirth intervals in community at the time of the recordings 
+
+#7th Cluster: Reliability 
+#Who checked column
+#Comment
+#Inclusion
+#Reason for exclusion
+#why_exclude
+
+
+##ORGANIZE COLUMNS
+#1st Cluster : Corpus Information
 
 
 #Clean column names 
