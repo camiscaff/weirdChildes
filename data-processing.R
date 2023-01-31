@@ -19,6 +19,13 @@ rm(list=ls()) #clean your environment
 #1.CHILDES annotations
 annotations<- read.csv("data/Table for authors - annotations.csv") 
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
+
+#some editing of the col names
+colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+colnames(annotations)[colnames(annotations)=="Location..Neighbourhood..village.city..province..state..country."]<-"Location"
+
 #2.CHILDES information about corpora
 total_corpus <- read.csv("data/Childes_corpora - Total CHILDES.csv")
 #Merge
@@ -29,7 +36,7 @@ d_participants <- get_participants()
 d_transcripts <- get_transcripts()
 d_corpus <- get_corpora()
 
-## Meta structure of the annotations file
+## Columns of the annotations file
 #1st Cluster : Corpus Information
 #Corpus
 annotations$Corpus <- as.factor(annotations$Corpus) #310 levels -- repeated corpora name
@@ -45,17 +52,82 @@ xtabs(~status, all)  #excluded 109 include 339
 #Language_group
 xtabs(~Language_group, all) 
 
-#Number of participants
-colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
-xtabs(~Nb.of.participants, annotations) 
+#Number of participants 
+#needs cleaning
+xtabs(~Nb.of.participants, all) 
 
 #Language or languages spoken in recordings 
+#needs cleaning
+xtabs(~Language, all) 
 
+#Location
+annotations$country <-NA
+annotations$continent <-NA
 
+annotations$country[grep("Ireland", annotations$Location)]  <- "Ireland"
+annotations$country[grep("England|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Wales|Cambridge, UK", annotations$Location)]  <- "United Kingdom"
+annotations$country[grep("Portugal", annotations$Location)]  <- "Portugal"
+annotations$country[grep("Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Alt penedes, region of catalonia|spain| Lloret de mar|Barcelona| SPAIN|Salamanca|Lugo", annotations$Location)]  <- "Spain"
+annotations$country[grep("France|France (Normandy, Marseille, + places visited)", annotations$Location)]  <- "France"
+annotations$country[grep("Naples|italy|Roma|Italy", annotations$Location)]  <- "Italy"
+annotations$country[grep("Switzerland", annotations$Location)]  <- "Switzerland"
+annotations$country[grep("Belgium", annotations$Location)]  <- "Belgium"
+annotations$country[grep("Germany", annotations$Location)]  <- "Germany"
+annotations$country[grep("Netherlands", annotations$Location)]  <- "Netherlands"
+annotations$country[grep("Austria", annotations$Location)]  <- "Austria"
+annotations$country[grep("Poznań, Poland", annotations$Location)]  <- "Poland"
+annotations$country[grep("Estonia|Tartu, Estonia ; Rapla, Estonia|Southern Estonia|Tartu, Estonia", annotations$Location)]  <- "Estonia"
+annotations$country[grep("Hungary", annotations$Location)]  <- "Hungary"
+annotations$country[grep("Czech Republic", annotations$Location)]  <- "Czech Republic"
+annotations$country[grep("Bucharest, Romania|Romania", annotations$Location)]  <- "Romania"
+annotations$country[grep("Serbia", annotations$Location)]  <- "Serbia"
+annotations$country[grep("Croatia", annotations$Location)]  <- "Croatia"
+annotations$country[grep("Slovenia", annotations$Location)]  <- "Slovenia"
+annotations$country[grep("Sweden", annotations$Location)]  <- "Sweden"
+annotations$country[grep("Iceland", annotations$Location)]  <- "Iceland"
+annotations$country[grep("Norway", annotations$Location)]  <- "Norway"
+annotations$country[grep("Denmark", annotations$Location)]  <- "Denmark"
+annotations$country[grep("Athens, Greece", annotations$Location)]  <- "Greece"
+annotations$country[grep("Moscow, Russia", annotations$Location)]  <- "Russia"
+annotations$country[grep("Turkey", annotations$Location)]  <- "Turkey"
+annotations$country[grep("Iran", annotations$Location)]  <- "Iran"
+annotations$country[grep("Israel|Yahud, Israel", annotations$Location)]  <- "Israel"
+annotations$country[grep("Kuwait", annotations$Location)]  <- "Kuwait"
+annotations$country[grep("Bombay, India", annotations$Location)]  <- "India"
+annotations$country[grep("China", annotations$Location)]  <- "China"
+annotations$country[grep("Singapore", annotations$Location)]  <- "Singapore"
+annotations$country[grep("Indonesia", annotations$Location)]  <- "Indonesia"
+annotations$country[grep("Bangkok, Thailand", annotations$Location)]  <- "Thailand"
+annotations$country[grep("Osaka|Tokyo|Nagoya|osaka|Kusatsu City, Shiga Pref", annotations$Location)]  <- "Japan"
+annotations$country[grep("Korea", annotations$Location)]  <- "Korea" #NOTE: one corpus just says "Korea", data collected in 2009-2011, assuming it's South Korean
+annotations$country[grep("Hong-Kong, Hong Kong", annotations$Location)]  <- "Hong Kong"
+annotations$country[grep("Taiwan", annotations$Location)]  <- "Taiwan"
+annotations$country[grep("Papua-New Guinea", annotations$Location)]  <- "Papua New Guinea"
+annotations$country[grep("Alexandria, Egypt", annotations$Location)]  <- "Egypt"
+annotations$country[grep("Mokhotlong, Lesotho", annotations$Location)]  <- "Lesotho"
+annotations$country[grep("South Africa", annotations$Location)]  <- "South Africa"
+annotations$continent[grep("Egypt|Lesotho|Africa", annotations$country)]  <- "Africa"
+annotations$country[grep("Rio Cuarto, Cordoba, Argentina", annotations$Location)]  <- "Argentina"
+annotations$country[grep("Sao Paulo", annotations$Location)]  <- "Brazil"
+annotations$country[grep("Mexico", annotations$Location)]  <- "Mexico"
+annotations$country[grep("Jamaica", annotations$Location)]  <- "Jamaica"
+annotations$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran|Cambridge MA|Honolulu, HI|usa|UCLA", annotations$Location)]  <- "United States"
+annotations$country[grep("Canada|Montreal", annotations$Location)]  <- "Canada"
 
-xtabs(~Corpus, annotations) 
+xtabs(~country, annotations) 
 
-colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+#Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
+annotations$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations$country)]  <- "Western Europe"
+annotations$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations$country)]  <- "Non-Western Europe"
+annotations$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|Korea|Hong Kong|Taiwan", annotations$country)]  <- "Asia"
+annotations$continent[grep("Papua New Guinea", annotations$country)]  <- "Oceania"
+annotations$continent[grep("United States|Canada", annotations$country)]  <- "North America"
+annotations$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations$country)]  <- "Latin America"
+
+#Special cases
+annotations$country[grep("Sweden ; Portugal", annotations$Location)]  <- "Sweden & Portugal"
+annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotations$Location)]  <- "Spain & Hungary"
+#We are leaving continent as NA (because one country is Western & the other Eastern Europe)
 
 
 #2nd Cluster : information about the recording
@@ -174,94 +246,6 @@ annotations <- all_annotations %>%
   filter(Inclusion=="yes"|Inclusion=="Yes")
 
 table(all_annotations$why_exclude)->excl
-
-annotations$country <-NA
-annotations$continent <-NA
-
-
-annotations$country[grep("Ireland", annotations$Location)]  <- "Ireland"
-annotations$country[grep("England|Arfon area Gwynedd, North Wales|Belfast, Northern Ireland|Nottingham/Manchester, England|England, Brighton|Wales|Cambridge, UK", annotations$Location)]  <- "United Kingdom"
-annotations$country[grep("Portugal", annotations$Location)]  <- "Portugal"
-annotations$country[grep("Spain|Madrid, Spain ; Tenerife, Canary Islands|Madrid, Spain|Navarra, Spain|Alt penedes, region of catalonia|spain| Lloret de mar|Barcelona| SPAIN|Salamanca|Lugo", annotations$Location)]  <- "Spain"
-annotations$country[grep("France|France (Normandy, Marseille, + places visited)", annotations$Location)]  <- "France"
-annotations$country[grep("Naples|italy|Roma|Italy", annotations$Location)]  <- "Italy"
-annotations$country[grep("Switzerland", annotations$Location)]  <- "Switzerland"
-annotations$country[grep("Belgium", annotations$Location)]  <- "Belgium"
-annotations$country[grep("Germany", annotations$Location)]  <- "Germany"
-annotations$country[grep("Netherlands", annotations$Location)]  <- "Netherlands"
-annotations$country[grep("Austria", annotations$Location)]  <- "Austria"
-
-#Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
-annotations$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations$country)]  <- "Western Europe"
-
-
-annotations$country[grep("Poznań, Poland", annotations$Location)]  <- "Poland"
-annotations$country[grep("Estonia|Tartu, Estonia ; Rapla, Estonia|Southern Estonia|Tartu, Estonia", annotations$Location)]  <- "Estonia"
-annotations$country[grep("Hungary", annotations$Location)]  <- "Hungary"
-annotations$country[grep("Czech Republic", annotations$Location)]  <- "Czech Republic"
-annotations$country[grep("Bucharest, Romania|Romania", annotations$Location)]  <- "Romania"
-annotations$country[grep("Serbia", annotations$Location)]  <- "Serbia"
-annotations$country[grep("Croatia", annotations$Location)]  <- "Croatia"
-annotations$country[grep("Slovenia", annotations$Location)]  <- "Slovenia"
-
-annotations$country[grep("Sweden", annotations$Location)]  <- "Sweden"
-annotations$country[grep("Iceland", annotations$Location)]  <- "Iceland"
-annotations$country[grep("Norway", annotations$Location)]  <- "Norway"
-annotations$country[grep("Denmark", annotations$Location)]  <- "Denmark"
-
-annotations$country[grep("Athens, Greece", annotations$Location)]  <- "Greece"
-
-annotations$country[grep("Moscow, Russia", annotations$Location)]  <- "Russia"
-
-annotations$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations$country)]  <- "Non-Western Europe"
-
-
-annotations$country[grep("Turkey", annotations$Location)]  <- "Turkey"
-annotations$country[grep("Iran", annotations$Location)]  <- "Iran"
-annotations$country[grep("Israel|Yahud, Israel", annotations$Location)]  <- "Israel"
-annotations$country[grep("Kuwait", annotations$Location)]  <- "Kuwait"
-
-annotations$country[grep("Bombay, India", annotations$Location)]  <- "India"
-
-annotations$country[grep("China", annotations$Location)]  <- "China"
-
-annotations$country[grep("Singapore", annotations$Location)]  <- "Singapore"
-annotations$country[grep("Indonesia", annotations$Location)]  <- "Indonesia"
-annotations$country[grep("Bangkok, Thailand", annotations$Location)]  <- "Thailand"
-annotations$country[grep("Osaka|Tokyo|Nagoya|osaka|Kusatsu City, Shiga Pref", annotations$Location)]  <- "Japan"
-annotations$country[grep("Korea", annotations$Location)]  <- "Korea" #NOTE: one corpus just says "Korea", data collected in 2009-2011, assuming it's South Korean
-annotations$country[grep("Hong-Kong", annotations$Location)]  <- "Hong Kong"
-annotations$country[grep("Hong Kong", annotations$Location)]  <- "Hong Kong"
-annotations$country[grep("Taiwan", annotations$Location)]  <- "Taiwan"
-
-annotations$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|Korea|Hong Kong|Taiwan", annotations$country)]  <- "Asia"
-
-
-annotations$country[grep("Papua-New Guinea", annotations$Location)]  <- "Papua New Guinea"
-annotations$continent[grep("Papua New Guinea", annotations$country)]  <- "Oceania"
-
-
-annotations$country[grep("Alexandria, Egypt", annotations$Location)]  <- "Egypt"
-annotations$country[grep("Mokhotlong, Lesotho", annotations$Location)]  <- "Lesotho"
-annotations$country[grep("South Africa", annotations$Location)]  <- "South Africa"
-annotations$continent[grep("Egypt|Lesotho|Africa", annotations$country)]  <- "Africa"
-
-
-annotations$country[grep("Rio Cuarto, Cordoba, Argentina", annotations$Location)]  <- "Argentina"
-annotations$country[grep("Sao Paulo", annotations$Location)]  <- "Brazil"
-annotations$country[grep("Mexico", annotations$Location)]  <- "Mexico"
-annotations$country[grep("Jamaica", annotations$Location)]  <- "Jamaica"
-annotations$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations$country)]  <- "Latin America"
-
-annotations$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran|Cambridge MA|Honolulu, HI|usa|UCLA", annotations$Location)]  <- "United States"
-annotations$country[grep("Canada|Montreal", annotations$Location)]  <- "Canada"
-annotations$continent[grep("United States|Canada", annotations$country)]  <- "North America"
-
-
-#Special cases
-annotations$country[grep("Sweden ; Portugal", annotations$Location)]  <- "Sweden & Portugal"
-annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotations$Location)]  <- "Spain & Hungary"
-#We are leaving continent as NA (because one country is Western & the other Eastern Europe)
 
 
 #to check if any left
