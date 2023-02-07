@@ -16,28 +16,28 @@ library(childesr)
 rm(list=ls()) #clean your environment
 # Read in data
 
-#1.CHILDES annotations
+##1.CHILDES annotations ####
 annotations<- read.csv("data/Table for authors - annotations.csv") 
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 
-#some editing of the col names
+#some cleaning  of the col names
+colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
 colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
 colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
 colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
 colnames(annotations)[colnames(annotations)=="Location..Neighbourhood..village.city..province..state..country."]<-"Location"
+colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
+colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
+colnames(annotations)[colnames(annotations)=="Our.coding.of"]<-"Our.coding.of.community.type"
 
 #2.CHILDES information about corpora
 total_corpus <- read.csv("data/Childes_corpora - Total CHILDES.csv")
 #Merge
 merge(x= total_corpus,y = annotations, by.x= "Corpus", by.y= "Corpus", all.x = T)-> all
 
-#childesr
-d_participants <- get_participants()
-d_transcripts <- get_transcripts()
-d_corpus <- get_corpora()
 
 ## Columns of the annotations file
-#1st Cluster : Corpus Information
+## 1st Cluster : Corpus Information #### 
 #Corpus
 annotations$Corpus <- as.factor(annotations$Corpus) #310 levels -- repeated corpora name
 all <- all %>%  #create numbered first column
@@ -55,10 +55,36 @@ xtabs(~Language_group, all)
 #Number of participants 
 #needs cleaning
 xtabs(~Nb.of.participants, all) 
+annotations$Number.of.participants[annotations$Number.of.participants=="1 or 5"]<-NA
+annotations$Number.of.participants[annotations$Number.of.participants=="1 CHI + MOT/FAT/INV"]<-1
+annotations$Number.of.participants[annotations$Number.of.participants=="4 CHI + MOTs, some FATs, some SIBs"]<-4
+annotations$Number.of.participants=as.numeric(as.character(annotations$Number.of.participants))
+
 
 #Language or languages spoken in recordings 
 #needs cleaning
 xtabs(~Language, all) 
+#we rewrite some of the cases in which multiple subgroups exist so that all combinations are represented
+#unique(sort(annotations$Language.or.Languages.spoken.in.recordings))
+
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings%in% c("British English","American English (Middle Atlantic mother, Texas father)")]<-"English"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Catalan (and the variant of Spanish spoken in Barcelona)"]<-"Catalan/Spanish"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Japanese (Kyoto dialect)"]<-"Japanese"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Mandarin Chinese, influenced by the dialects of Jianghuai Mandarin and Cantonese to a minor degree"]<-"Mandarin"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Norwegian (Children: mostly trøndersk, parents/care-takers: trøndersk, vestnorsk, nordnorsk, austnorsk)"]<-"Norwegian"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Spanish Spain"]<-"Spanish"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("European Portuguese","Brazilian Portuguese")]<-"Portuguese (Brazilian or European)"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Kuwaiti Arabic","Egyptian Arabic")]<-"Arabic (Egyptian or Kuwaiti)"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Spanish & Spanish/English")]<-"Spanish/English"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Dutch/French (N=31) and Dutch/English (N=3)")]<-"Dutch/English, Dutch/French"
+annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Dutch/French & Dutch/Italian")]<-"Dutch/Italian"
+
+byPart<- annotations %>%
+  select(Language.or.Languages.spoken.in.recordings, Number.of.participants) %>%
+  filter(!is.na(Number.of.participants)) %>%
+  group_by(Language.or.Languages.spoken.in.recordings) %>%
+  summarise(numpar = sum(as.numeric(Number.of.participants))) 
+
 
 #Location
 annotations$country <-NA
@@ -114,7 +140,10 @@ annotations$country[grep("Jamaica", annotations$Location)]  <- "Jamaica"
 annotations$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran|Cambridge MA|Honolulu, HI|usa|UCLA", annotations$Location)]  <- "United States"
 annotations$country[grep("Canada|Montreal", annotations$Location)]  <- "Canada"
 
-xtabs(~country, annotations) 
+country_info<- as.data.frame(xtabs(~country, annotations)) 
+#to check if any left
+#annotations[is.na(annotations$country),"Location"]
+#annotations[is.na(annotations$continent),"Location"]
 
 #Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
 annotations$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations$country)]  <- "Western Europe"
@@ -130,146 +159,15 @@ annotations$country[grep("Spain (Lloret de Mar), Hungary (Kecskemét)", annotati
 #We are leaving continent as NA (because one country is Western & the other Eastern Europe)
 
 
-#2nd Cluster : information about the recording
-#Location
+##2nd Cluster : information about the recording ####
+
 #Place of recordings (home, nursery...)
 #Mean number of sessions per child
 #Range number of  sessions per child
 #Mean Duration of sessions (in minutes)
 #Range Duration of sessions (in minutes)
 
-#3rd Cluster: information about the language of the recording
-#Language minority
-#Bilingualism/Multilingualism in corpus (yes/ no)
-#Bilingualism/Multilingualism in community (yes/ no)
-#Bilingualism/Multilingualism in family (yes/ no)
-#Number of speakers of the language (e.g. millions for English, 22k for Tsimane’)
-
-#4rd Cluster: information about the recorded children
-#Where children spend their time (home, nursery, playing by the river...)
-#Mean child age at beginning of recordings (in months)
-#Mean child age at end of recordings (in months)
-# of children with siblings
-# of children with older siblings
-#Average number of siblings
-#Average number of older siblings
-#Access to schooling for recorded children (yes/no/only elementary) 
-#Access to health service for recorded children  (yes/no) - (answer ‘yes’ if the answer is an obvious yes, for example a child growing up in a middle-class family in France, or 'no' if the answer is an obvious no, for example a remote village where many people do not have access to health services e.g. the Tsimane')
-#our coding of access to health
-#our coding of access to school
-#Household structure (nuclear, extended)
-
-
-#5th Cluster: information about SES or related measures
-#Parental education
-#Education STDZD
-#Parental socioeconomic status
-#SES STDZD
-#Parental profession
-
-#6th Cluster: Information about the recorded community
-#Type of community at the time of the recordings (hunter/forager/herder/farmer/work-for-pay/industrial/...)
-#STDZD community type
-#Fertility rate of community at the time of the recordings 
-#Interbirth intervals in community at the time of the recordings 
-
-#7th Cluster: Reliability 
-#Who checked column
-#Comment
-#Inclusion
-#Reason for exclusion
-#why_exclude
-
-
-##ORGANIZE COLUMNS
-#1st Cluster : Corpus Information
-
-
-#Clean column names 
-colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
-colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
-colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
-colnames(annotations)[colnames(annotations)=="Our.coding.of"]<-"Our.coding.of.community.type"
-
-annotations$Number.of.participants[annotations$Number.of.participants=="1 or 5"]<-NA
-annotations$Number.of.participants[annotations$Number.of.participants=="1 CHI + MOT/FAT/INV"]<-1
-annotations$Number.of.participants[annotations$Number.of.participants=="4 CHI + MOTs, some FATs, some SIBs"]<-4
-annotations$Number.of.participants=as.numeric(as.character(annotations$Number.of.participants))
-
-annotations$Nb.of.children.with.siblings=as.numeric(as.character(annotations$Nb.of.children.with.siblings))
-
-annotations$Proportion.With.Siblings=annotations$Nb.of.children.with.siblings/annotations$Number.of.participants
-
-annotations$Parental.profession=tolower(annotations$Parental.profession)
-annotations$is.academic=annotations$is.health=annotations$is.teacher=NA
-annotations$is.academic[grep("stud|prof|ling|investig|resear|sociol|academ|scienti|university|universities",annotations$Parental.profession)]<-"yes"
-annotations$is.health[grep("psychology|doctor|therapist|nurse",annotations$Parental.profession)]<-"yes"
-annotations$is.health[grep("teacher",annotations$Parental.profession)]<-"yes"
-annotations$is.academic[annotations$Parental.profession=="pi"]<-"yes"
-annotations$Parental.profession[annotations$Parental.profession %in% c("don't know")]<-NA
-
-#table(annotations$Household.structure)
-annotations$Household.structure=tolower(annotations$Household.structure)
-annotations$Household.structure[grep("different|diverse|varied",annotations$Household.structure)] <- NA #turn to NA?
-annotations$Household.structure[annotations$Household.structure %in% c("nuclear, extended","extended/nuclear")]<-"varied"
-annotations$Household.structure[grep("nuclear|nucear|single",annotations$Household.structure)]<-"nuclear" # including single parent
-annotations$Household.structure[grep("extended",annotations$Household.structure)]<-"extended"
-annotations$Household.structure[annotations$Household.structure==""]<-NA
-
-
-# Education & SES cleaning
-annotations$Education.STDZD[annotations$Education.STDZD==""]<-NA
-annotations$Education.STDZD[annotations$Education.STDZD=="4-6"]<-"4-5" #fix typo
-annotations$Education.min<-as.numeric(as.character(gsub("-.*","",annotations$Education.STDZD)))
-annotations$Education.max<-as.numeric(as.character(gsub(".*-","",annotations$Education.STDZD)))
-annotations$Education.mid<-annotations$Education.min+(annotations$Education.max-annotations$Education.min)/2
-# 1 = primary
-# 2 = secondary school
-# 3 = some college
-# 4 = university
-# 5 = postgraduate
-
-annotations$Education.ac=NA
-annotations$Education.ac[annotations$Education.min==1 & !is.na(annotations$Education.min)]<-"Some primary"
-annotations$Education.ac[annotations$Education.min==2 & !is.na(annotations$Education.min)]<-"Some secondary"
-annotations$Education.ac[annotations$Education.min==3 & !is.na(annotations$Education.min)]<-"Some college"
-annotations$Education.ac[annotations$Education.min>3 & !is.na(annotations$Education.min)]<-"College and above"
-
-annotations$SES.STDZD[annotations$SES.STDZD==""]<-NA
-annotations$SES.STDZD[annotations$SES.STDZD=="middle class"]<-2
-
-annotations$Average.number.of.siblings=as.numeric(as.character(gsub(",",".",annotations$Average.number.of.siblings)))
-
-all_annotations <- annotations
-
-annotations <- all_annotations %>%
-  filter(Inclusion=="yes"|Inclusion=="Yes")
-
-table(all_annotations$why_exclude)->excl
-
-
-#to check if any left
-#annotations[is.na(annotations$country),"Location"]
-#annotations[is.na(annotations$continent),"Location"]
-
-
-
-#we rewrite some of the cases in which multiple subgroups exist so that all combinations are represented
-#unique(sort(annotations$Language.or.Languages.spoken.in.recordings))
-
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings%in% c("British English","American English (Middle Atlantic mother, Texas father)")]<-"English"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Catalan (and the variant of Spanish spoken in Barcelona)"]<-"Catalan/Spanish"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Japanese (Kyoto dialect)"]<-"Japanese"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Mandarin Chinese, influenced by the dialects of Jianghuai Mandarin and Cantonese to a minor degree"]<-"Mandarin"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Norwegian (Children: mostly trøndersk, parents/care-takers: trøndersk, vestnorsk, nordnorsk, austnorsk)"]<-"Norwegian"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings=="Spanish Spain"]<-"Spanish"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("European Portuguese","Brazilian Portuguese")]<-"Portuguese (Brazilian or European)"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Kuwaiti Arabic","Egyptian Arabic")]<-"Arabic (Egyptian or Kuwaiti)"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Spanish & Spanish/English")]<-"Spanish/English"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Dutch/French (N=31) and Dutch/English (N=3)")]<-"Dutch/English, Dutch/French"
-annotations$Language.or.Languages.spoken.in.recordings[annotations$Language.or.Languages.spoken.in.recordings %in% c("Dutch/French & Dutch/Italian")]<-"Dutch/Italian"
-
-
+##3rd Cluster: information about the language of the recording ####
 lang_temp=levels(factor(annotations$Language.or.Languages.spoken.in.recordings))
 
 #split up &
@@ -294,8 +192,78 @@ annotations$Bilingualism.Multilingualism.in.corpus[grep("no; a few words of yidd
 annotations$Bilingualism.Multilingualism.in.corpus[annotations$Bilingualism.Multilingualism.in.corpus==""]<-NA
 
 
+#Language minority
+#Bilingualism/Multilingualism in corpus (yes/ no)
+#Bilingualism/Multilingualism in community (yes/ no)
+#Bilingualism/Multilingualism in family (yes/ no)
+#Number of speakers of the language (e.g. millions for English, 22k for Tsimane’)
+
+##4rd Cluster: information about the recorded children####
+
+#Where children spend their time (home, nursery, playing by the river...)
+#Mean child age at beginning of recordings (in months)
+#Mean child age at end of recordings (in months)
+# of children with siblings
+annotations$Nb.of.children.with.siblings=as.numeric(as.character(annotations$Nb.of.children.with.siblings))
+annotations$Proportion.With.Siblings=annotations$Nb.of.children.with.siblings/annotations$Number.of.participants
+
+# of children with older siblings
+#Average number of siblings
+annotations$Average.number.of.siblings=as.numeric(as.character(gsub(",",".",annotations$Average.number.of.siblings)))
+
+#Average number of older siblings
+#Access to schooling for recorded children (yes/no/only elementary) 
+#Access to health service for recorded children  (yes/no) - (answer ‘yes’ if the answer is an obvious yes, for example a child growing up in a middle-class family in France, or 'no' if the answer is an obvious no, for example a remote village where many people do not have access to health services e.g. the Tsimane')
+#our coding of access to health
+#our coding of access to school
+#Household structure (nuclear, extended)
+annotations$Household.structure=tolower(annotations$Household.structure)
+annotations$Household.structure[grep("different|diverse|varied",annotations$Household.structure)] <- NA #turn to NA?
+annotations$Household.structure[annotations$Household.structure %in% c("nuclear, extended","extended/nuclear")]<-"varied"
+annotations$Household.structure[grep("nuclear|nucear|single",annotations$Household.structure)]<-"nuclear" # including single parent
+annotations$Household.structure[grep("extended",annotations$Household.structure)]<-"extended"
+annotations$Household.structure[annotations$Household.structure==""]<-NA
 
 
+##5th Cluster: information about SES or related measures ####
+#Parental education
+#Education STDZD
+# Education & SES cleaning
+annotations$Education.STDZD[annotations$Education.STDZD==""]<-NA
+annotations$Education.STDZD[annotations$Education.STDZD=="4-6"]<-"4-5" #fix typo
+annotations$Education.min<-as.numeric(as.character(gsub("-.*","",annotations$Education.STDZD)))
+annotations$Education.max<-as.numeric(as.character(gsub(".*-","",annotations$Education.STDZD)))
+annotations$Education.mid<-annotations$Education.min+(annotations$Education.max-annotations$Education.min)/2
+# 1 = primary
+# 2 = secondary school
+# 3 = some college
+# 4 = university
+# 5 = postgraduate
+
+annotations$Education.ac=NA
+annotations$Education.ac[annotations$Education.min==1 & !is.na(annotations$Education.min)]<-"Some primary"
+annotations$Education.ac[annotations$Education.min==2 & !is.na(annotations$Education.min)]<-"Some secondary"
+annotations$Education.ac[annotations$Education.min==3 & !is.na(annotations$Education.min)]<-"Some college"
+annotations$Education.ac[annotations$Education.min>3 & !is.na(annotations$Education.min)]<-"College and above"
+
+#Parental socioeconomic status
+#SES STDZD
+annotations$SES.STDZD[annotations$SES.STDZD==""]<-NA
+annotations$SES.STDZD[annotations$SES.STDZD=="middle class"]<-2
+
+
+#Parental profession
+annotations$Parental.profession=tolower(annotations$Parental.profession)
+annotations$is.academic=annotations$is.health=annotations$is.teacher=NA
+annotations$is.academic[grep("stud|prof|ling|investig|resear|sociol|academ|scienti|university|universities",annotations$Parental.profession)]<-"yes"
+annotations$is.health[grep("psychology|doctor|therapist|nurse",annotations$Parental.profession)]<-"yes"
+annotations$is.health[grep("teacher",annotations$Parental.profession)]<-"yes"
+annotations$is.academic[annotations$Parental.profession=="pi"]<-"yes"
+annotations$Parental.profession[annotations$Parental.profession %in% c("don't know")]<-NA
+
+
+##6th Cluster: Information about the recorded community ####
+#Type of community at the time of the recordings (hunter/forager/herder/farmer/work-for-pay/industrial/...)
 annotations$Type.of.community.at.the.time.of.the.recordings[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]<-annotations$STDZD.community.type[is.na(annotations$Type.of.community.at.the.time.of.the.recordings)]
 
 annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.community.at.the.time.of.the.recordings %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
@@ -314,12 +282,31 @@ annotations$Type.of.community.at.the.time.of.the.recordings[annotations$Type.of.
 #table(annotations$Type.of.community.at.the.time.of.the.recordings)
 
 
-byPart<- annotations %>%
-  select(Language.or.Languages.spoken.in.recordings, Number.of.participants) %>%
-  filter(!is.na(Number.of.participants)) %>%
-  group_by(Language.or.Languages.spoken.in.recordings) %>%
-  summarise(numpar = sum(as.numeric(Number.of.participants))) 
+#STDZD community type
+#Fertility rate of community at the time of the recordings 
+#Interbirth intervals in community at the time of the recordings 
 
+##7th Cluster: Reliability ####
+#Who checked column
+#Comment
+#Inclusion
+#Reason for exclusion
+#why_exclude
+all_annotations <- annotations
+
+annotations <- all_annotations %>%
+  filter(Inclusion=="yes"|Inclusion=="Yes")
+
+table(all_annotations$why_exclude)->excl
+
+
+##ORGANIZE COLUMNS
+#1st Cluster : Corpus Information
+
+
+## Country level information ####
+## Merge ISO of country with our names for Countries
+# This is necessary to merge info with World Bank
 read.csv("country_iso.csv")->iso_lookup
 codes=iso_lookup$Code
 iso_lookup$Name<-as.character(iso_lookup$Name)
@@ -331,7 +318,7 @@ iso_lookup$Name=gsub("Congo, the Democratic Republic of the","Democratic Republi
 
 names(codes)<-iso_lookup$Name
 
-
+## Country name for Wordbank
 annotations$country_WB<-codes[annotations$country]
 
 annotations$country_WB <-factor(annotations$country_WB)
@@ -392,7 +379,7 @@ wdi_all$country<-gsub("Syrian Arab Republic","Syria",wdi_all$country,fixed=T)
 wdi_all$country<-gsub("Russian Federation","Russia",wdi_all$country,fixed=T)
 wdi_all$country<-gsub("Slovak Republic","Slovakia",wdi_all$country,fixed=T)
 
-
+## Read in Ourworld in data info on Education - Educated ####
 # https://ourworldindata.org/primary-and-secondary-education
 read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->ed_basic
 ed_basic[ed_basic$Year>2006 & ed_basic$Year<2015,]->ed_basic
@@ -400,24 +387,25 @@ ed_basic[!duplicated(ed_basic$Entity),]->ed_basic
 colnames(ed_basic)[colnames(ed_basic)=="Lower.secondary.completion.rate..total....of.relevant.age.group."]<-"Compl.LS"
 ed_basic$Compl.LS[ed_basic$Compl.LS>100]<-100  #cap to 100%
 
+#https://ourworldindata.org/tertiary-education
+read.csv("share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->ed
+ed[ed$Year==2010,]->ed #note, no data for 2011, data only every 10 years
+colnames(ed)[colnames(ed)=="Barro.Lee..Percentage.of.population.age.15..with.tertiary.schooling..Completed.Tertiary"]<-"College"
 
+## Read in Ourworld in data info on Democracy - Democratic ####
 
 #https://ourworldindata.org/grapher/political-regimes
 read.csv("political-regimes-OWID-20220215.csv")->democr
 democr[democr$Year==2011,]->democr
+
+## Read in Ourworld in data info on Population Size  ####
 
 #https://ourworldindata.org/grapher/population-past-future
 read.csv("population-past-future-OWID-20220217.csv")->pop
 pop[pop$Year==2011,]->pop
 colnames(pop)[colnames(pop)=="Population..historical.estimates.and.future.projections."]<-"Population"
 
-#https://ourworldindata.org/tertiary-education
-read.csv("share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->ed
-ed[ed$Year==2010,]->ed #note, no data for 2011, data only every 10 years
-colnames(ed)[colnames(ed)=="Barro.Lee..Percentage.of.population.age.15..with.tertiary.schooling..Completed.Tertiary"]<-"College"
-
-
-
+## Read in Ourworld in data info on Children born per woman - Fertility ####
 
 read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
 cpw[cpw$Year==2011,]->cpw
