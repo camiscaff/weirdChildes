@@ -10,6 +10,7 @@ library(dplyr)
 library(readxl)
 library(stringr)
 library(childesr)
+library(ggplot2)
 
 
 ## READ IN DATA AND ORGANIZE ####
