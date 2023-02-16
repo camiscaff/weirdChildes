@@ -43,6 +43,7 @@ annotations$Education.mid<-annotations$Education.min+(annotations$Education.max-
 # 4 = university
 # 5 = postgraduate
 
+
 annotations$Education.ac=NA
 annotations$Education.ac[annotations$Education.min==1 & !is.na(annotations$Education.min)]<-"Some primary"
 annotations$Education.ac[annotations$Education.min==2 & !is.na(annotations$Education.min)]<-"Some secondary"
