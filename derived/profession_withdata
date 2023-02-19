@@ -1,0 +1,25 @@
+"country" "teach" "Freq_teach" "health" "Freq_health" "academ" "Freq_acad"
+"Belgium" "yes" 1 "yes" 1 "yes" 1
+"Brazil" "yes" 0 "yes" 1 "yes" 1
+"Canada" "yes" 0 "yes" 0 "yes" 2
+"China" "yes" 2 "yes" 0 "yes" 2
+"Croatia" "yes" 1 "yes" 0 "yes" 1
+"Czech Republic" "yes" 1 "yes" 0 "yes" 1
+"Denmark" "yes" 0 "yes" 0 "yes" 1
+"Estonia" "yes" 0 "yes" 0 "yes" 2
+"France" "yes" 0 "yes" 0 "yes" 4
+"Germany" "yes" 1 "yes" 0 "yes" 2
+"Hungary" "yes" 0 "yes" 1 "yes" 2
+"Israel" "yes" 0 "yes" 0 "yes" 2
+"Italy" "yes" 1 "yes" 0 "yes" 0
+"Korea" "yes" 0 "yes" 1 "yes" 0
+"Mexico" "yes" 0 "yes" 1 "yes" 2
+"Netherlands" "yes" 0 "yes" 1 "yes" 4
+"Portugal" "yes" 1 "yes" 0 "yes" 0
+"Russia" "yes" 0 "yes" 0 "yes" 1
+"Serbia" "yes" 1 "yes" 0 "yes" 1
+"Spain" "yes" 1 "yes" 2 "yes" 5
+"Spain & Hungary" "yes" 0 "yes" 0 "yes" 1
+"Sweden & Portugal" "yes" 0 "yes" 0 "yes" 1
+"United Kingdom" "yes" 1 "yes" 1 "yes" 4
+"United States" "yes" 2 "yes" 0 "yes" 10

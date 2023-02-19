@@ -515,3 +515,5 @@ countries$V1=tolower(gsub("^ ","", countries$V1))
 annotations_inc$country_l=tolower(annotations_inc$country)
 
 annotations_inc$oecd<-annotations_inc$country_l %in% countries$V1
+
+write.table(annotations_inc,"derived/annotations_included", row.names = FALSE, col.names = TRUE)
