@@ -11,6 +11,7 @@ library(readxl)
 library(stringr)
 library(childesr)
 library(ggplot2)
+library(dichromat)
 
 ## READ IN DATA AND ORGANIZE ####
 rm(list=ls()) #clean your environment
@@ -27,14 +28,24 @@ write.table(education_withdata,"derived/education_withdata", row.names = FALSE, 
 
 education_withdata<- read.csv("derived/education_withdata", sep="")
 levels(as.factor(education_withdata$country))#28 countries
+education_withdata$Education.ac = factor(education_withdata$Education.ac, levels=c("Some primary", "Some secondary", "Some college", "College and above"))
 
 # Plot this categorywise bar chart
 g <- ggplot(data=subset(annotations_inc, !is.na(Education.ac)), aes(country))
-g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
-  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
-  labs(title="Education of caregivers") 
-g + geom_bar(aes(fill=Education.ac), width = 0.6) + 
-  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+g + geom_bar(aes(fill=Education.ac), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("Some primary", "Some secondary", "Some college", "College and above"),values = c("#E6FFFF", "#99E6FF", "#4CA6FF", "#0040FF" )) +
+  scale_x_discrete(name = "Number of corpus") +
+  scale_y_continuous(name = "Countries") 
   labs(title="Education of caregivers") +  scale_y_continuous( breaks = seq(0,13, 1))
 
 
