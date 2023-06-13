@@ -125,3 +125,53 @@ write.table(community_withdata,"derived/community_withdata", row.names = FALSE, 
 community_withdata<- read.csv("derived/community_withdata", sep="")
 levels(as.factor(community_withdata$country))#28 countries
 
+
+## Figure
+install.packages("ggplot2")
+install.packages("maps")
+install.packages("mapdata")
+install.packages("geosphere")
+install.packages("rgeos")
+
+library(ggplot2)
+library(maps)
+library(mapdata)
+library(geosphere)
+library(rgeos)
+
+country_coords <- data.frame(
+  Country <- c("Argentina", "Austria", "Belgium", "Canada", "China", "Croatia", "Czech Republic",
+             "Denmark", "Egypt", "Estonia", "France", "Germany", "Greece", "Hungary", "Iceland",
+             "India", "Indonesia", "Iran", "Ireland", "Israel", "Italy", "Jamaica", "Japan",
+             "Korea", "Kuwait", "Lesotho", "Mexico", "Netherlands", "Norway", "Papua New Guinea",
+             "Poland", "Portugal", "Romania", "Russia", "Serbia", "Singapore", "Slovenia",
+             "South Africa", "Spain", "Sweden", "Switzerland", "Taiwan", "Thailand", "Turkey",
+             "United Kingdom", "United States", "Hong-Kong"),
+  Latitude <- c(-34.6037, 47.5162, 50.5039, 56.1304, 35.8617, 45.8150, 49.8175, 55.6761, 26.8206,
+                58.5953, 46.6034, 51.1657, 39.0742, 47.1625, 64.9631, 20.5937, -0.7893, 32.4279,
+                53.3498, 31.0461, 41.8719, 18.1096, 36.2048, 35.9078, 29.3117, -29.6099, 23.6345,
+                52.3702, 60.4720, -6.3146, 51.9194, 39.3999, 45.9432, 44.0165, 44.7866, 1.3521,
+                46.1512, -30.5595, 40.4168, 59.3293, 46.8182, 23.6978, 38.7223, 39.9334, 51.5074,
+                37.0902, 22.3964),
+  Longitude <- c(-58.3816, 14.5501, 4.4699, -106.3468, 104.1954, 15.9785, 15.4730, 12.5683,
+                 30.8025, 25.0136, 2.3522, 10.4515, 21.8243, 19.0402, -21.9426, 78.9629,
+                 113.9213, 53.6880, -8.2439, 34.8516, 12.4964, -76.7926, 139.6503, 127.7669,
+                 126.9770, 28.2336, -29.6099, -102.5528, 4.8952, 19.5033, 138.2529, 21.0122,
+                 34.7695, 105.3188, 20.4489, 20.9975, 1.3521, 46.1512, 14.9955, 25.2048, 8.2275,
+                 120.9605, 100.9925, 35.2433, -3.7038, 55.3781, -95.7129)
+)
+
+
+
+               
+
+world_map <- map_data("world")
+
+merged_data <- merge(world_map, participant_data, by.x = "region", by.y = "Country", all.x = TRUE)
+
+ggplot() +
+  geom_polygon(data = merged_data, aes(x = long, y = lat, group = group), fill = "lightgray") +
+  geom_point(data = merged_data, aes(x = Longitude, y = Latitude, size = Participants), color = "blue", alpha = 0.6) +
+  coord_map() +
+  theme_void() +
+  labs(title = "Participants by Country")
