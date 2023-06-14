@@ -137,7 +137,7 @@ library(ggplot2)
 library(maps)
 library(mapdata)
 library(geosphere)
-library(rgeos)
+#library(rgeos)
 
 country_coords <- data.frame(
   Country <- c("Argentina", "Austria", "Belgium", "Canada", "China", "Croatia", "Czech Republic",
@@ -161,17 +161,22 @@ country_coords <- data.frame(
                  120.9605, 100.9925, 35.2433, -3.7038, 55.3781, -95.7129)
 )
 
-
-
+names(country_coords)[1] <- "Country"
+names(country_coords)[2] <- "Latitude"
+names(country_coords)[3] <- "Longitude"
                
 
 world_map <- map_data("world")
 
-merged_data <- merge(world_map, participant_data, by.x = "region", by.y = "Country", all.x = TRUE)
+merged_data <- merge(world_map, country_coords, by.x = "region", by.y = "Country", all.x = TRUE)
+
+merged_data2 <- merge(country_coords, annotations_inc, by.x = "Country", by.y = "country", all.x = TRUE)
+
 
 ggplot() +
-  geom_polygon(data = merged_data, aes(x = long, y = lat, group = group), fill = "lightgray") +
-  geom_point(data = merged_data, aes(x = Longitude, y = Latitude, size = Participants), color = "blue", alpha = 0.6) +
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "lightgray") +
+  geom_point(data = merged_data2, aes(x = Longitude, y = Latitude, size = Nb.of.participants), color = "blue", alpha = 0.6) +
   coord_map() +
   theme_void() +
   labs(title = "Participants by Country")
+colnames(annotations_inc)
