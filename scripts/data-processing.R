@@ -125,26 +125,26 @@ annotations_inc$country[grep("China", annotations_inc$Location)]  <- "China"
 annotations_inc$country[grep("Singapore", annotations_inc$Location)]  <- "Singapore"
 annotations_inc$country[grep("Indonesia", annotations_inc$Location)]  <- "Indonesia"
 annotations_inc$country[grep("Bangkok, Thailand", annotations_inc$Location)]  <- "Thailand"
-annotations_inc$country[grep("Osaka|Tokyo|Nagoya|osaka|Kusatsu City, Shiga Pref", annotations_inc$Location)]  <- "Japan"
-annotations_inc$country[grep("Korea", annotations_inc$Location)]  <- "Korea" #NOTE: one corpus just says "Korea", data collected in 2009-2011, assuming it's South Korean
+annotations_inc$country[grep("Korea", annotations_inc$Location)]  <- "South Korea" #NOTE: one corpus just says "Korea", data collected in 2009-2011, assuming it's South Korean
 annotations_inc$country[grep("Hong-Kong, Hong Kong", annotations_inc$Location)]  <- "Hong Kong"
 annotations_inc$country[grep("Taiwan", annotations_inc$Location)]  <- "Taiwan"
 annotations_inc$country[grep("Papua-New Guinea", annotations_inc$Location)]  <- "Papua New Guinea"
 annotations_inc$country[grep("Alexandria, Egypt", annotations_inc$Location)]  <- "Egypt"
 annotations_inc$country[grep("Mokhotlong, Lesotho", annotations_inc$Location)]  <- "Lesotho"
 annotations_inc$country[grep("South Africa", annotations_inc$Location)]  <- "South Africa"
-annotations_inc$continent[grep("Egypt|Lesotho|Africa", annotations_inc$country)]  <- "Africa"
 annotations_inc$country[grep("Rio Cuarto, Cordoba, Argentina", annotations_inc$Location)]  <- "Argentina"
 annotations_inc$country[grep("Sao Paulo", annotations_inc$Location)]  <- "Brazil"
 annotations_inc$country[grep("Mexico", annotations_inc$Location)]  <- "Mexico"
 annotations_inc$country[grep("Jamaica", annotations_inc$Location)]  <- "Jamaica"
 annotations_inc$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran|Cambridge MA|Honolulu, HI|usa|UCLA", annotations_inc$Location)]  <- "United States"
 annotations_inc$country[grep("Canada|Montreal", annotations_inc$Location)]  <- "Canada"
+annotations_inc$country[grep("Osaka|Tokyo|Nagoya|osaka|Kusatsu City, Shiga Pref", annotations_inc$Location)]  <- "Japan"
 annotations_inc$country[annotations_inc$Location==""]<-NA
 
 #Special cases
 annotations_inc$country[grep("Sweden ; Portugal", annotations_inc$Location)]  <- "Sweden & Portugal"
 annotations_inc$country[annotations_inc$Location %in% c("Spain (Lloret de Mar), Hungary (Kecskemét)")] <- "Spain & Hungary"
+xtabs(~country, annotations_inc) 
 
 country_info<- as.data.frame(xtabs(~country, annotations_inc)) 
 #to check if any left
@@ -154,11 +154,11 @@ country_info<- as.data.frame(xtabs(~country, annotations_inc))
 #Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
 annotations_inc$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations_inc$country)]  <- "Western Europe"
 annotations_inc$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations_inc$country)]  <- "Non-Western Europe"
-annotations_inc$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|Korea|Hong Kong|Taiwan", annotations_inc$country)]  <- "Asia"
+annotations_inc$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|South Korea|Hong Kong|Taiwan", annotations_inc$country)]  <- "Asia"
 annotations_inc$continent[grep("Papua New Guinea", annotations_inc$country)]  <- "Oceania"
 annotations_inc$continent[grep("United States|Canada", annotations_inc$country)]  <- "North America"
 annotations_inc$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations_inc$country)]  <- "Latin America"
-
+annotations_inc$continent[grep("Egypt|Lesotho|Africa", annotations_inc$country)]  <- "Africa"
 
 #We are leaving continent as NA (because one country is Western & the other Eastern Europe)
 
