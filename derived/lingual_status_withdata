@@ -24,8 +24,7 @@
 "no" "Italy" 3
 "yes" "Italy" 1
 "no" "Jamaica" 1
-"no" "Japan" 5
-"no" "Korea" 1
+"no" "Japan" 6
 "yes" "Kuwait" 1
 "no" "Lesotho" 1
 "no" "Mexico" 1
@@ -37,6 +36,7 @@
 "no" "Russia" 1
 "no" "Serbia" 1
 "yes" "Singapore" 1
+"no" "South Korea" 1
 "no" "Spain" 11
 "yes" "Spain" 11
 "yes" "Spain & Hungary" 1
@@ -44,5 +44,5 @@
 "yes" "Sweden & Portugal" 1
 "no" "United Kingdom" 5
 "yes" "United Kingdom" 1
-"no" "United States" 8
+"no" "United States" 7
 "yes" "United States" 5

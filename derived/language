@@ -36,8 +36,7 @@
 "Italian/German" "Italy" 1
 "Italian/Japanese" "Italy" 1
 "Jamaican" "Jamaica" 1
-"Japanese" "Japan" 5
-"Korean" "Korea" 2
+"Japanese" "Japan" 6
 "Arabic (Egyptian or Kuwaiti)" "Kuwait" 1
 "Sesotho" "Lesotho" 1
 "Spanish" "Mexico" 2
@@ -53,6 +52,7 @@
 "English/Mandarin" "Singapore" 1
 "Slovenian" "Slovenia" 1
 "Afrikaans" "South Africa" 1
+"Korean" "South Korea" 2
 "Basque" "Spain" 2
 "Catalan" "Spain" 4
 "Catalan/Spanish" "Spain" 1
@@ -76,6 +76,6 @@
 "English/Mandarin/Cantonese" "United States" 1
 "English/Russian" "United States" 1
 "English/Spanish" "United States" 1
-"Japanese" "United States" 3
+"Japanese" "United States" 2
 "Russian" "United States" 1
 "Spanish/English" "United States" 1

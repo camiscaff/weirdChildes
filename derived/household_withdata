@@ -16,7 +16,6 @@
 "nuclear" "Italy" 2
 "nuclear" "Japan" 2
 "varied" "Japan" 1
-"nuclear" "Korea" 1
 "varied" "Kuwait" 1
 "extended" "Lesotho" 1
 "nuclear" "Netherlands" 1
@@ -24,6 +23,7 @@
 "nuclear" "Romania" 1
 "extended" "Russia" 1
 "nuclear" "Serbia" 1
+"nuclear" "South Korea" 1
 "nuclear" "Spain" 12
 "nuclear" "Spain & Hungary" 1
 "nuclear" "Sweden & Portugal" 1

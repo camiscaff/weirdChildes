@@ -21,6 +21,24 @@ rm(list=ls()) #clean your environment
 
 ##1.CHILDES annotations ####
 annotations_inc<- read.csv("derived/annotations_included", sep="")
+ocde <-read_csv("data/ocde_country.csv",  col_types = cols(country = col_character(),ocde = col_character()))
+
+
+##countries and corpora
+corpora <- as.data.frame((table(annotations_inc$country)))
+names(corpora)<-c("country","Freq")
+write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
+
+
+merge(x=corpora, y=ocde,  by = "country", all.x = T) -> ocde_country
+sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)
+#important to add the 2 bil corpora! 149 + 2 = 151
+
+#Average number of household members of selected ages
+#Under age 15 years among all households	:The average number of members under age 15 years (aged 0-14) per household, among all households
+hh_composition <- read.csv("~/Documents/GitHub/weirdChildes/data/UU_hh_size_composition.csv")
+hh_composition$source=paste0(hh_composition$Data.source.category,hh_composition$year)
+table(hh_composition$source)
 
 #Education level info
 education <- as.data.frame((table(annotations_inc$Education.ac, annotations_inc$country)))

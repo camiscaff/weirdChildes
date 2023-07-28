@@ -2,16 +2,16 @@ country	Corpus	Nb.of.participants	Location
 1	Argentina	Remedi	1	Rio Cuarto, Cordoba, Argentina
 2	Austria	Koroschetz	1	Austria
 3	Belgium	DeHouwer	4	Antwerp, Belgium
-4	Belgium	De Houwer	1	Antwerp, Belgium
+4	Belgium	Gillis	1	Antwerp (Belgium)
 5	Belgium	De Houwer/Bornstein	34	Belgium (mostly Flanders and Brussels)
-6	Belgium	Gillis	1	Antwerp (Belgium)
+6	Belgium	De Houwer	1	Antwerp, Belgium
 7	Brazil	Florianopolis	1	Sao Paulo
-8	Canada	GNP	5	Montreal or surroundings communities
+8	Canada	GoadRose	2	Québec City, Québec, Canada (Clara); Montréal suburb, Québec, Canada (Théo)
 9	Canada	CCLAS	1	Canada
-10	Canada	GoadRose	2	Québec City, Québec, Canada (Clara); Montréal suburb, Québec, Canada (Théo)
+10	Canada	GNP	5	Montreal or surroundings communities
 11	China	Erbaugh	4	Beijing, China
-12	China	YipMatthews	9	China
-13	China	ZhouDinner	71	China
+12	China	ZhouDinner	71	China
+13	China	YipMatthews	9	China
 14	China	Zhou3	1	China
 15	China	LeeWongLeung	8	China
 16	China	Tong	1	Shenzhen, China
@@ -22,36 +22,36 @@ country	Corpus	Nb.of.participants	Location
 21	Denmark	Hayashi	1	Denmark
 22	Egypt	Salama	10	Alexandria, Egypt
 23	Estonia	Zupping	1	Southern Estonia
-24	Estonia	Beek	1	Estonia
-25	Estonia	Kohler	8	Tartu, Estonia
-26	Estonia	Korgesaar	12	Estonia
-27	Estonia	Kuett	7	Tartu, Estonia ; Rapla, Estonia
+24	Estonia	Kuett	7	Tartu, Estonia ; Rapla, Estonia
+25	Estonia	Beek	1	Estonia
+26	Estonia	Kohler	8	Tartu, Estonia
+27	Estonia	Korgesaar	12	Estonia
 28	Estonia	Kapanen	1	Estonia
-29	Estonia	Vija	1	Tartu, Estonia
-30	Estonia	Argus	1	Estonia, Tallinn 
+29	Estonia	Argus	1	Estonia, Tallinn 
+30	Estonia	Vija	1	Tartu, Estonia
 31	France	Yamaguchi	1	France
-32	France	Watkins	7	Paris, France
-33	France	Champaud	1	France
-34	France	Pauline	1	France
-35	France	Bailleul	1	France (Normandy, Marseille, + places visited)
-36	France	Paris	7	France
-37	France	Leveillé	1	France
-38	France	York	3	France
-39	France	Lyon	5	France
+32	France	Champaud	1	France
+33	France	Watkins	7	Paris, France
+34	France	Paris	7	France
+35	France	Pauline	1	France
+36	France	Bailleul	1	France (Normandy, Marseille, + places visited)
+37	France	Lyon	5	France
+38	France	Leveillé	1	France
+39	France	York	3	France
 40	France	Hunkeler	2	France
 41	France	Palasis	22	France
 42	Germany	Caroline	1	Germany, Heidelberg
-43	Germany	PhonBLA	9	Germany
-44	Germany	PAIDUS-German	5	Hamburg, Germany
-45	Germany	Rigol	21	Germany, village/city
-46	Germany	Miller	2	Germany
-47	Germany	Wagner	13	Dortmund, Germany
-48	Germany	Grimm	4	Osnabrueck, Germany
+43	Germany	Miller	2	Germany
+44	Germany	PhonBLA	9	Germany
+45	Germany	PAIDUS-German	5	Hamburg, Germany
+46	Germany	Grimm	4	Osnabrueck, Germany
+47	Germany	Rigol	21	Germany, village/city
+48	Germany	Wagner	13	Dortmund, Germany
 49	Greece	Stephany	4	Athens, Greece
 50	Greece	Doukas	2	Athens, Greece
-51	Hungary	MacWhinney	6	Hungary
-52	Hungary	Reger	1	Hungary
-53	Hungary	Navracsics	2	Veszprém, Hungary
+51	Hungary	Navracsics	2	Veszprém, Hungary
+52	Hungary	MacWhinney	6	Hungary
+53	Hungary	Reger	1	Hungary
 54	Hungary	Bodor	1	Budapest, Hungary
 55	Iceland	Kari	1	Iceland
 56	India	Narasimhan	1	Bombay, India
@@ -63,119 +63,119 @@ country	Corpus	Nb.of.participants	Location
 62	Israel	BermanLong	4	Tel Aviv, Israel
 63	Israel	BatEl	3	Israel
 64	Israel	BSF	102	central Israel
-65	Israel	Naama	1	Herzliya, Israel
-66	Israel	Ravid	1	Yahud, Israel
-67	Israel	Hacohen	1	Israel, village nearby Beer-Sheva, a high socio economic status village
+65	Israel	Hacohen	1	Israel, village nearby Beer-Sheva, a high socio economic status village
+66	Israel	Naama	1	Herzliya, Israel
+67	Israel	Ravid	1	Yahud, Israel
 68	Israel	Levy	11	Israel
 69	Italy	Tonelli	1	Northest Italy; Udine
 70	Italy	Klammler	1	Naples, Italy
 71	Italy	Roma	1	Roma
-72	Italy	Calambrone	6	italy
-73	Italy	Roggero	1	Italy
+72	Italy	Roggero	1	Italy
+73	Italy	Calambrone	6	italy
 74	Jamaica	DeLisser	2	Jamaica
 75	Japan	Miyata	3	Nagoya
-76	Japan	Hamasaki	1	Nagoya area
-77	Japan	Okayama	130	Osaka area
-78	Japan	NINJAL-Okubo	1	Tokyo
-79	Japan	Miipro	4	Tokyo area
-80	Korea	Ryu	3	Korea
-81	Korea	Jiwon	1	South Korea
-82	Kuwait	Kuwaiti	70	Kuwait
-83	Lesotho	Demuth	4	Mokhotlong, Lesotho
-84	Mexico	Montes	1	Patzcuaro, Michoacan, iMexico
-85	Mexico	Romero	1	Mexico City, Mexico
+76	Japan	Ishii	1	Kusatsu City, Shiga Pref
+77	Japan	NINJAL-Okubo	1	Tokyo
+78	Japan	Hamasaki	1	Nagoya area
+79	Japan	Okayama	130	Osaka area
+80	Japan	Miipro	4	Tokyo area
+81	Kuwait	Kuwaiti	70	Kuwait
+82	Lesotho	Demuth	4	Mokhotlong, Lesotho
+83	Mexico	Montes	1	Patzcuaro, Michoacan, iMexico
+84	Mexico	Romero	1	Mexico City, Mexico
+85	Netherlands	VanKampen	2	Netherlands
 86	Netherlands	Amsterdam	4	Netherlands (Utrecht, Amsterdam, Arnhem)
 87	Netherlands	Schaerlaekens	6	Netherlands
-88	Netherlands	Groningen	7	Netherlands
-89	Netherlands	Wijnen	1	Netherlands
-90	Netherlands	VanKampen	2	Netherlands
-91	Netherlands	Utrecht	2	Netherlands
-92	Norway	Ringstad	3	Norway (Trøndelag: Trondheim/Stjørdal)
-93	Norway	Garmann	8	Oslo, Norway
-94	Papua New Guinea	Sarvasy	5	Papua-New Guinea
-95	Poland	WeistJarosz	4	Poznań, Poland
-96	Portugal	Santos	3	Portugal
-97	Portugal	CCF	5	Portugal
-98	Romania	Kern-Romanian	4	Bucharest, Romania
-99	Romania	Avram	2	Romania
-100	Russia	Protassova	1	Moscow, Russia; recordings were made in the apartment, in the yard, in the summer cottage
-101	Serbia	SCECL	8	Belgrade (Serbia), Banja Luka (Bosnia & Herzegovina)
-102	Singapore	Singapore	55	Singapore
-103	Slovenia	Zagar	20	Slovenia
-104	South Africa	Stellenbosch	2	South Africa
-105	Spain	EsteveGibert/Prieto	4	Alt penedes, region of catalonia
+88	Netherlands	Wijnen	1	Netherlands
+89	Netherlands	Utrecht	2	Netherlands
+90	Netherlands	Groningen	7	Netherlands
+91	Norway	Ringstad	3	Norway (Trøndelag: Trondheim/Stjørdal)
+92	Norway	Garmann	8	Oslo, Norway
+93	Papua New Guinea	Sarvasy	5	Papua-New Guinea
+94	Poland	WeistJarosz	4	Poznań, Poland
+95	Portugal	Santos	3	Portugal
+96	Portugal	CCF	5	Portugal
+97	Romania	Kern-Romanian	4	Bucharest, Romania
+98	Romania	Avram	2	Romania
+99	Russia	Protassova	1	Moscow, Russia; recordings were made in the apartment, in the yard, in the summer cottage
+100	Serbia	SCECL	8	Belgrade (Serbia), Banja Luka (Bosnia & Herzegovina)
+101	Singapore	Singapore	55	Singapore
+102	Slovenia	Zagar	20	Slovenia
+103	South Africa	Stellenbosch	2	South Africa
+104	South Korea	Jiwon	1	South Korea
+105	South Korea	Ryu	3	Korea
 106	Spain	Aguirre	1	Spain
-107	Spain	MireiaEvaPascual	3	Barcelona
-108	Spain	Vila	1	Spain
-109	Spain	Ornat	1	Madrid, Spain
-110	Spain	Linaza	4	Spain
-111	Spain	Luque	38	Bizkaia, Autonomous Community of the Basque Country, Spain
-112	Spain	Soto	8	Navarra, Spain
-113	Spain	OreaPine	2	Madrid, Spain
-114	Spain	Serra & Sole	9	spain
-115	Spain	FerFuLice	2	Spain, Salamanca
-116	Spain	PAIDUS Spanish	4	Madrid, Spain
-117	Spain	LlinasOjea	2	Spain
-118	Spain	Vila	1	Spain
-119	Spain	LlinasOjea (IRENE)	1	Gijón, Spain
-120	Spain	SerraSole	1	Spain
-121	Spain	Marrero	6	Madrid, Spain ; Tenerife, Canary Islands
-122	Spain	Serra	4	Spain
-123	Spain	Jordina	1	Barcelona
-124	Spain	Julia	1	Barcelona
-125	Spain	FernAguado	50	Pamplona, Spain
-126	Spain	Koine	66	 Santiago/A Estrada/Lugo
-127	Spain	Nieva	1	Madrid, Spain 
-128	Spain & Hungary	Biro	1	Spain (Lloret de Mar), Hungary (Kecskemét)
-129	Sweden	Andrén	1	Sweden
-130	Sweden	Lund	5	Sweden
-131	Sweden	Lacerda	3	Stockholm, Sweden
-132	Sweden & Portugal	MCF	3	Sweden ; Portugal
-133	Switzerland	Geneva	1	Switzerland
-134	Taiwan	Tsay	4	Taiwan
-135	Thailand	CRSLP-MARCS	18	Bangkok, Thailand
-136	Turkey	Altinkamis	1	Turkey
-137	United Kingdom	Providence 	6	Southern New England
+107	Spain	EsteveGibert/Prieto	4	Alt penedes, region of catalonia
+108	Spain	Marrero	6	Madrid, Spain ; Tenerife, Canary Islands
+109	Spain	Linaza	4	Spain
+110	Spain	MireiaEvaPascual	3	Barcelona
+111	Spain	Vila	1	Spain
+112	Spain	Ornat	1	Madrid, Spain
+113	Spain	Serra & Sole	9	spain
+114	Spain	Luque	38	Bizkaia, Autonomous Community of the Basque Country, Spain
+115	Spain	Soto	8	Navarra, Spain
+116	Spain	OreaPine	2	Madrid, Spain
+117	Spain	Jordina	1	Barcelona
+118	Spain	FerFuLice	2	Spain, Salamanca
+119	Spain	PAIDUS Spanish	4	Madrid, Spain
+120	Spain	LlinasOjea	2	Spain
+121	Spain	Vila	1	Spain
+122	Spain	LlinasOjea (IRENE)	1	Gijón, Spain
+123	Spain	SerraSole	1	Spain
+124	Spain	Nieva	1	Madrid, Spain 
+125	Spain	Serra	4	Spain
+126	Spain	Julia	1	Barcelona
+127	Spain	FernAguado	50	Pamplona, Spain
+128	Spain	Koine	66	 Santiago/A Estrada/Lugo
+129	Spain & Hungary	Biro	1	Spain (Lloret de Mar), Hungary (Kecskemét)
+130	Sweden	Lacerda	3	Stockholm, Sweden
+131	Sweden	Andrén	1	Sweden
+132	Sweden	Lund	5	Sweden
+133	Sweden & Portugal	MCF	3	Sweden ; Portugal
+134	Switzerland	Geneva	1	Switzerland
+135	Taiwan	Tsay	4	Taiwan
+136	Thailand	CRSLP-MARCS	18	Bangkok, Thailand
+137	Turkey	Altinkamis	1	Turkey
 138	United Kingdom	Manchester	12	Nottingham/Manchester, England
-139	United Kingdom	Korman	6	Nottingham, England
+139	United Kingdom	Providence 	6	Southern New England
 140	United Kingdom	Belfast	8	Belfast, Northern Ireland
 141	United Kingdom	Thomas	1	England
-142	United Kingdom	CIG2	468	Wales
-143	United Kingdom	Howe	16	Cambridge, UK
-144	United Kingdom	Wells	32	England
-145	United Kingdom	Forrester	3	Canterbury, Kent, England.
-146	United Kingdom	Deuchar	1	England, Brighton
+142	United Kingdom	Korman	6	Nottingham, England
+143	United Kingdom	Wells	32	England
+144	United Kingdom	Forrester	3	Canterbury, Kent, England.
+145	United Kingdom	CIG2	468	Wales
+146	United Kingdom	Howe	16	Cambridge, UK
 147	United Kingdom	CIG1	7	Arfon area Gwynedd, North Wales
-148	United States	Perez	6	Michigan, USA
+148	United Kingdom	Deuchar	1	England, Brighton
 149	United States	Hall	39	USA
-150	United States	Brent	8	USA
-151	United States	Bloom	3	USA
-152	United States	Clark	1	Palo Alto, California, USA
-153	United States	Post	NA	Suwannee County, Florida, USA
-154	United States	Valian	21	Massachusetts, New York, USA
-155	United States	Brown	3	USA
-156	United States	Ionin	22	USA, Michigan (Ann Arbor, Southfield, Flint)
-157	United States	Morisset	NA	Seattle, Topeka, and UCLA.
-158	United States	Higginson	3	USA, Iowa
-159	United States	Demetras - Trevor	NA	USA
-160	United States	Ota	3	Washington DC
-161	United States	McMillan	NA	USA
-162	United States	StanfordJapanese	5	San Francisco area
-163	United States	Ishii	1	Kusatsu City, Shiga Pref
-164	United States	Snow	1	USA, Brookline, MA
-165	United States	Ticio	1	Houston, Texas, USA
-166	United States	CHCC	3	US: Seattle, Maryland, Ann Arbor
-167	United States	Demetras - Working	NA	USA
-168	United States	Menn	1	Cambridge MA
-169	United States	Sachs	1	Connecticut, USA
-170	United States	Davis	NA	USA
-171	United States	Feldman (Andrea) 	NA	Colorado, USA
-172	United States	Tanja	1	United States
-173	United States	FallsChurch	1	USA, Northern Virginia
+150	United States	Perez	6	Michigan, USA
+151	United States	Clark	1	Palo Alto, California, USA
+152	United States	Valian	21	Massachusetts, New York, USA
+153	United States	Brent	8	USA
+154	United States	Bloom	3	USA
+155	United States	McMillan	NA	USA
+156	United States	Post	NA	Suwannee County, Florida, USA
+157	United States	Snow	1	USA, Brookline, MA
+158	United States	Brown	3	USA
+159	United States	Ionin	22	USA, Michigan (Ann Arbor, Southfield, Flint)
+160	United States	Morisset	NA	Seattle, Topeka, and UCLA.
+161	United States	Higginson	3	USA, Iowa
+162	United States	Demetras - Trevor	NA	USA
+163	United States	Ota	3	Washington DC
+164	United States	StanfordJapanese	5	San Francisco area
+165	United States	Feldman (Andrea) 	NA	Colorado, USA
+166	United States	Demetras - Working	NA	USA
+167	United States	FallsChurch	1	USA, Northern Virginia
+168	United States	Ticio	1	Houston, Texas, USA
+169	United States	CHCC	3	US: Seattle, Maryland, Ann Arbor
+170	United States	Soderstrom	2	USA
+171	United States	Menn	1	Cambridge MA
+172	United States	Sachs	1	Connecticut, USA
+173	United States	Davis	NA	USA
 174	United States	Suppes	1	USA
-175	United States	Warren-Leubecker 	20	suburbs of Atlanta, Georgia, USA
+175	United States	Tanja	1	United States
 176	United States	Rondal-TD	21	usa
-177	United States	Soderstrom	2	USA
+177	United States	Warren-Leubecker 	20	suburbs of Atlanta, Georgia, USA
 178	United States	Peters/Wilson	1	Honolulu, HI
 179	NA	Leo	1	Hong-Kong
 180	NA	CUHK	7	Hong Kong
