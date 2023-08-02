@@ -11,7 +11,6 @@ library(readxl)
 library(stringr)
 library(childesr)
 
-
 ## READ IN DATA AND ORGANIZE ####
 rm(list=ls()) #clean your environment
 # Read in data
@@ -19,6 +18,8 @@ rm(list=ls()) #clean your environment
 ##1.CHILDES annotations ####
 annotations<- read.csv("data/Table for authors - annotations.csv") 
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
+#https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
+read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions
 
 #some cleaning  of the col names
 #colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
@@ -126,7 +127,6 @@ annotations_inc$country[grep("Singapore", annotations_inc$Location)]  <- "Singap
 annotations_inc$country[grep("Indonesia", annotations_inc$Location)]  <- "Indonesia"
 annotations_inc$country[grep("Bangkok, Thailand", annotations_inc$Location)]  <- "Thailand"
 annotations_inc$country[grep("Korea", annotations_inc$Location)]  <- "South Korea" #NOTE: one corpus just says "Korea", data collected in 2009-2011, assuming it's South Korean
-annotations_inc$country[grep("Hong-Kong, Hong Kong", annotations_inc$Location)]  <- "Hong Kong"
 annotations_inc$country[grep("Taiwan", annotations_inc$Location)]  <- "Taiwan"
 annotations_inc$country[grep("Papua-New Guinea", annotations_inc$Location)]  <- "Papua New Guinea"
 annotations_inc$country[grep("Alexandria, Egypt", annotations_inc$Location)]  <- "Egypt"
@@ -139,6 +139,7 @@ annotations_inc$country[grep("Jamaica", annotations_inc$Location)]  <- "Jamaica"
 annotations_inc$country[grep("Michigan, USA|USA, Northern Virginia|California, USA|washington dc|United States|USA|Washington|Maryland|San Fran|Cambridge MA|Honolulu, HI|usa|UCLA", annotations_inc$Location)]  <- "United States"
 annotations_inc$country[grep("Canada|Montreal", annotations_inc$Location)]  <- "Canada"
 annotations_inc$country[grep("Osaka|Tokyo|Nagoya|osaka|Kusatsu City, Shiga Pref", annotations_inc$Location)]  <- "Japan"
+annotations_inc$country[grep("Hong-Kong|Hong Kong", annotations_inc$Location)]  <- "Hong Kong"
 annotations_inc$country[annotations_inc$Location==""]<-NA
 
 #Special cases
@@ -152,13 +153,13 @@ country_info<- as.data.frame(xtabs(~country, annotations_inc))
 #annotations_inc[is.na(annotations_inc$continent),"Location"]
 
 #Following the EuroVoc classification https://en.wikipedia.org/wiki/EuroVoc + Italy and Spain and Portugal
-annotations_inc$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations_inc$country)]  <- "Western Europe"
-annotations_inc$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations_inc$country)]  <- "Non-Western Europe"
-annotations_inc$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|South Korea|Hong Kong|Taiwan", annotations_inc$country)]  <- "Asia"
-annotations_inc$continent[grep("Papua New Guinea", annotations_inc$country)]  <- "Oceania"
-annotations_inc$continent[grep("United States|Canada", annotations_inc$country)]  <- "North America"
-annotations_inc$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations_inc$country)]  <- "Latin America"
-annotations_inc$continent[grep("Egypt|Lesotho|Africa", annotations_inc$country)]  <- "Africa"
+# annotations_inc$continent[grep("Andorra|Austria|Belgium|France|Germany|Ireland|Italy|Liechtenstein|Luxembourg|Monaco|Netherlands|Portugal|Spain|Switzerland|United Kingdom", annotations_inc$country)]  <- "Western Europe"
+# annotations_inc$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations_inc$country)]  <- "Non-Western Europe"
+# annotations_inc$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|South Korea|Hong Kong|Taiwan", annotations_inc$country)]  <- "Asia"
+# annotations_inc$continent[grep("Papua New Guinea", annotations_inc$country)]  <- "Oceania"
+# annotations_inc$continent[grep("United States|Canada", annotations_inc$country)]  <- "North America"
+# annotations_inc$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations_inc$country)]  <- "Latin America"
+# annotations_inc$continent[grep("Egypt|Lesotho|Africa", annotations_inc$country)]  <- "Africa"
 
 #We are leaving continent as NA (because one country is Western & the other Eastern Europe)
 
@@ -281,13 +282,7 @@ annotations_inc$Parental.profession[annotations_inc$Parental.profession %in% c("
 xtabs(~Type.of.community, annotations_inc) 
 annotations_inc$Type.of.community[is.na(annotations_inc$Type.of.community)]<-annotations_inc$STDZD.community.type[is.na(annotations_inc$Type.of.community)]
 annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
-                                                                                                                               "industrial & service &trade activities...","industrial city (3.000.000 inhabitants",
-                                                                                                                               "Industrial city (population: around 272,000 inhabitants)",
-                                                                                                                               "Mediterranean city of 1.6 million inhabitants",
-                                                                                                                               "modern city families, usually both working parents",
-                                                                                                                               "Orthodox Jews",
-                                                                                                                               "Seaside tourist town",
-                                                                                                                               "work-for-pay/industrial","industrial","Northeastern US urban","urban western")]<-"urban"
+                                                                                                        "work-for-pay/industrial","industrial","Northeastern US urban","urban western")]<-"urban"
 
 annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("farmer","rural","rural farming village")]<-"rural"
 annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("industrial, farmers","mainly urban")]<-"both"
@@ -298,222 +293,17 @@ annotations_inc$Type.of.community[annotations_inc$Type.of.community==""]<-NA
 #Fertility rate of community at the time of the recordings 
 #Interbirth intervals in community at the time of the recordings 
 
+#merge with international codes
+#fix the names
+regions$name=gsub("United States of America","United States",regions$name)
+regions$name=gsub("United Kingdom of Great Britain and Northern Ireland","United Kingdom",regions$name)
+regions$name=gsub("Czechia","Czech Republic",regions$name)
+regions$name[regions$name == "Iran (Islamic Republic of)"] <- "Iran" #regular code didnt work
+regions$name=gsub("Russian Federation","Russia",regions$name)
+regions$name=gsub("Korea, Republic of","South Korea",regions$name)
+regions$name=gsub("Taiwan, Province of China","Taiwan",regions$name)
 
-## Country level information ####
-## Merge ISO of country with our names for Countries
-# This is necessary to merge info with World Bank
-read.csv("country_iso.csv")->iso_lookup
-codes=iso_lookup$Code
-iso_lookup$Name<-as.character(iso_lookup$Name)
-iso_lookup$Name=gsub(", Islamic Republic of","",iso_lookup$Name)
-iso_lookup$Name=gsub("Russian Federation","Russia",iso_lookup$Name)
-iso_lookup$Name=gsub(", Province of China","",iso_lookup$Name)
-iso_lookup$Name=gsub(", Republic of","",iso_lookup$Name)
-iso_lookup$Name=gsub("Congo, the Democratic Republic of the","Democratic Republic of Congo",iso_lookup$Name)
-
-names(codes)<-iso_lookup$Name
-
-## Country name for Wordbank
-annotations_inc$country_WB<-codes[annotations_inc$country]
-
-annotations_inc$country_WB <-factor(annotations_inc$country_WB)
-#annotations_inc[is.na(annotations_inc$country_WB),"country"]
-#check - this one is NA bec it's data from 2 countries
-
-annotations_inc$continent <-factor(annotations_inc$continent)
-
-
-read.csv("wdi-data.csv")->wdi_all
-
-#remove areas
-wdi_all=wdi_all[!(wdi_all$country %in% c( "Africa Eastern and Southern" ,"Africa Western and Central",
-                                          "Arab World", "Caribbean small states", "Central Europe and the Baltics" ,
-                                          "European Union", "Fragile and conflict affected situations",
-                                          "OECD members", "West Bank and Gaza",
-                                          "Small states"  , "Pacific island small states" 
-                                          , "Caribbean small states" , "Other small states",
-                                          "Latin America & the Caribbean (IDA & IBRD countries)", "Middle East & North Africa (IDA & IBRD countries)"  ,
-                                          "East Asia & Pacific (IDA & IBRD countries)"     ,      "South Asia (IDA & IBRD)"    ,                        
-                                          "Sub-Saharan Africa (IDA & IBRD countries)"    ,        "Europe & Central Asia (IDA & IBRD countries)" ,
-                                          "Turks and Caicos Islands", 
-                                          "Euro area"      ,                                     
-                                          "High income"                               ,           "Heavily indebted poor countries (HIPC)"              
-                                          , "IBRD only"                                ,            "IDA total"                                           
-                                          , "IDA blend"                               ,            "IDA only"                                            
-                                          , "Latin America & Caribbean (excluding high income)",
-                                          "Middle East & North Africa"                          
-                                          , "IDA & IBRD total"  ,
-                                          "Europe & Central Asia"  ,  "Sub-Saharan Africa (excluding high income)"  ,"Sub-Saharan Africa"    ,                               "Africa Eastern and Southern",
-                                          "Least developed countries: UN classification"   ,      "Low income"                                          
-                                          , "Lower middle income"      ,                            "Low & middle income"                                 
-                                          , "Middle income"          ,                              "Middle East & North Africa (excluding high income)"  
-                                          , "Upper middle income"     ,                             "North America"                                       
-                                          , "Not classified"                                             
-                                          , "East Asia & Pacific", "Pre-demographic dividend" , "Early-demographic dividend" ,"Late-demographic dividend"       , "Post-demographic dividend" , "World","East Asia & Pacific (excluding high income)"  , "Europe & Central Asia (excluding high income)","Latin America & Caribbean","Western Sahara","World" ,"South Asia"
-)),]
-#cleanup
-wdi_all$country[wdi_all$country=="Congo, Dem. Rep."]<-"Democratic Republic of Congo"
-wdi_all$country[wdi_all$country=="Congo, Rep."]<-"Congo"
-wdi_all$country[wdi_all$country=="Lao PDR"]<-"Laos"
-wdi_all$country[wdi_all$country=="Virgin Islands (U.S.)"]<-"United States Virgin Islands"
-wdi_all$country<-gsub(", The","",wdi_all$country)
-wdi_all$country<-gsub(", RB","",wdi_all$country)
-wdi_all$country<-gsub(", Arab Rep.","",wdi_all$country)
-wdi_all$country<-gsub(", Islamic Rep.","",wdi_all$country)
-wdi_all$country<-gsub(" SAR, China","",wdi_all$country)
-wdi_all$country<-gsub("St.","Saint",wdi_all$country,fixed=T)
-wdi_all$country<-gsub(", Fed. Sts.","",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Kyrgyz Republic","Kyrgyzstan",wdi_all$country,fixed=T)
-wdi_all$country<-gsub(" Darussalam","",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Cabo Verde","Cape Verde",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Czech Republic","Czechia",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Korea, Dem. People's Rep.","North Korea",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Korea, Rep.","South Korea",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Yemen, Rep.","Yemen",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Syrian Arab Republic","Syria",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Russian Federation","Russia",wdi_all$country,fixed=T)
-wdi_all$country<-gsub("Slovak Republic","Slovakia",wdi_all$country,fixed=T)
-
-## Read in Ourworld in data info on Education - Educated ####
-# https://ourworldindata.org/primary-and-secondary-education
-read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->ed_basic
-ed_basic[ed_basic$Year>2006 & ed_basic$Year<2015,]->ed_basic
-ed_basic[!duplicated(ed_basic$Entity),]->ed_basic
-colnames(ed_basic)[colnames(ed_basic)=="Lower.secondary.completion.rate..total....of.relevant.age.group."]<-"Compl.LS"
-ed_basic$Compl.LS[ed_basic$Compl.LS>100]<-100  #cap to 100%
-
-#https://ourworldindata.org/tertiary-education
-read.csv("share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->ed
-ed[ed$Year==2010,]->ed #note, no data for 2011, data only every 10 years
-colnames(ed)[colnames(ed)=="Barro.Lee..Percentage.of.population.age.15..with.tertiary.schooling..Completed.Tertiary"]<-"College"
-
-## Read in Ourworld in data info on Democracy - Democratic ####
-
-#https://ourworldindata.org/grapher/political-regimes
-read.csv("political-regimes-OWID-20220215.csv")->democr
-democr[democr$Year==2011,]->democr
-
-## Read in Ourworld in data info on Population Size  ####
-
-#https://ourworldindata.org/grapher/population-past-future
-read.csv("population-past-future-OWID-20220217.csv")->pop
-pop[pop$Year==2011,]->pop
-colnames(pop)[colnames(pop)=="Population..historical.estimates.and.future.projections."]<-"Population"
-
-## Read in Ourworld in data info on Children born per woman - Fertility ####
-
-read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
-cpw[cpw$Year==2011,]->cpw
-colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
-cpw$Entity<-gsub("Slovak Republic","Slovakia",cpw$Entity,fixed=T)
-
-merge(ed_basic,democr[,c("Entity","Political.regime")],all=T)->owid
-merge(owid,pop[,c("Entity","Population")],all=T)->owid
-merge(owid,ed[,c("Entity","College")],all=T)->owid
-merge(owid,cpw[,c("Entity","Fertility")],all=T)->owid
-
-#clean up
-owid=owid[grep("(Urban)",owid$Entity,invert=T),]
-owid=owid[grep("(Rural)",owid$Entity,invert=T),]
-owid=owid[!(owid$Entity%in% c("World","Western Sahara","Africa" ,"Asia","Oceania","South America",
-                              "Europe", "North America"  , "Arab World" ,"Caribbean Small States"  , "Central Europe and the Baltics" ,"Early-demographic dividend", "East Asia & Pacific" ,
-                              "East Asia & Pacific (excluding high income)", "East Asia & Pacific (IDA & IBRD)", "Euro area", "Europe & Central Asia", "Europe & Central Asia (excluding high income)",
-                              "Europe & Central Asia (IDA & IBRD)", "European Union",
-                              "Fragile and conflict affected situations" , "Heavily indebted poor countries (HIPC)","High income" , "IBRD only"    ,                                     
-                              "IDA & IBRD total"    ,                              
-                              "IDA blend"           ,                              
-                              "IDA only"           ,                               
-                              "Late-demographic dividend"              ,           
-                              "Latin America & Caribbean"     ,                    
-                              "Latin America & Caribbean (excluding high income)" ,
-                              "Latin America & Caribbean (IDA & IBRD)"       ,     
-                              "Least developed countries: UN classification"      ,
-                              "Low & middle income"         ,                      
-                              "Low income"             ,                           
-                              "Lower middle income"     ,
-                              "Middle East & North Africa"        ,                
-                              "Middle East & North Africa (excluding high income)",
-                              "Middle East & North Africa (IDA & IBRD)"           ,
-                              "Middle income",
-                              "OECD members"   ,                                   
-                              "Other small states"       ,                         
-                              "Pacific island small states"    , "Post-demographic dividend"    ,                     
-                              "Pre-demographic dividend"     ,
-                              "South Asia"   ,                                     
-                              "South Asia (IDA & IBRD)"       ,                    
-                              "Sub-Saharan Africa"    ,                            
-                              "Sub-Saharan Africa (excluding high income)"        ,
-                              "Sub-Saharan Africa (IDA & IBRD)"  ,   
-                              "Upper middle income" 
-)),]
-
-owid$Political.regime_t<-NA
-owid$Political.regime_t[owid$Political.regime %in% c(0,1)]<-"autocracies"
-#owid$Political.regime_t[owid$Political.regime==1]<-"electoral \n autocracies"
-owid$Political.regime_t[owid$Political.regime%in% c(2,3)]<-"democracies"
-#owid$Political.regime_t[owid$Political.regime==3]<-"liberal \n democracies"
-
-
-# check no missing countries across WB & OWID merge
-#owid$Entity[!(owid$Entity %in% levels(factor(wdi_all$country)))]
-#lots of dependencies; but also Palestine -- unclear how to merge
-# note: ,"Palestine/Gaza","Palestine/West Bank" -- we are leaving them in and not matching them with other OWID data, which has just Palestine
-
-#2 data points lost: Channel Islands & Kosovo
-wdi_all$country[!(wdi_all$country %in% levels(factor(owid$Entity)))]
-
-
-ind_all = merge(wdi_all,owid,by.x="country",by.y="Entity",all=T)
-#ind_all$country
-
-#https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions
-
-ind_all=merge(ind_all,regions,by.x="iso2c",by.y="alpha.2")
-
-ind_all$simple_region=ind_all$sub.region
-ind_all$simple_region[ind_all$sub.region%in% c("Australia and New Zealand","Melanesia","Micronesia","Polynesia")]<-"Oceania"
-
-ind_all$simple_region[grep("Asia",ind_all$sub.region)]<-"Asia"
-ind_all$simple_region[grep("Africa",ind_all$sub.region)]<-"Africa"
-
-ind_all$simple_region[ind_all$sub.region%in% c("Southern Europe","Eastern Europe","Northern Europe")]<-"Non-Western Europe"
-
-ind_all$simple_region[ind_all$country%in% c("Spain","Italy","Portugal")]<-"Western Europe"
-
-ind_all$log_gdp=log(ind_all$NY.GDP.PCAP.PP.KD,10)
-ind_all$log2_fert=log(ind_all$Fertility,2)
-ind_all$log_pop=log(ind_all$Population,10)
-
-ind_all$western<-"non-Western"
-ind_all$western[ind_all$simple_region %in% c('Western Europe',"Northern America")]<-"Western"
-ind_all$western[ind_all$country %in% c('Norway',"Australia","New Zealand","Iceland","Sweden","Denmark")]<-"Western"
-ind_all$western[ind_all$country %in% c('Bermuda',"Greenland")]<-"non-Western"
-ind_all$western=factor(ind_all$western)
-ind = ind_all[ind_all$iso2c %in% levels(annotations_inc$country_WB),]
-
-#final check
-#levels(factor(ind_all$country))
-
-
-annotations_inc=merge(annotations_inc,ind_all,by="country",all.x=T)
-
-
-read.csv("Households-by-number-of-children-2015-OECD-20220217.csv",sep=";")->nkids
-for(i in 2:dim(nkids)[2]) nkids[,c(i)]<-as.numeric(as.character(nkids[,c(i)]))
-nkids[grep("average",nkids$country,invert=T),]->nkids
-nkids$anychildren<-rowSums(nkids[,c("X1.child","X2.children","X3.or.more.children")],na.rm=T)
-nkids$total=nkids$X0.children+nkids$anychildren # this mostly checks out -- total is 100%
-#% of single kids' household, out of households with any children
-nkids$single=(nkids$X1.child/nkids$anychildren)*100
-#summary(nkids)
-
-#https://www.oecd.org/about/document/ratification-oecd-convention.htm
-read.csv("oecd.txt",sep="\t",header=F, skip=1)->countries
-countries$V1=tolower(gsub("^ ","", countries$V1))
-
-annotations_inc$country_l=tolower(annotations_inc$country)
-
-annotations_inc$oecd<-annotations_inc$country_l %in% countries$V1
+merge(x=annotations_inc, y=regions,  by.x = "country", by.y = "name", all.x = T) -> annotations_inc
 
 write.table(annotations_inc,"derived/annotations_included", row.names = FALSE, col.names = TRUE)
+
