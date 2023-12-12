@@ -1,0 +1,379 @@
+---
+title: "How WEIRD-biased is CHILDES' data on children's linguistic input"
+shorttitle        : "WEIRD CHILDES"
+
+author: 
+  - name          : "Camila Scaff*"
+    affiliation   : "1,2"
+  - name          : "Georgia Loukatou*"
+    affiliation   : "2"
+  - name          : "Alejandrina Cristia"
+    affiliation   : "2"
+  - name          : "Naomi Havron"
+    affiliation   : "3"
+    
+affiliation:
+  - id: "1"
+    institution: University of Zurich, Institute of Evolutionary Medicine (IEM), Switzerland
+  - id: "2"
+    institution: PSL University, Laboratoire de Sciences Cognitives et de Psycholinguistique (ENS, EHESS, CNRS, DEC), France
+  - id: "3"
+    institution: Haifa Univerity, Israel
+
+
+
+  # - code: "2"
+  #   address: ENS, EHESS, CNRS, PSL University, Laboratoire de Sciences Cognitives et de Psycholinguistique, Département d études cognitives, 29 rue d ulm, Paris, 75005, France
+
+   
+
+
+
+# corresp_author_name:  "ANON"
+# corresp_author_email: "ANON"
+
+abstract: |
+  Child development studies are heavily biased towards WEIRD (Western, Educated, Industrialized, Rich and Democratic) populations. First, this paper situates the acronym in children's language development research, showing that only some of these dimensions may matter for the description of children's language input. Additional dimensions relevant for describing children's language input are the language(s) used and the child's family structure. Next, a descriptive analysis of 147 corpora from the major archive of child-centered language, CHILDES, revealed that naturalistic speech samples in CHILDES are markedly varied in terms of languages and countries. However, they are biased in terms of education, urbanization, wealth, and family structure, in terms of both the countries represented, and the samples gathered within these countries. 
+
+
+
+## Remove this if not required
+funding: |
+  AC acknowledges financial and institutional support from Agence Nationale de la Recherche (ANR-16-DATA-0004 ACLEW, ANR-17-EURE-0017, ANR-14-CE30-0003 MechELex); the J. S. McDonnell Foundation Understanding Human Cognition Scholar Award; and the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (ExELang, Grant agreement No. 101001095). GL acknowledges financial support from Fondation Fyssen.
+
+
+
+
+## Remove this if not required
+acknowledgements: |
+  We are grateful to Lara Oliel and Clara Daoud for help entering corpus-level data; Sara Pisani for organizing communication with corpus curators; Brian MacWhinney for support and encouragement when retrieving information from corpus curators. We particularly want to thank the literally hundreds of researchers who contributed data to CHILDES, without which this project would be unthinkable; and the 103 curators who replied to our request.
+
+# ac2cs shall we add their names? Do we have permission for that?
+
+
+keywords          : "childes, verbal input, infant-directed speech, language, weird"
+wordcount         : "8,300 words"
+
+
+bibliography      : ["childes.bib"]
+
+floatsintext      : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_pdf
+---
+
+
+
+
+
+```{r setup, include=FALSE}
+#Sys.setlocale("LC_CTYPE", "en_US_POSIX.UTF-8")
+#Sys.setlocale("LANG", "en_US_POSIX.UTF-8")
+Sys.setlocale(category = "LC_ALL", locale = "en_SE.utf8")
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = FALSE)
+library("papaja")
+library(psych)
+library(car)
+library(ggplot2)
+library(scales)
+library(gridExtra)
+library(lme4)
+library(ggpubr)
+library(lmerTest)
+
+library(knitr)
+options(digits=1)
+library(kableExtra)
+library(dplyr)
+
+library(magick)
+
+library(effects)
+library(gvlma)
+library(influence.ME)
+library("wesanderson")
+library(introdataviz)
+#devtools::install_github("psyteachr/introdataviz")
+#library(ggalt)
+library(Hmisc)
+```
+
+This paper provides a systematic review of the CHILDES database, aiming to assess any potential biases in sampling naturalistic input. We examine the database through the lenses of different social and demographic factors that influence language learning. 
+ Since its foundation in 1984, CHILDES (the Child Language Data Exchange System, MacWhinney, 2000) has been the major source of naturalistic recordings and transcript data for researchers studying language acquisition. Naturalistic recordings provide insight into how children acquire language in everyday contexts, and capture the richness and complexity of language use in everyday conversations. They also constitute a valuable and ecologically valid source of data necessary for computational models seeking to reverse engineer language acquisition or simulate natural language development. Additionally, they form the foundation for many influential concepts in developmental science. For instance, they helped establish correlations between caregiver behavior, home environment, and child development, such as the link between socio-economic status and language and literacy (Hoff, 2013). Last, they inspire theories that help understand the connection between language input quantity and language development (Christiansen et al., 2022). 
+However, naturalistic recordings may also contain potential biases that can significantly impact the ideas and conclusions derived from the data, ultimately affecting the research findings and generalizability. One notable concern is that participants or home environments might not represent the diverse socio-economic backgrounds, cultures, or linguistic environments children typically experience. As a result, the validity and applicability of the research stemming from naturalistic recordings may be limited, necessitating cautious interpretation and consideration of these potential biases.
+	Researchers in many fields are increasingly aware of the bias towards WEIRD populations (Western, Educated, Industrial, Rich, Democratic, Henrich 2010;  Nielsen et al., 2017; Moriguchi, 2021; see Cychosz & Cristia, 2022, Singh et al., 2023) in the samples they study. Recent calls have been made to diversify research in psychology, cognitive, and developmental science to address this issue (Majid & Levinson, 2010;  Kidd & Garcia, 2022; Blasi et al. 2022). For instance, Kidd and Garcia (2022)  systematically sampled publications from child-language journals. They revealed biases towards specific continents (North America and Europe) and languages (English. Spanish, French), highlighting the need for increased diversity in populations and languages studied. Similarly. Blasi et al. (2022) emphasize the potential consequences of generalizing observations derived solely from English speakers and how fit they are to represent our entire human species.
+However, the WEIRD versus non-WEIRD dichotomy, while useful as an umbrella term to describe diversity in scientific publications, has been criticized for oversimplifying human diversity (see Ghai, 2022; Muthukrishna et al 2020). On the one hand non-WEIRD countries are often lumped together despite their heterogeneity, and on the other hand, disadvantaged and/or underrepresented groups within WEIRD countries are often diluted into a homogenous group or altogether excluded, leading to further marginalization and limited representation (Ghai, 2022). 
+	Every area of research conceptualizes or determines which dimensions are relevant for explaining variance. Based on previous research, we present in what follows the most relevant dimensions known to play a role in the development of child language, particularly related to naturalistic recordings. Following Ghai's (2022) recommendation to improve the description of diversity in behavioral sciences, we chose to employ two distinct levels of analysis. Firstly, at the country-level, we conduct a broad comparison between world averages against countries included in the CHILDES database. Secondly, at the corpus-level, we delved into individual corpora to gain a more detailed and nuanced understanding of the data. This approach allows for a comprehensive examination of the database and enriches our insights into language acquisition research. Below we describe the dimensions found to be important in the context of language development.
+### Socioeconomic Status
+Decades of research have examined the linguistic differences among families with varying Socio-Economic Status (SES). In the developmental literature, this is primarily indexed by parents’ education (Ensminger, Fothergill, Bornstein, & Bradley, 2003; Hoff, 2003a),  but can also be indexed by parental income, occupation, or a composite measure of them all (e.g. Hollingshead, 1975).
+It is beyond the scope of this paper to detail all the theories that attempt to account for the complex causal pathways that may connect SES to children's language environments. However, Hoff (2003a) provides an example where she compared the speech of high versus low SES American mothers, with SES defined based on education and occupation. College-educated parents produced more utterances to their child, with more diverse vocabulary, and longer phrases, and higher number of utterances continuing a topic the child had brought up. Similar findings can be seen in other studies (Hart & Risley, 1995; Hoff-Ginsberg 1990; Hoff, 2003b; Huttenlocher, et al., 2002, 2007) along with meta-analytic reviews specifically documenting correlations between parental SES and children's linguistic input using naturalistic input recordings (see Dailey & Bergelson, 2022 & Piot et al., 2021), indicating the significance of SES in language acquisition research. We recommend Rowe (2018) as a starting point for readers interested in this literature, along with Golinkoff et al. (2019) and Sperry et al. (2019) for diverse theoretical perspectives.
+It should be noted, however, that some of this literature has been found to reflect majority biases, including what kinds of language input are counted, and what features of linguistic experiences are valued (Sperry, et al., 2019; Scaff et al., 2023). 
+### Urbanization
+Urbanization is the process of moving from rural to urban areas along with noticeable changes in job opportunities and living conditions. It involves the growth and development of cities, leading to increased access to infrastructure and amenities. Studies indicate that children exposed to higher levels of noise pollution in urban areas, exhibit a reduction in cortical thickness in the left IFG, an area of the brain associated with language development (Simon et al., 2022). Within the general theoretical framework of language socialization, there have been proposals suggesting that societies varying in their urbanization process have differing views and values about the role of children in conversations, and more generally in the community (e.g., Sharma & Levine, 1998; Richman et al., 1992; Draper & Harpending, 1987; Keller, 2012). For instance, Keller (2012) discusses three prototypical cases: urban, rural, and hybrid. These three groups differ in terms of their goals for children, with urban families aiming for child psychological independence, rural families for child physical autonomy and interdependence, and hybrid families aiming for some mix across these values. Vogt et al. (2020) employ this conceptual classification to interpret their results on multimodal language use across three samples, namely urban Dutch, urban Mozambique, and rural Mozambique, finding that both the number of gestures, gesture-speech alignment, and gesture types vary across the three groups in ways that can be related to Keller's typology.
+
+### Family structure
+Family structure refers to the arrangement within a household, forming the basis of a family unit. This dimension encompasses aspects such as the number of siblings, birth order, the number of caregivers in the household, and the number of individuals sharing or competing for household resources (including caregiving attention); all of which have a significant impact on child and language development (e.g., Blake, 1981; Duncan & Paradis, 2020; Havron et al., 2019, 2022, Hoff, 1993; Tomasello et al., 1995; Bornstein et al., 2019). In middle-class Euro-American families, parents typically assume primary responsibility for children, often focusing on the mother as the primary caregiver (e.g. Bakermans-Kranenburg et al., 2004; Huttenlocher et al., 2010; Ispa et al., 2004; Pan et al., 2005). However, certain cultures, like Turkish families described by Isleyen (2021), may adopt a different approach, with nuclear families living in separate apartments but sharing common spaces and caregiving responsibilities, resulting in extensive support networks. 
+Within country analysis, has revealed that … (naomi example).  
+### Languages 
+Characterizing the diversity of participant samples in terms of language (Blasi et al, 2022; Kidd & Garcia, 2022) is an important factor in language acquisition, as variations in language exposure and language use among different groups allow to explore how purely linguistic factors shape and influence the development of language skills in children.  Another major dimension and entire sub-field in developmental science is the study of bilingualism or multilingualism (for an introductory review see XX, also McCabe et al., 2013). We refer to lingual status as the variable that distinguishes monolingualism, bilingualism, or other cases.
+### The current study
+Here, we provide a systematic analysis of the naturalistic speech corpora of the CHILDES database by quantifying the diversity of each dimension presented above (see Table 1). Though some of these dimensions overlap with each other (See Figures SM.X and SM.x in the supplementary materials for illustrations), we decided to treat each, as best as possible, independently.
+ Although valuable insights can be gleaned from corpora on clinical populations and elicitation tasks, we deliberately excluded them from our review. This is because they introduce additional biases. For example, the inclusion of clinical populations may highlight differences in the prevalence and access to diagnosis of language disorders in different regions or countries. Additionally, the structure of elicitation tasks may not accurately reflect spontaneous language use in everyday conversations.
+Our systematic analysis follows three steps. First, we screened the CHILDES database, excluding the clinical and task-driven recordings. Second, we extracted information related to the dimensions described in Table 1, and contacted the corpus authors for missing information not included in the corpus description. Finally, we analyzed the data at two levels: the country in which the corpus was recorded (country-level analysis), and the individual families recorded (corpus-level analysis). Taking into account the  dimensions previously found to be important for language acquisition, we aimed to address two descriptive research questions: (1) According to the country-level variables, to what extent do countries in this sub-sample of CHILDES represent countries in the world? and (2) According to corpus-level variables, to what extent do corpora in this sub-sample of CHILDES represent their own countries? 
+
+
+```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+
+mytab<-all[,c("ref","country","mean_age","ling_status","BAME","N","comp_measure_xtable","SES_measure_cat","SES_as_primary_measure","r_calc")]
+mytab=mytab[order(mytab$ref),]
+mytab$SES_measure_cat= gsub("_based","",mytab$SES_measure_cat)
+# mytab$uniqueID= gsub(",.*\\("," ",mytab$uniqueID)
+# mytab$uniqueID= gsub(",.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("&.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("\\)","",mytab$uniqueID)
+mytab$mean_age=round(mytab$mean_age/365.25*12,1)
+
+#making some changes to get tab1 to fit
+mytab$BAME<-gsub("%","",mytab$BAME)
+
+mytab$ling_status[mytab$ling_status=="Monolingual"]<-"Monol."
+mytab$ling_status[mytab$ling_status=="Bilingual"]<-"Bil."
+
+mytab$country[mytab$country=="New Zealand"]<-"NZ"
+mytab$country[mytab$country=="Switzerland"]<-"Switz."
+mytab$country[mytab$country=="Netherlands"]<-"NL"
+mytab$country[mytab$country=="Argentina"]<-"Argent."
+
+mytab$SES_measure_cat[mytab$SES_measure_cat=="composite"]<-"C"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="education"]<-"E"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="other"]<-"O"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="income"]<-"I"
+
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="yes"]<-"Y"
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="no"]<-"N"
+
+mytab[is.na(mytab)]<-"--"
+mytab[mytab=="NA"]<-"--"
+
+
+colnames(mytab)<-c("Paper","Country", "Age","Lingual", "% BAME","N","Test","SES","Aim","r")
+mytab$N=as.character(round(mytab$N))
+mytab$r=printr(mytab$r)
+mytab$Age=as.character(round(mytab$Age))
+apa_table(mytab,caption="Included studies. Papers are cited by first author and year regardless of how many authors there are. In Country Argent. stands for Argentina, NL for Netherlands, NZ for New Zealand,  Switz.  for Switzerland. Age stands for mean age in months; N for number of included participants; Lingual for lingual status, namely monolingual (monol.), bilingual (bil.) or mixed samples; % BAME for percentage of participants were Black, Asian, and Minority Ethnic; test for which test children did (see main text for explanation of acronym); SES for the type of SES meaure, namely education (E), income (I), a composite (O), or other (O); Aim for whether the study investigated SES effects as a main aim (Y) or not (N); r indicates the correlation between child word comprehension and familial SES.", longtable = T, align=c("lccccccccr"))
+write.csv(mytab,"output/table1.csv")
+```
+
+# Methods
+
+Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 (Wickham, 2016). Data, scripts, and online Supplementary Materials are available on the OSF [https://osf.io/q9w82/?view_only=a013f1b25b8c4556b8248f12870402c9]. 
+
+### Inclusion criteria
+We excluded the following corpora: a) clinical populations or non-typically developing children, b) structured tasks such as toy narratives, personal narratives, frog stories, picture or movie descriptions, structured storytelling, and other elicitation tasks; c) only child or adult speech without a conversational partner; and d) non-naturalistic elements, such as recordings conducted exclusively in a lab environment or in a diary format.
+### Screening
+Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified 180 corpora that met our inclusion criteria mentioned above in section Inclusion Criteria. For a detailed breakdown of the included corpora, please refer to Figure XX. 
+
+Figure XX. Flowchart. (n) represents the number of different corpora; (N) represents the number of different countries. Describe color….
+![Flowchart for study inclusion/exclusion: "Age" (children older than 4 years on average), "Other measures" (measures not LWL, PPVT, TVT), "Language" (articles in an unfamiliar language). "Studies included in qualitative synthesis" met all criteria except for quantitative SES-language comprehension estimates; when possible authors were contacted for this data."Studies included in quantitative synthesis" encompassed studies with available SES-language comprehension effect sizes for analysis.](flowchart.png){ width=80% }
+
+## Country-level information
+The goal of the country-level analysis is to assess the representativeness of our sub-sample of CHILDES against world statistics. For this, we first identified the country where the recordings were collected. The following variables were used for this level of analysis, all derived from official sources including the World Bank, Our World in Data (WDI), and the United Nations (UN). For each macro-dimension described in the Introduction, we looked for relevant world statistics available (see the annotated code for more details about the indicators). 
+
+### SES
+For the SES dimension we choose two measures representing education and income. For the education measure, we turned to Our World in Data (WDI), an organization that collates information from various official sources. We downloaded information on the proportion of the population that had completed lower secondary school (data from 2007-2015; Our World in Data, 2022a;  see Supplementary Materials (SMX) for figures using the proportion of the population completing high school instead). For the income measure, we relied on the World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021). We choose the Gross Domestic Product (GDP) per capita (based on log 10), a measure that represents how relatively rich countries are based on purchasing power parity. It is expressed in 2017 US dollars. 
+
+### Urbanization
+We used the percentage of the population living in urban areas indicator, from the WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables. 
+Family structure
+We used two measures pertaining to household size from the UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022). First, the average number of household members, and second, the average number of members under the age of 15. 
+
+### Languages
+To estimate the number of languages in the world we used Ethnologue….
+Add sentence about why we dont have something on multilingualism at this level: not good data at the country level for this as some languages or dialects are not be counted blabla…  
+
+## Corpus-level information
+The goal of the corpus-level analysis was to assess the representativeness of our sub-sample of CHILDES in a finer-grained way across our macro dimensions: SES, urbanization, family structure and languages (see Table 1). Fine-grained categories were created for each dimension, and data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. See Table 2  for the complete list of variables and definitions.
+Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. The response from curators was overwhelmingly positive, with over a third of the contacted curators providing additional data or confirming missing information. Unfortunately, curators for 50 corpora could not be contacted due to unresponsive email addresses (14), absence of email addresses (24), or the curator’s passing (12). 
+
+```{r tab2,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+
+mytab<-all[,c("ref","country","mean_age","ling_status","BAME","N","comp_measure_xtable","SES_measure_cat","SES_as_primary_measure","r_calc")]
+mytab=mytab[order(mytab$ref),]
+mytab$SES_measure_cat= gsub("_based","",mytab$SES_measure_cat)
+# mytab$uniqueID= gsub(",.*\\("," ",mytab$uniqueID)
+# mytab$uniqueID= gsub(",.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("&.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("\\)","",mytab$uniqueID)
+mytab$mean_age=round(mytab$mean_age/365.25*12,1)
+
+#making some changes to get tab1 to fit
+mytab$BAME<-gsub("%","",mytab$BAME)
+
+mytab$ling_status[mytab$ling_status=="Monolingual"]<-"Monol."
+mytab$ling_status[mytab$ling_status=="Bilingual"]<-"Bil."
+
+mytab$country[mytab$country=="New Zealand"]<-"NZ"
+mytab$country[mytab$country=="Switzerland"]<-"Switz."
+mytab$country[mytab$country=="Netherlands"]<-"NL"
+mytab$country[mytab$country=="Argentina"]<-"Argent."
+
+mytab$SES_measure_cat[mytab$SES_measure_cat=="composite"]<-"C"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="education"]<-"E"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="other"]<-"O"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="income"]<-"I"
+
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="yes"]<-"Y"
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="no"]<-"N"
+
+mytab[is.na(mytab)]<-"--"
+mytab[mytab=="NA"]<-"--"
+
+
+colnames(mytab)<-c("Paper","Country", "Age","Lingual", "% BAME","N","Test","SES","Aim","r")
+mytab$N=as.character(round(mytab$N))
+mytab$r=printr(mytab$r)
+mytab$Age=as.character(round(mytab$Age))
+apa_table(mytab,caption="Included studies. Papers are cited by first author and year regardless of how many authors there are. In Country Argent. stands for Argentina, NL for Netherlands, NZ for New Zealand,  Switz.  for Switzerland. Age stands for mean age in months; N for number of included participants; Lingual for lingual status, namely monolingual (monol.), bilingual (bil.) or mixed samples; % BAME for percentage of participants were Black, Asian, and Minority Ethnic; test for which test children did (see main text for explanation of acronym); SES for the type of SES meaure, namely education (E), income (I), a composite (O), or other (O); Aim for whether the study investigated SES effects as a main aim (Y) or not (N); r indicates the correlation between child word comprehension and familial SES.", longtable = T, align=c("lccccccccr"))
+write.csv(mytab,"output/table2.csv")
+```
+
+# Results
+
+The 180 corpora included in this study represent 47 different countries across all populated continents. The corpora are distributed as follows: 3 corpora from Africa, which represent a total of 16 children; 32 from Asia, representing 602 children; 105 from Europe, representing 1091 children; 34 from North America, representing 177 children, 5 from Latin America, representing 6 children, and only 1 from Oceania, representing 5 children. Out of the 48 different countries or areas included in the sample, 28 of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 151 out of 180 corpora or to 84% of this sub-sample of CHILDES. OECD countries represent 19.5% of world countries.
+```{r fig1, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Effect sizes as a function of age and comprehension measure. PPVT samples are colored green, TVT blue, and LWL red. Shaded areas represent 95% confidence intervals from linear regressions (weighted by sample size using the geom_smooth function of the ggplot R package)."}
+#Figure number of participants per country
+```
+
+## Country-level variables
+Using country-level statistics, we were able to assess the extent to which the countries with data in our sub-sample of CHILDES were a representative sample of countries in the world. Density plots are portrayed in Figure 3. 
+The means for each of the variables differed for the countries in our sub-sample of CHILDES versus overall in the world using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (% compl. LSS, t(101.59) = 5.79, p < .001); they were more urban (% urban, t(79.77) = 3.51,  p < .001); richer (log GDP per capita, t(103.29) = 6,  p < .001) and had smaller households (average household size, t(118.8) = 7.116, p  p < .001) and less average number of members under the age of 15 (average under 15 size, t(26.118) = 5.01, p  p < .001). 
+```{r fig3, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Effect sizes as a function of age and comprehension measure. PPVT samples are colored green, TVT blue, and LWL red. Shaded areas represent 95% confidence intervals from linear regressions (weighted by sample size using the geom_smooth function of the ggplot R package)."}
+#Figure 3. Density plots show the distribution of country-level descriptors for all world countries (gray) versus countries represented in our sub-sample of CHILDES (orange). % complete. LSS is the percentage of the country's population completing lower secondary school. % urban is the percent of the country's population residing in urban (as opposed to rural) locations. GDP stands for Gross Domestic Product. Avg Household size stands for average household size.
+```
+
+Additionally, out of the 7128 languages used today in the world (Ethnologue REF), only 43 individual languages have naturalistic recordings in our sub-sample of CHILDES. See table XX for distribution per language family.  
+```{r tab4,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+
+mytab<-all[,c("ref","country","mean_age","ling_status","BAME","N","comp_measure_xtable","SES_measure_cat","SES_as_primary_measure","r_calc")]
+mytab=mytab[order(mytab$ref),]
+mytab$SES_measure_cat= gsub("_based","",mytab$SES_measure_cat)
+# mytab$uniqueID= gsub(",.*\\("," ",mytab$uniqueID)
+# mytab$uniqueID= gsub(",.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("&.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("\\)","",mytab$uniqueID)
+mytab$mean_age=round(mytab$mean_age/365.25*12,1)
+
+#making some changes to get tab1 to fit
+mytab$BAME<-gsub("%","",mytab$BAME)
+
+mytab$ling_status[mytab$ling_status=="Monolingual"]<-"Monol."
+mytab$ling_status[mytab$ling_status=="Bilingual"]<-"Bil."
+
+mytab$country[mytab$country=="New Zealand"]<-"NZ"
+mytab$country[mytab$country=="Switzerland"]<-"Switz."
+mytab$country[mytab$country=="Netherlands"]<-"NL"
+mytab$country[mytab$country=="Argentina"]<-"Argent."
+
+mytab$SES_measure_cat[mytab$SES_measure_cat=="composite"]<-"C"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="education"]<-"E"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="other"]<-"O"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="income"]<-"I"
+
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="yes"]<-"Y"
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="no"]<-"N"
+
+mytab[is.na(mytab)]<-"--"
+mytab[mytab=="NA"]<-"--"
+
+
+colnames(mytab)<-c("Paper","Country", "Age","Lingual", "% BAME","N","Test","SES","Aim","r")
+mytab$N=as.character(round(mytab$N))
+mytab$r=printr(mytab$r)
+mytab$Age=as.character(round(mytab$Age))
+apa_table(mytab,caption="Included studies. Papers are cited by first author and year regardless of how many authors there are. In Country Argent. stands for Argentina, NL for Netherlands, NZ for New Zealand,  Switz.  for Switzerland. Age stands for mean age in months; N for number of included participants; Lingual for lingual status, namely monolingual (monol.), bilingual (bil.) or mixed samples; % BAME for percentage of participants were Black, Asian, and Minority Ethnic; test for which test children did (see main text for explanation of acronym); SES for the type of SES meaure, namely education (E), income (I), a composite (O), or other (O); Aim for whether the study investigated SES effects as a main aim (Y) or not (N); r indicates the correlation between child word comprehension and familial SES.", longtable = T, align=c("lccccccccr"))
+write.csv(mytab,"output/table4.csv")
+```
+
+
+## Corpus-level variables
+We then investigated at the corpus level the variables described in Table 2. The information collected allows us to have more detail about the characteristics of the individual families that compose our sub-sample of CHILDES. However, it is important to acknowledge that for the majority of the corpora, this information was missing, not known, or not provided.
+
+### SES
+For socioeconomic status, information was available for 102 corpora (78 missing values 43%). Of these 102 corpora, 5 were described as having low SES; 16 were described as spanning both lower and middle or higher SES; and 81 were described as middle or higher SES exclusively (80%). Given that most countries represented in our sub-sample of CHILDES are in the OECD, we can compare this proportion with the proportion of the population in these countries that are middle class. According to a 2016 report, “Almost two-thirds of people live in middle-income households in OECD countries”, for whom “household net income [is] between 0.75 and 2 times the median”. Thus, middle and higher-class participants appear to be over-represented in our sub-sample of CHILDES data. 
+Education. Education information was available for 80 corpora out of the 180, meaning it was missing for more than half of the corpora (see Table 3). Four corpora were described as "diverse", without clarifying the range of education covered. Of the remaining 76 corpora, 3 had at least some parents with primary-level education; 9 had parents with secondary school education as the lower bound of the education range, and a further 6 had some college as the lower bound. Thus, 72.5% of the corpora (N = 58) include children whose parents had at least a graduate, if not a postgraduate, degree. The collected corpora do not accurately represent the demographics of the countries they were obtained from. For instance, while the U.S. Census Bureau reported that only 36% of the adult population held a bachelor’s degree or higher in 2020, our data indicates that 100% of the corpora from people in the United States had a college education or higher. As seen in Figure XX, the same result is seen for corpus from China, Japan, Israel, South Korea, Italy, Hungary, Mexico, The Netherlands, Poland, and Switzerland, … where 100% of parents with data are college educated or above. Thus, it seems that our sub-samples of CHILDES are very skewed toward higher-educated parents. 
+
+```{r fig4, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Effect sizes as a function of age and comprehension measure. PPVT samples are colored green, TVT blue, and LWL red. Shaded areas represent 95% confidence intervals from linear regressions (weighted by sample size using the geom_smooth function of the ggplot R package)."}
+#Figure 3. education ac
+```
+
+Occupation. Information about parents’ occupation or employment activity was available for 99 corpora 45% of missing values, see Table 3). Professions were overall varied, but 50% of the corpora contained parents who were described as one of the following:  Masters or Ph.D students, professors, linguists, researchers, scientists, or academics. Some of the other professions reported were …. To give an idea of the extent to which this is not representative, in 2020, 6% of the American population would be included in that list of professions (REF). Similar data is hard to find for all countries represented in our sub-sample of CHILDES, but we suspect that the proportion of scientists, professors, Masters, and PhD students found in most other countries will be similar or lower.
+
+### Urbanization
+Only about a third of the corpora (65 corpora) had information about whether the community was rural or urban (see Table 3), and the remaining ones were very homogeneous. Setting aside 115 missing values (64%), and focusing on the remaining 65 corpora, 58 were described as industrialized or urban, and an additional one as both rural and urban. Only 7 corpora were described as farming or rural. In these same countries, the proportion of the population residing in urban settings was 76%, suggesting that samples were not representative of their countries in terms of rural versus urban settings either.
+
+
+### Family structure : nuclear households
+As for household composition, 60 corpora (88%) were based on nuclear families; 6 extended families(XX%); and in 2 corpora the structure was varied (XX%). We compare side by side the average per country of the nuclear households (the sum of the percentages of couples with children households, and single parents with children households; United Nations, 2022). 
+```{r tab3,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+
+mytab<-all[,c("ref","country","mean_age","ling_status","BAME","N","comp_measure_xtable","SES_measure_cat","SES_as_primary_measure","r_calc")]
+mytab=mytab[order(mytab$ref),]
+mytab$SES_measure_cat= gsub("_based","",mytab$SES_measure_cat)
+# mytab$uniqueID= gsub(",.*\\("," ",mytab$uniqueID)
+# mytab$uniqueID= gsub(",.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("&.*2","2",mytab$uniqueID)
+# mytab$uniqueID= gsub("\\)","",mytab$uniqueID)
+mytab$mean_age=round(mytab$mean_age/365.25*12,1)
+
+#making some changes to get tab1 to fit
+mytab$BAME<-gsub("%","",mytab$BAME)
+
+mytab$ling_status[mytab$ling_status=="Monolingual"]<-"Monol."
+mytab$ling_status[mytab$ling_status=="Bilingual"]<-"Bil."
+
+mytab$country[mytab$country=="New Zealand"]<-"NZ"
+mytab$country[mytab$country=="Switzerland"]<-"Switz."
+mytab$country[mytab$country=="Netherlands"]<-"NL"
+mytab$country[mytab$country=="Argentina"]<-"Argent."
+
+mytab$SES_measure_cat[mytab$SES_measure_cat=="composite"]<-"C"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="education"]<-"E"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="other"]<-"O"
+mytab$SES_measure_cat[mytab$SES_measure_cat=="income"]<-"I"
+
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="yes"]<-"Y"
+mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="no"]<-"N"
+
+mytab[is.na(mytab)]<-"--"
+mytab[mytab=="NA"]<-"--"
+
+
+colnames(mytab)<-c("Paper","Country", "Age","Lingual", "% BAME","N","Test","SES","Aim","r")
+mytab$N=as.character(round(mytab$N))
+mytab$r=printr(mytab$r)
+mytab$Age=as.character(round(mytab$Age))
+apa_table(mytab,caption="Included studies. Papers are cited by first author and year regardless of how many authors there are. In Country Argent. stands for Argentina, NL for Netherlands, NZ for New Zealand,  Switz.  for Switzerland. Age stands for mean age in months; N for number of included participants; Lingual for lingual status, namely monolingual (monol.), bilingual (bil.) or mixed samples; % BAME for percentage of participants were Black, Asian, and Minority Ethnic; test for which test children did (see main text for explanation of acronym); SES for the type of SES meaure, namely education (E), income (I), a composite (O), or other (O); Aim for whether the study investigated SES effects as a main aim (Y) or not (N); r indicates the correlation between child word comprehension and familial SES.", longtable = T, align=c("lccccccccr"))
+write.csv(mytab,"output/table3.csv")
+```
+
+### Sibling presence
+A majority of corpora in our sub-sample of CHILDES include children who have siblings. In fact, only 28% of corpora (among the 93 corpora having information on siblings) were constituted exclusively of children with no siblings, and the remaining had at least one sibling, with the overall average being 0.8 siblings. Since 83% of countries in CHILDES are in the OECD, we draw a comparison point for such countries: 46% of children had no siblings in OECD countries according to 2015 data. In this sense, children with no siblings appear to be under-represented in CHILDES.
+
+### Languages
+We had two variables of interest here: language spoken in the corpus and lingual status. A total of 62 different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. The corpora in which only one language was reported spoke Afrikaans, Arabic (Egyptian or Kuwaiti), Basque, Cantonese, Catalan, Cree, Croatian, Czech, Danish, Dutch, English, Estonian, Farsi, French, German, Greek, Hebrew, Hungarian, Icelandic, Indonesian, Irish, Italian, Jamaican, Japanese, Korean, Mandarin, Norwegian, Nungon, Polish, Portuguese (Brazilian or European), Romanian, Russian, Serbian, Sesotho, Slovenian, Spanish, Swedish, Taiwanese, Tamil, Thai, Turkish, and  Welsh. The corpora in which multiple languages were reported spoke Catalan/Spanish, Dutch/English, Dutch/French, Dutch/Italian, English/Cantonese, English/Dutch, English/French, English/Hebrew, English/Japanese, English/Japanese/Danish, English/Mandarin, English/Mandarin/Cantonese, English/Russian, English/Spanish, French/Russian, German/Spanish, Hungarian/Catalan/Spanish, Hungarian/Farsi/English, Italian/German, Italian/Japanese, Portuguese/Swedish/English, Spanish/Catalan, Spanish/English, Spanish/Galician.
+
+About a third (32%) of the included corpora that had available data for this variable (N = 110) were not monolingual. It is hard to find reliable estimates of the percentage of the population which is not monolingual in the world or in the countries represented in our sub-sample of CHILDES, but for instance, in Europe in 2016, 65% of adults reported knowing multiple languages (Eurostat, 2022). According to such estimates, even if samples are linguistically diverse, it would appear that input data in our sub-sample of CHILDES under-represents bilingual and multilingual households.
+
+# Discussion
+
+\newpage
+# References
