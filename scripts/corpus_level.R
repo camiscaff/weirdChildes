@@ -20,14 +20,14 @@ rm(list=ls()) #clean your environment
 # Read in data
 
 ##1.CHILDES annotations ####
-annotations_inc<- read.csv("derived/annotations_included", sep="")
-ocde <- read.csv("data/ocde_country.csv", sep=",")
+annotations_inc<- read.csv("../derived/annotations_included", sep="")
+ocde <- read.csv("../data/ocde_country.csv", sep=",")
 
 
 ##countries and corpora
 corpora <- as.data.frame((table(annotations_inc$country)))
 names(corpora)<-c("country","Freq")
-write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
+#write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
 
 
 merge(x=corpora, y=ocde,  by = "country", all.x = T) -> ocde_country
@@ -68,10 +68,31 @@ g + geom_bar(aes(fill=Education.ac), width = 0.9) +
 ses <- as.data.frame((table(annotations_inc$SES.STDZD, annotations_inc$country)))
 names(ses)<-c("SES.STDZD","country","Freq")
 ses_withdata <- subset(ses, Freq > 0)   
-write.table(ses_withdata,"derived/ses_withdata", row.names = FALSE, col.names = TRUE)
+#write.table(ses_withdata,"derived/ses_withdata", row.names = FALSE, col.names = TRUE)
 
-ses_withdata<- read.csv("derived/ses_withdata", sep="")
+ses_withdata<- read.csv("../derived/ses_withdata", sep="")
 levels(as.factor(ses_withdata$country))#35 countries
+
+
+# Plot this categorywise bar chart
+ses <- ggplot(data=subset(annotations_inc, !is.na(SES.STDZD)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+ses + geom_bar(aes(fill=SES.STDZD), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("1", "1-2", "2"),values = c( "#99E6FF", "#4CA6FF", "#0040FF" )) +
+  scale_x_discrete(name = "Number of corpus") +
+  scale_y_continuous(name = "Countries") 
+labs(title="SES of caregivers") +  scale_y_continuous( breaks = seq(0,13, 1))
+
+
 
 #Profession level info
 teach <- as.data.frame((table(annotations_inc$is.teacher, annotations_inc$country)))
@@ -137,8 +158,26 @@ names(community)<-c("Type.of.community","country","Freq")
 community_withdata<- subset(community, Freq > 0)   
 write.table(community_withdata,"derived/community_withdata", row.names = FALSE, col.names = TRUE)
 
-community_withdata<- read.csv("derived/community_withdata", sep="")
+community_withdata<- read.csv("../derived/community_withdata", sep="")
 levels(as.factor(community_withdata$country))#28 countries
+
+# Plot this categorywise bar chart
+urbans <- ggplot(data=subset(annotations_inc, !is.na(Type.of.community)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+urbans + geom_bar(aes(fill=Type.of.community), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("rural", "both", "urban"),values = c( "#99E6FF", "#4CA6FF", "#0040FF" )) +
+  scale_x_discrete(name = "Number of corpus") +
+  scale_y_continuous(name = "Countries") 
+labs(title="Urbanization") +  scale_y_continuous( breaks = seq(0,13, 1))
 
 
 ## Figure
@@ -157,5 +196,60 @@ ggplot() +
   labs(title = "Participants by Country")
 
 ggsave("figures/childes_country_participants.png", width = 6, height = 4, dpi = 300)
+
+
+library(ggplot2)
+
+# Assuming 'data' is your dataset
+
+library(ggplot2)
+
+# Assuming 'data' is your dataset
+
+# Plot for Education
+g <- ggplot(data=subset(annotations_inc, !is.na(Education.ac)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+ 
+education_plot <- g + geom_bar(aes(fill=Education.ac), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("Some primary", "Some secondary", "Some college", "College and above"),values = c("#E6FFFF", "#99E6FF", "#4CA6FF", "#0040FF" )) +
+  scale_x_discrete(name = "Number of corpus") +
+  scale_y_continuous(name = "Countries") 
+labs(title="Education of caregivers") +  scale_y_continuous( breaks = seq(0,13, 1))
+
+
+# Plot for SES
+ses <- ggplot(data=subset(annotations_inc, !is.na(SES.STDZD)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+ses_plot <- ses + geom_bar(aes(fill=SES.STDZD), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("1", "1-2", "2"),values = c( "#99E6FF", "#4CA6FF", "#0040FF" )) +
+  scale_x_discrete(name = "Number of corpus") +
+  scale_y_continuous(name = "Countries") 
+labs(title="SES of caregivers") +  scale_y_continuous( breaks = seq(0,13, 1))
+
+
+# Combine the plots into a mirrored bar chart
+combined_plot <- cowplot::plot_grid(education_plot, ses_plot, nrow = 1)
+
+# Show the combined plot
+print(combined_plot)
+
 
 
