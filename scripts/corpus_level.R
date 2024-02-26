@@ -35,7 +35,7 @@ sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)
 #important to add the 2 bil corpora! 149 + 2 = 151
 
 
-#Education level info
+##Education level info 
 education <- as.data.frame((table(annotations_inc$Education.ac, annotations_inc$country)))
 names(education)<-c("Education.ac","country","Freq")
 education_withdata <- subset(education, Freq > 0)   
@@ -141,6 +141,7 @@ write.table(language,"derived/language", row.names = FALSE, col.names = TRUE)
 
 language<- read.csv("derived/language", sep="")
 levels(as.factor(language$country))#49 countries
+
 
 
 #Lingual status

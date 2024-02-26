@@ -19,16 +19,16 @@ library(rjson)
 ## READ IN DATA AND ORGANIZE ####
 rm(list=ls()) #clean your environment
 # Read in data
-annotations_inc<- read.csv("derived/annotations_included", sep="")
-read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("wdi-data.csv")->wdi_all
+annotations_inc<- read.csv("../derived/annotations_included", sep="")
+read.csv("data/macro_level_measures/ISO-3166-Countries-with-Regional-Codes.csv")->regions #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
+read.csv("data/macro_level_measures/wdi-data.csv")->wdi_all
 ## Read in Ourworld in data info on Education - Educated ####
 # https://ourworldindata.org/primary-and-secondary-education
-read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->owid_ed_basic
-UU_hh_composition <- read.csv("data/hh-size-composition.csv" ,sep=",") #https://population.un.org/household/#/countries/
+read.csv("data/macro_level_measures/completion-rate-of-lower-secondary-education-OWID-20220303.csv")->owid_ed_basic
+UU_hh_composition <- read.csv("data/macro_level_measures//hh-size-composition.csv" ,sep=",") #https://population.un.org/household/#/countries/
 #https://www.oecd.org/about/document/ratification-oecd-convention.htm
 ocde <- read.csv("data/ocde_country.csv", sep=",")
-read.csv("oecd.txt",sep="\t",header=F, skip=1)->countries
+read.csv("data/oecd.txt",sep="\t",header=F, skip=1)->countries
 
 #Merge and cleanup codes
 ##Remove regions and areas from WDI and OWID 
@@ -79,87 +79,6 @@ colnames(ind_all)[colnames(ind_all)=="Under.age.15.years.among.all.households"]<
 #NA
 #CHILDES
 ind = ind_all[ind_all$alpha.3 %in% annotations_inc$alpha.3,] #50 -2 (2 corpora biling) ALL IN :)
-
-
-##Figure 3: Density plots ####
-
-#GDP
-dens_dat=data.frame(rbind(cbind(ind_all$log_gdp[!is.na(ind_all$log_gdp)],0),
-                          cbind(ind$log_gdp[!is.na(ind$log_gdp)],1) ))
-colnames(dens_dat)<-c("GDP.per.capita","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-gdpt = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-rich <- ggplot(dens_dat, aes(x = GDP.per.capita, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "GDP per capita (log 10)")+ scale_fill_colorblind()
-
-
-#Education
-dens_dat=data.frame(rbind(cbind(ind_all$Compl.LS[!is.na(ind_all$Compl.LS)],0),
-                          cbind(ind$Compl.LS[!is.na(ind$Compl.LS)],1) ))
-colnames(dens_dat)<-c("completed.LSS","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-edt = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-ed <- ggplot(dens_dat, aes(x = completed.LSS, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = c(0.25, 0.8), axis.title.y=element_blank() , legend.title = element_blank())+labs( x = "% compl. LSS")+ scale_fill_colorblind()
-
-#urbanization
-dens_dat=data.frame(rbind(cbind(ind_all$SP.URB.TOTL.ZS[!is.na(ind_all$SP.URB.TOTL.ZS)],0),
-                          cbind(ind$SP.URB.TOTL.ZS[!is.na(ind$SP.URB.TOTL.ZS)],1) ))
-colnames(dens_dat)<-c("pc.urban","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-urbt = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-urb <- ggplot(dens_dat, aes(x = pc.urban, fill = in.childes)) + geom_density(alpha = 0.5) + theme(legend.position = "none", axis.title.y=element_blank() )+labs( x = "% urban")+ scale_fill_colorblind()
-
-#Family structure
-#% nuclear family
-ind_all$nuclear = (ind_all$Couple.with.children + ind_all$Single.parent.with.children)
-ind$nuclear = (ind$Couple.with.children + ind$Single.parent.with.children)
-
-dens_dat=data.frame(rbind(cbind(ind_all$nuclear[!is.na(ind_all$nuclear)],0),
-                          cbind(ind$nuclear[!is.na(ind$nuclear)],1) ))
-colnames(dens_dat)<-c("nuclear","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-nuclear = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-NUCLEAR <- ggplot(dens_dat, aes(x = nuclear, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "% Nuclear household with children")+ scale_fill_colorblind()
-
-#% non nuclear family
-ind_all$nnuclear = (ind_all$Extended.family + ind_all$Non.relatives)
-ind$nnuclear = (ind$Extended.family + ind$Non.relatives)
-
-dens_dat=data.frame(rbind(cbind(ind_all$nnuclear[!is.na(ind_all$nnuclear)],0),
-                          cbind(ind$nnuclear[!is.na(ind$nnuclear)],1) ))
-colnames(dens_dat)<-c("nnuclear","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-nnuclear = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-NNUCLEAR <- ggplot(dens_dat, aes(x = nnuclear, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "% Extended or Non-relatives in the household")+ scale_fill_colorblind()
-
-
-#Average household size
-dens_dat=data.frame(rbind(cbind(ind_all$Avg.hs[!is.na(ind_all$Avg.hs)],0),
-                          cbind(ind$Avg.hs[!is.na(ind$Avg.hs)],1) ))
-colnames(dens_dat)<-c("Avg.hs","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-hh = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-HH <- ggplot(dens_dat, aes(x = Avg.hs, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Avg Household size")+ scale_fill_colorblind()
-
-#Average household size
-dens_dat=data.frame(rbind(cbind(ind_all$Avg.und15[!is.na(ind_all$Avg.und15)],0),
-                          cbind(ind$Avg.und15[!is.na(ind$Avg.und15)],1) ))
-colnames(dens_dat)<-c("Avg.und15","in.childes_T")
-dens_dat$in.childes=ifelse(dens_dat$in.childes,"CHILDES","all")
-und15 = t.test(dens_dat[,1]~dens_dat$in.childes)
-
-UND15 <- ggplot(dens_dat, aes(x = Avg.und15, fill = in.childes)) + geom_density(alpha = 0.5)+ theme(legend.position = "none", axis.title.y=element_blank() ) +labs( x = "Avg # members >15 years per household ")+ scale_fill_colorblind()
-
-
-# combined
-x <- ggarrange(ed, urb, rich, HH,  
-               labels = c("A", "B", "C", "D"),
-               ncol = 2, nrow = 2)
 
 write.table(ind_all,"derived/ind_all", row.names = FALSE, col.names = TRUE)
 write.table(ind,"derived/ind", row.names = FALSE, col.names = TRUE)

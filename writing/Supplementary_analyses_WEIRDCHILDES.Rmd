@@ -150,7 +150,8 @@ p
 dev.off()
 ```
 
-## Flowchart: (n) represents the number of different corpora; (N) represents the number of different countries.
+## Flowchart
+![Flowchart.(n) represents the number of different corpora; (N) represents the number of different countries. ](../figures/flowchart.png){ width=% }
 
 
 ```{r SM1,fig.width=8, fig.height=5.5, echo=F,warning=F,fig.cap = "Figure SM1. Effect sizes as a function of type of assessment and SES measure. PPVT samples are in green, LwL in red and TvT in blue SES measures are composites (circle), educational-based (triangle), income-based (square) and other (cross)."}

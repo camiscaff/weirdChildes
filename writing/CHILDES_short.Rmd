@@ -63,7 +63,7 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
-output            : papaja::apa6_pdf
+output            : papaja::apa6_word
 ---
 
 
@@ -77,6 +77,7 @@ library("papaja")
 library(psych)
 library(car)
 library(ggplot2)
+library(ggthemes)
 library(scales)
 library(gridExtra)
 library(lme4)
@@ -87,19 +88,18 @@ library(knitr)
 options(digits=1)
 library(kableExtra)
 library(dplyr)
-
-library(magick)
-
 library(effects)
 library(gvlma)
 library(influence.ME)
 library("wesanderson")
-library(introdataviz)
 #devtools::install_github("psyteachr/introdataviz")
 #library(ggalt)
 library(Hmisc)
 
 annotations_inc<- read.csv("../derived/annotations_included", sep="")
+ind<- read.csv("../derived/ind", sep="")
+ind_all<- read.csv("../derived/ind_all", sep="")
+
 ```
 
 Research highlights 
@@ -149,14 +149,14 @@ Following a thorough examination of each corpus, which involved reviewing the co
 ```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
 # Create a data frame
-data1 <- data.frame(
+mytab1 <- data.frame(
   Dimension = c("SES", "SES", "Urbanization", "Family structure", "Family structure", "Language"),
   `Macro-level variable` = c("Percent of the population completing lower secondary school*", "GDP per capita (log 10)", "Percent of the population living in urban areas", "Average household size", "Average number of member under 15 in households", "NA"),
   Source = c("Data from 2007-2015; Our World in Data, 2022a", "World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021)", "WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables.", "UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)", "UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)", "NA")
 )
 
-apa_table(mytab,caption="", longtable = T, align=c("lccccccccr"))
-write.csv(mytab,"output/table1.csv")
+apa_table(mytab1,caption="", longtable = T, align=c("lccccccccr"))
+#write.csv(mytab,"output/table1.csv")
 ```
 
 The goal of the country-level analysis is to assess the representativeness of our sub-sample of CHILDES against world statistics.. The following variables were used for this level of analysis, all derived from official sources including the World Bank, Our World in Data (WDI), and the United Nations (UN). Add sentence about why we dont have something on multilingualism at this level: not good data at the country level for this as some languages or dialects are not be counted blabla…  
@@ -166,18 +166,16 @@ The goal of the country-level analysis is to assess the representativeness of ou
 ```{r tab2,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
 # Create a data frame
-data <- data.frame(
+mytab2 <- data.frame(
   Dimension = c("SES", "SES", "SES", "Urb", "Family structure", "Family structure", "Family structure", "Language", "Language"),
   `Corpus-level variable` = c("Parents' socio-economic status", "Parents' education level", "Parents' occupation", "Type of community", "Household composition", "Percent children with sibling(s)", "Average number of siblings", "Language(s) spoken", "Lingual status"),
   `Definition or levels` = c("Low, mid and/or high", "Highest level of education completed: Primary, High school, Undergraduate, Masters, PhD", "Parents' activity or profession", "Urban, rural, mixed", "Whether the family was composed primarily of caregivers and children (nuclear) or it also included other family members: grandparents, cousins, uncles, and aunts (extended)", "The percentage of children in the corpus who had at least one sibling", "How many siblings children had on average (including children with zero siblings)", "Which languages were spoken in the transcripts and by the family", "Whether more than one language is spoken in the corpus (regardless of how many languages are spoken in the family or the community at large)"),
   `N of corpus (%missing)` = c("", "", "", "", "", "", "", "", "")
 )
 
-# Print the data frame
-print(data)
 
-apa_table(mytab,caption="Definition of the corpus-level variables", longtable = T, align=c("lccccccccr"))
-write.csv(mytab,"output/table2.csv")
+apa_table(mytab2,caption="Definition of the corpus-level variables", longtable = T, align=c("lccccccccr"))
+#write.csv(mytab2,"output/table2.csv")
 ```
 
 
@@ -185,117 +183,47 @@ The goal of the corpus-level analysis was to assess the representativeness of ou
 
 # Results
 
-The 180 corpora included in this study represent 47 different countries across all populated continents. Out of the 48 different countries or areas included in the sample, 28 of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 151 out of 180 corpora or to 84% of this sub-sample of CHILDES. OECD countries represent 19.5% of world countries. See Table 3 and Figure X for distribution of corpora in the globe.
+The 180 corpora included in this study represent 47 different countries across all populated continents. Out of the 48 different countries or areas included in the sample, 28 of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 151 out of 180 corpora or to 84% of this sub-sample of CHILDES. OECD countries represent 19.5% of world countries. See Table 3 and Figure 1 for distribution of corpora in the globe.
 ```{r tab3,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+# Create another data frame for the third set of information
+mytab3 <- data.frame(
+  Continent = c("Africa", "Asia", "North America", "Latin America", "Europe", "Oceania"),
+  `N corpora` = c(3, 32, 34, 5, 105, 1),
+  `N total children` = c(16, 602, 177, 6, 1091, 5),
+  `N children growing in continent` = c("X", "X", "X", "X", "X", "X")
+)
 
-mytab<-all[,c("ref","country","mean_age","ling_status","BAME","N","comp_measure_xtable","SES_measure_cat","SES_as_primary_measure","r_calc")]
-mytab=mytab[order(mytab$ref),]
-mytab$SES_measure_cat= gsub("_based","",mytab$SES_measure_cat)
-# mytab$uniqueID= gsub(",.*\\("," ",mytab$uniqueID)
-# mytab$uniqueID= gsub(",.*2","2",mytab$uniqueID)
-# mytab$uniqueID= gsub("&.*2","2",mytab$uniqueID)
-# mytab$uniqueID= gsub("\\)","",mytab$uniqueID)
-mytab$mean_age=round(mytab$mean_age/365.25*12,1)
-
-#making some changes to get tab1 to fit
-mytab$BAME<-gsub("%","",mytab$BAME)
-
-mytab$ling_status[mytab$ling_status=="Monolingual"]<-"Monol."
-mytab$ling_status[mytab$ling_status=="Bilingual"]<-"Bil."
-
-mytab$country[mytab$country=="New Zealand"]<-"NZ"
-mytab$country[mytab$country=="Switzerland"]<-"Switz."
-mytab$country[mytab$country=="Netherlands"]<-"NL"
-mytab$country[mytab$country=="Argentina"]<-"Argent."
-
-mytab$SES_measure_cat[mytab$SES_measure_cat=="composite"]<-"C"
-mytab$SES_measure_cat[mytab$SES_measure_cat=="education"]<-"E"
-mytab$SES_measure_cat[mytab$SES_measure_cat=="other"]<-"O"
-mytab$SES_measure_cat[mytab$SES_measure_cat=="income"]<-"I"
-
-mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="yes"]<-"Y"
-mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="no"]<-"N"
-
-mytab[is.na(mytab)]<-"--"
-mytab[mytab=="NA"]<-"--"
-
-
-colnames(mytab)<-c("Paper","Country", "Age","Lingual", "% BAME","N","Test","SES","Aim","r")
-mytab$N=as.character(round(mytab$N))
-mytab$r=printr(mytab$r)
-mytab$Age=as.character(round(mytab$Age))
-apa_table(mytab,caption="Included studies. Papers are cited by first author and year regardless of how many authors there are. In Country Argent. stands for Argentina, NL for Netherlands, NZ for New Zealand,  Switz.  for Switzerland. Age stands for mean age in months; N for number of included participants; Lingual for lingual status, namely monolingual (monol.), bilingual (bil.) or mixed samples; % BAME for percentage of participants were Black, Asian, and Minority Ethnic; test for which test children did (see main text for explanation of acronym); SES for the type of SES meaure, namely education (E), income (I), a composite (O), or other (O); Aim for whether the study investigated SES effects as a main aim (Y) or not (N); r indicates the correlation between child word comprehension and familial SES.", longtable = T, align=c("lccccccccr"))
-write.csv(mytab3,"output/table3.csv")
+apa_table(mytab3,caption="Descriptives", longtable = T, align=c("lccccccccr"))
+#write.csv(mytab3,"output/table3.csv")
 ```
 
+```{r worldmapecho = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "World map showing corpus. Size proportional to number of children per corpus"}
 
-We assessed the extent to which the countries with data in our sub-sample of CHILDES were a representative sample of countries in the world. Density plots are portrayed in Figure 3. 
+## Figure
+# Creating a subset with specific columns
+map_info <- annotations_inc[, c("country", "Corpus", "Nb.of.participants", "Location")]
+#write.table(map_info, file = "derived/map_info.txt", sep = "\t", quote = FALSE)
 
-```{r densityplot,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+country_coords<- read.csv("../data/map_coordinates.csv", sep=",")
 
-annotations_inc<- read.csv("derived/annotations_included", sep="")
-read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("wdi-data.csv")->wdi_all
-## Read in Ourworld in data info on Education - Educated ####
-# https://ourworldindata.org/primary-and-secondary-education
-read.csv("completion-rate-of-lower-secondary-education-OWID-20220303.csv")->owid_ed_basic
-UU_hh_composition <- read.csv("data/hh-size-composition.csv" ,sep=",") #https://population.un.org/household/#/countries/
-#https://www.oecd.org/about/document/ratification-oecd-convention.htm
-ocde <- read.csv("data/ocde_country.csv", sep=",")
-read.csv("oecd.txt",sep="\t",header=F, skip=1)->countries
+world_map <- map_data("world")
 
-#Merge and cleanup codes
-##Remove regions and areas from WDI and OWID 
-merge(regions, wdi_all, by.x = "alpha.2",  by.y = "iso2c", all.x=T) -> wdi
+ggplot() +
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "lightgray") +
+  geom_point(data = country_coords, aes(x = Longitude, y = Latitude, size = Nb.of.participants), color = "blue", alpha = 0.6) +
+  theme_void() +
+  labs(title = "Participants by Country")
 
-#Choose only data between 2006 and 2015 for ed_basic 
-owid_ed_basic[owid_ed_basic$Year>2006 & owid_ed_basic$Year<2015,]->owid_ed_basic
+ggsave("../figures/childes_country_participants.png", width = 6, height = 4, dpi = 300)
 
-filtered_ed_basic <- owid_ed_basic %>%
-  group_by(Entity) %>%
-  filter(Year == max(Year)) #pic the latest available data if duplicates
+```
 
-merge(regions, filtered_ed_basic, by.x  = "alpha.3",by.y  = "Code", all.x=T) -> ed_basic
+We assessed the extent to which the countries with data in our sub-sample of CHILDES were a representative sample of countries in the world. Density plots are portrayed in Figure 2. 
 
-filtered_hh_composition <- UU_hh_composition %>%
-  group_by(ISO.Code) %>%
-  filter(year == max(year))
-#some entries for the same country and year duplicates
-#the DYB database seems the most complete so we are keeping that one in case of duplicates
-filtered_hh_composition2 <- filtered_hh_composition %>%
-  group_by(ISO.Code) %>%
-  arrange(!("DYB" %in% Data.source.category), year) %>%
-  distinct(ISO.Code, .keep_all = TRUE)
-
-merge(regions, filtered_hh_composition2, by.x = "country.code", by.y = "ISO.Code", all.x=T) -> hh_composition
-
-##ALL DATA SET: 
-temp = merge(x=hh_composition,y=wdi[ , c("alpha.3","year","NY.GDP.PCAP.PP.KD","SE.SEC.CUAT.UP.ZS","SP.URB.TOTL.ZS"),],by = "alpha.3",all=T)
-
-ind_all = merge(x=temp,y=ed_basic[ , c("alpha.3","Entity","Year","Lower.secondary.completion.rate..total....of.relevant.age.group."),],by = "alpha.3",all=T)
-
-##SES####
-#Education##
-colnames(ind_all)[colnames(ind_all)=="Lower.secondary.completion.rate..total....of.relevant.age.group."]<-"Compl.LS"
-ind_all$Compl.LS[ind_all$Compl.LS>100]<-100  #cap to 100%
-#GDP##
-ind_all$log_gdp=log(ind_all$NY.GDP.PCAP.PP.KD,10)
-##Urbanization####
-#ind_all$SP.URB.TOTL.ZS
-
-##Family structure####
-#Average number of household members of selected ages
-#Under age 15 years among all households	:The average number of members under age 15 years (aged 0-14) per household, among all households
-colnames(ind_all)[colnames(ind_all)=="Average.household.size..number.of.members."]<-"Avg.hs"
-colnames(ind_all)[colnames(ind_all)=="Under.age.15.years.among.all.households"]<-"Avg.und15"
-
-##Languages####
-#NA
-#CHILDES
-ind = ind_all[ind_all$alpha.3 %in% annotations_inc$alpha.3,] #50 -2 (2 corpora biling) ALL IN :)
-
-
+``````{r densityplot, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Density plots show the distribution of country-level descriptors for all world countries (gray) versus countries represented in our sub-sample of CHILDES (orange). % complete. LSS is the percentage of the country's population completing lower secondary school. % urban is the percent of the country's population residing in urban (as opposed to rural) locations. GDP stands for Gross Domestic Product. Avg Household size stands for average household size."}
 ##Figure 3: Density plots ####
+library(ggplot2)
+
 
 #GDP
 dens_dat=data.frame(rbind(cbind(ind_all$log_gdp[!is.na(ind_all$log_gdp)],0),
@@ -371,12 +299,11 @@ UND15 <- ggplot(dens_dat, aes(x = Avg.und15, fill = in.childes)) + geom_density(
 
 
 # combined
-x <- ggarrange(ed, urb, rich, HH,  
+density_plot <- ggarrange(ed, urb, rich, HH,  
                labels = c("A", "B", "C", "D"),
                ncol = 2, nrow = 2)
 
-write.table(ind_all,"derived/ind_all", row.names = FALSE, col.names = TRUE)
-write.table(ind,"derived/ind", row.names = FALSE, col.names = TRUE)
+ggsave("../figures/density_plot.png", width = 6, height = 4, dpi = 300)
 
 ```
 
@@ -410,44 +337,22 @@ A majority of corpora in our sub-sample of CHILDES include children who have sib
 We had two variables of interest here: language spoken in the corpus and lingual status. A total of 62 different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. 
 ```{r tab4,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
-mytab<-all[,c("ref","country","mean_age","ling_status","BAME","N","comp_measure_xtable","SES_measure_cat","SES_as_primary_measure","r_calc")]
-mytab=mytab[order(mytab$ref),]
-mytab$SES_measure_cat= gsub("_based","",mytab$SES_measure_cat)
-# mytab$uniqueID= gsub(",.*\\("," ",mytab$uniqueID)
-# mytab$uniqueID= gsub(",.*2","2",mytab$uniqueID)
-# mytab$uniqueID= gsub("&.*2","2",mytab$uniqueID)
-# mytab$uniqueID= gsub("\\)","",mytab$uniqueID)
-mytab$mean_age=round(mytab$mean_age/365.25*12,1)
+# table4 <- annotations_inc %>%
+#   group_by(Language) %>%
+#   summarize(Total_Participants = sum(Nb.of.participants, na.rm = TRUE))
+# 
+# write.csv(table4, file = "../derived/table4.csv", row.names = FALSE)
 
-#making some changes to get tab1 to fit
-mytab$BAME<-gsub("%","",mytab$BAME)
-
-mytab$ling_status[mytab$ling_status=="Monolingual"]<-"Monol."
-mytab$ling_status[mytab$ling_status=="Bilingual"]<-"Bil."
-
-mytab$country[mytab$country=="New Zealand"]<-"NZ"
-mytab$country[mytab$country=="Switzerland"]<-"Switz."
-mytab$country[mytab$country=="Netherlands"]<-"NL"
-mytab$country[mytab$country=="Argentina"]<-"Argent."
-
-mytab$SES_measure_cat[mytab$SES_measure_cat=="composite"]<-"C"
-mytab$SES_measure_cat[mytab$SES_measure_cat=="education"]<-"E"
-mytab$SES_measure_cat[mytab$SES_measure_cat=="other"]<-"O"
-mytab$SES_measure_cat[mytab$SES_measure_cat=="income"]<-"I"
-
-mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="yes"]<-"Y"
-mytab$SES_as_primary_measure[mytab$SES_as_primary_measure=="no"]<-"N"
-
-mytab[is.na(mytab)]<-"--"
-mytab[mytab=="NA"]<-"--"
+mytab4 <- data.frame(
+  Monolingual_Language = c("Afrikaans", "Arabic (Egyptian or Kuwaiti)", "Basque", "Cantonese", "Catalan", "Cree", "Croatian", "Czech", "Danish", "Dutch", "English", "Estonian", "Farsi", "French", "German", "Greek", "Hebrew", "Hungarian", "Icelandic", "Indonesian", "Irish", "Italian", "Jamaican", "Japanese", "Korean", "Mandarin", "Norwegian", "Nungon", "Polish", "Portuguese (Brazilian or European)", "Romanian", "Russian", "Serbian", "Sesotho", "Slovenian", "Spanish", "Swedish", "Taiwanese", "Tamil", "Thai", "Turkish", "Welsh"),
+  Total_Participants = c(2, 80, 46, 8, 17, 1, 3, 6, 2, 23, 210, 32, 5, 46, 46, 6, 122, 8, 1, 8, 7, 8, 2, 148, 4, 157, 11, 5, 4, 9, 6, 2, 8, 4, 20, 75, 9, 4, 1, 18, 1, 475),
+  Multilingual_Languages = c("Dutch/English, Dutch/French", "Dutch/Italian", "Spanish/Catalan", "Spanish/Galician", "English/Cantonese", "English/French", "English/Hebrew", "English/Japanese", "English/Japanese/Danish", "English/Mandarin", "English/Mandarin/Cantonese", "English/Russian", "English/Spanish", "French/Russian", "Hungarian/Catalan/Spanish", "Hungarian/Farsi/English", "German/Spanish", "Italian/Japanese", "Italian/German", "Portuguese/Swedish/English", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+  Total_Participants_Multilingual = c(35, 4, 6, 66, 9, 12, 1, 1, 1, 55, 11, 22, 12, 1, 1, 2, 9, 1, 2, 3, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+)
 
 
-colnames(mytab)<-c("Paper","Country", "Age","Lingual", "% BAME","N","Test","SES","Aim","r")
-mytab$N=as.character(round(mytab$N))
-mytab$r=printr(mytab$r)
-mytab$Age=as.character(round(mytab$Age))
-apa_table(mytab,caption="Included studies. Papers are cited by first author and year regardless of how many authors there are. In Country Argent. stands for Argentina, NL for Netherlands, NZ for New Zealand,  Switz.  for Switzerland. Age stands for mean age in months; N for number of included participants; Lingual for lingual status, namely monolingual (monol.), bilingual (bil.) or mixed samples; % BAME for percentage of participants were Black, Asian, and Minority Ethnic; test for which test children did (see main text for explanation of acronym); SES for the type of SES meaure, namely education (E), income (I), a composite (O), or other (O); Aim for whether the study investigated SES effects as a main aim (Y) or not (N); r indicates the correlation between child word comprehension and familial SES.", longtable = T, align=c("lccccccccr"))
-write.csv(mytab4,"output/table3.csv")
+apa_table(mytab4,caption="Total number of participants per language,", longtable = T, align=c("lccccccccr"))
+#write.csv(mytab4,"output/table3.csv")
 ```
 
 
