@@ -17,7 +17,7 @@ rm(list=ls()) #clean your environment
 # Read in data
 
 ##1.CHILDES annotations ####
-annotations<- read.csv("data/Table for authors - annotations.csv") 
+annotations<- read.csv("../data/Table for authors - annotations.csv") 
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 
 #some cleaning  of the col names

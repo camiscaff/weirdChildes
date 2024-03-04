@@ -99,14 +99,44 @@ library(Hmisc)
 annotations_inc<- read.csv("../derived/annotations_included", sep="")
 ind<- read.csv("../derived/ind", sep="")
 ind_all<- read.csv("../derived/ind_all", sep="")
+ocde <- read.csv("../data/ocde_country.csv", sep=",")
 
+
+##countries and corpora
+corpora <- as.data.frame((table(annotations_inc$country)))
+names(corpora)<-c("country","Freq")
+#write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
+
+
+merge(x=corpora, y=ocde,  by = "country", all.x = T) -> ocde_country
+
+annotations<- read.csv("../data/Table for authors - annotations.csv") 
+#original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
+
+#some cleaning  of the col names
+colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
+colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+colnames(annotations)[colnames(annotations)=="Location..Neighbourhood..village.city..province..state..country."]<-"Location"
+colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
+colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
+colnames(annotations)[colnames(annotations)=="Our.coding.of"]<-"Our.coding.of.community.type"
+
+#Inclusion
+annotations$Inclusion[annotations$Inclusion %in% c("No","no")] <- "exclude"
+annotations$Inclusion[annotations$Inclusion %in% c("Yes","yes")] <- "include"
+#why_exclude
+excluded <-  subset(annotations, (Inclusion %in% c("exclude")))
+xtabs(~why_exclude, excluded)
 ```
 
-Research highlights 
-* We examined CHILDES, the major source of data on children’s linguistic environment for potential sampling bias in terms of SES, urbanization, family structure and languages.
-* We found that the 47 countries present in CHILDES overrepresented rich, educated, urbanized countries with small nuclear families.
-* Within these countries, corpora overrepresented rich, educated, urban and nuclear families - and single-child families, as well as bilingual families were underrepresented. 
-* Interpretation of studies based on CHILDES should acknowledge these biases.
+## Research highlights
+
+*We examined CHILDES, the major source of data on children’s linguistic environment for potential sampling bias in terms of SES, urbanization, family structure and languages.
+*We found that the 47 countries present in CHILDES overrepresented rich, educated, urbanized countries with small nuclear families.
+*Within these countries, corpora overrepresented rich, educated, urban and nuclear families - and single-child families, as well as bilingual families were underrepresented. 
+*Interpretation of studies based on CHILDES should acknowledge these biases.
 
 \newpage
 
@@ -116,6 +146,7 @@ However, naturalistic recordings may also contain potential biases. One notable 
 Researchers in many fields are increasingly aware of the bias towards WEIRD populations (Western, Educated, Industrial, Rich, Democratic, Henrich 2010) in the samples they study (Nielsen et al., 2017; Moriguchi, 2021; see Cychosz & Cristia, 2022, Singh et al., 2023). Recent calls have been made to diversify research in psychology, cognitive, and developmental science to address this issue (Majid & Levinson, 2010;  Kidd & Garcia, 2022; Blasi et al. 2022). For instance, Kidd and Garcia (2022)  systematically sampled publications from child-language journals. They revealed biases towards specific continents (North America and Europe) and languages (English. Spanish, French), highlighting the need for increased diversity in populations and languages studied. Similarly, Blasi et al. (2022) emphasize the potential consequences of generalizing observations derived solely from English speakers and how fit they are to represent our entire human species.
 [TRANSITION]
 Every area of research conceptualizes different dimensions relevant to explaining variance for a given research topic. In what follows we present the four most relevant dimensions thought to play a role in the development of child language, particularly related to naturalistic recordings: Socioeconomic Status, Urbanization, Family Structure, and Language. 
+
 ### Socioeconomic Status
 Decades of research have examined the linguistic differences among families with varying socio-economic status (SES). In the developmental literature, this is primarily indexed by parents’ education (Ensminger, Fothergill, Bornstein, & Bradley, 2003; Hoff, 2003a),  but can also be indexed otherwise, such as by parental income, occupation, or a composite measure of those three (e.g. Hollingshead, 1975).
 It is beyond the scope of this paper to detail all the theories that attempt to account for the complex causal pathways that may connect SES to children's language environments.  We recommend Rowe (2018) as a starting point for readers interested in this literature, along with Golinkoff et al. (2019) and Sperry et al. (2019) for diverse theoretical perspectives. It should be noted, however, that some of this literature has been found to reflect majority biases, including what kinds of language input are counted, and what features of linguistic experiences are valued (Sperry, et al., 2019; Scaff et al., 2023). Without desiring to take a stance on how SES and language environments relate to each other, we merely indicate here that SES is undoubtedly one of the factors that has been repeatedly studied in the context of early language acquisition, including in terms of input description. For example,  Hoff (2003a) compared the speech of high- versus low-SES American mothers. College-educated parents produced more utterances to their child, with more diverse vocabulary, and longer phrases, and higher number of utterances continuing a topic the child had brought up. Similar findings can be seen in other studies (Hart & Risley, 1995; Hoff-Ginsberg 1990; Hoff, 2003b; Huttenlocher, et al., 2002, 2007; see also Dailey & Bergelson, 2022; Piot et al., 2021; for meta-analyses supporting the link; and Bergelson et al., 2023 for a large-scale study finding non-significant SES effects). 
@@ -144,7 +175,14 @@ We excluded the following corpora: a) clinical populations or non-typically deve
 Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified `r nrow(annotations_inc)` corpora that met our inclusion criteria mentioned above. For a detailed breakdown of the included corpora, please refer to the flowchart in Supplementary Materials.
 
 
-### Macro-level information
+### Descriptive-statistics
+
+Descriptive statistics
+Firstly, we present an overview of the countries within the CHILDES database, specifically the distribution of participants by continent (Table 2 ) and geographical location (Figure 1) and examining three out of our four key dimensions: SES, urbanization, family structure (Figure 2). Our goal is to provide insights into the representativeness of our CHILDES sub-sample when compared to global statistics. Figure 2 draws data from official sources such as the World Bank, Our World in Data (WDI), and the United Nations (UN). It is noteworthy that information on the Language dimension is omitted due to the lack of official world statistics on multilingualism. This limitation arises from the exclusion of certain languages or dialects in official country counts (REF). For additional details on Figure 2 and the corresponding variables, please refer to the Supplementary Materials (SMX).
+
+Secondly, we offer corpus-level statistics to assess the representativeness of our sub-sample of CHILDES in a more detailed manner across our four dimensions: SES, urbanization, family structure, and languages (See Table 1 for the complete list of variables and definitions).
+ Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (XX corpora, XX%) provided additional data or confirmed missing information. Unfortunately, curators for `r nrow(annotations_inc)` corpora (XX%) could not be contacted due to unresponsive email addresses (38), or the curator’s passing (12). 
+
 
 ```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
@@ -159,9 +197,6 @@ apa_table(mytab1,caption="", longtable = T, align=c("lccccccccr"))
 #write.csv(mytab,"output/table1.csv")
 ```
 
-The goal of the country-level analysis is to assess the representativeness of our sub-sample of CHILDES against world statistics.. The following variables were used for this level of analysis, all derived from official sources including the World Bank, Our World in Data (WDI), and the United Nations (UN). Add sentence about why we dont have something on multilingualism at this level: not good data at the country level for this as some languages or dialects are not be counted blabla…  
-
-### Corpus-level information
 
 ```{r tab2,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
@@ -179,19 +214,21 @@ apa_table(mytab2,caption="Definition of the corpus-level variables", longtable =
 ```
 
 
-The goal of the corpus-level analysis was to assess the representativeness of our sub-sample of CHILDES in a finer-grained way across our four dimensions: SES, urbanization, family structure and languages (See Table 2  for the complete list of variables and definitions). Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (XX corpora, XX%) provied additional data or confirmed missing information. Unfortunately, curators for 50 corpora (XX%) could not be contacted due to unresponsive email addresses (38) , or the curator’s passing (12). 
-
 # Results
 
-The 180 corpora included in this study represent 47 different countries across all populated continents. Out of the 48 different countries or areas included in the sample, 28 of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 151 out of 180 corpora or to 84% of this sub-sample of CHILDES. OECD countries represent 19.5% of world countries. See Table 3 and Figure 1 for distribution of corpora in the globe.
+The `r nrow(annotations_inc)`  corpora included in this study represent 48 different countries across all populated continents. Out of the 48 different countries or areas included in the sample, `r sum(ocde_country$ocde == "yes", na.rm = TRUE)` of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to `r sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)` out of `r nrow(annotations_inc)` corpora or to `r (sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)*100)/nrow(annotations_inc)`% of this sub-sample of CHILDES. OECD countries represent 19.5% of world countries.  
+
 ```{r tab3,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 # Create another data frame for the third set of information
+sum(annotations$continent=="Africa")
+
 mytab3 <- data.frame(
   Continent = c("Africa", "Asia", "North America", "Latin America", "Europe", "Oceania"),
   `N corpora` = c(3, 32, 34, 5, 105, 1),
   `N total children` = c(16, 602, 177, 6, 1091, 5),
   `N children growing in continent` = c("X", "X", "X", "X", "X", "X")
 )
+
 
 apa_table(mytab3,caption="Descriptives", longtable = T, align=c("lccccccccr"))
 #write.csv(mytab3,"output/table3.csv")
@@ -307,7 +344,8 @@ ggsave("../figures/density_plot.png", width = 6, height = 4, dpi = 300)
 
 ```
 
-By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (% compl. LSS, t(101.59) = 5.79, p < .001); they were more urban (% urban, t(79.77) = 3.51,  p < .001); richer (log GDP per capita, t(103.29) = 6,  p < .001) and had smaller households (average household size, t(118.8) = 7.116, p  p < .001) and less average number of members under the age of 15 (average under 15 size, t(26.118) = 5.01, p  p < .001). 
+By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (% compl. LSS, t(`r round(edt$parameter,2)`)=`r round(edt$statistic,2)`, p = `r round(edt$p.value,2)`); they were more urban (% urban, t(`r round(urbt$parameter,2)`)=`r round(urbt$statistic,2)`, p = `r round(urbt$p.value,2)`); richer (log GDP per capita, t(`r round(gdpt$parameter,2)`)=`r round(gdpt$statistic,2)`, p = `r round(gdpt$p.value,2)`) and had smaller households (average household size, t(`r round(hh$parameter,2)`)=`r round(hht$statistic,2)`, p = `r round(hh$p.value,2)`) and less average number of members under the age of 15 (average under 15 size,  t(`r round(und15$parameter,2)`)=`r round(und15t$statistic,2)`, p = `r round(und15$p.value,2)`). 
+
 
 ## Corpus-level
 
