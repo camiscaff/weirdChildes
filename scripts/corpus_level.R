@@ -44,6 +44,7 @@ write.table(education_withdata,"derived/education_withdata", row.names = FALSE, 
 education_withdata<- read.csv("derived/education_withdata", sep="")
 levels(as.factor(education_withdata$country))#28 countries
 education_withdata$Education.ac = factor(education_withdata$Education.ac, levels=c("Some primary", "Some secondary", "Some college", "College and above"))
+annotations_inc$Education.ac = factor(annotations_inc$Education.ac, levels=c("College and above", "Some college", "Some secondary","Some primary"  ))
 
 # Plot this categorywise bar chart
 g <- ggplot(data=subset(annotations_inc, !is.na(Education.ac)), aes(country))
@@ -59,9 +60,9 @@ g + geom_bar(aes(fill=Education.ac), width = 0.9) +
   coord_flip() + 
   #guides(fill=FALSE ) + 
   scale_fill_manual(breaks=c("Some primary", "Some secondary", "Some college", "College and above"),values = c("#E6FFFF", "#99E6FF", "#4CA6FF", "#0040FF" )) +
-  scale_x_discrete(name = "Number of corpus") +
-  scale_y_continuous(name = "Countries") 
-  labs(title="Education of caregivers") +  scale_y_continuous( breaks = seq(0,13, 1))
+  scale_x_discrete(name = "Countries or Territories") +
+  scale_y_continuous(name = "Number of corpus with Education data") +
+  labs(title="Education of caregivers", fill = "Education Level")
 
 
 #SES level info

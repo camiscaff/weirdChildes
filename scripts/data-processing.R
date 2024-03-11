@@ -19,7 +19,7 @@ rm(list=ls()) #clean your environment
 annotations<- read.csv("data/Table for authors - annotations.csv") 
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("ISO-3166-Countries-with-Regional-Codes.csv")->regions
+read.csv("data/ISO-3166-Countries-with-Regional-Codes.csv")->regions
 
 #some cleaning  of the col names
 #colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
@@ -270,10 +270,11 @@ annotations_inc$SES.STDZD[annotations_inc$SES.STDZD=="middle class"]<-2
 xtabs(~Parental.profession, annotations_inc) 
 annotations_inc$Parental.profession=tolower(annotations_inc$Parental.profession)
 annotations_inc$is.academic=annotations_inc$is.health=annotations_inc$is.teacher=NA
-annotations_inc$is.academic[grep("stud|prof|ling|investig|resear|sociol|academ|scienti|university|universities|pi|PI|psycholing",annotations_inc$Parental.profession)]<-"yes"
+annotations_inc$is.academic[grep("stud|professor|ling|investig|resear|sociol|academ|scienti|university|universities|pi|PI|psycholing|gradua",annotations_inc$Parental.profession)]<-"yes"
 annotations_inc$is.health[grep("psychology|doctor|therapist|nurse|psycholo",annotations_inc$Parental.profession)]<-"yes"
-annotations_inc$is.teacher[grep("teacher",annotations_inc$Parental.profession)]<-"yes"
+annotations_inc$is.teacher[grep("teach",annotations_inc$Parental.profession)]<-"yes"
 annotations_inc$is.academic[annotations_inc$Parental.profession=="pi"]<-"yes"
+annotations_inc$is.education[annotations_inc$is.academic=="yes"| annotations_inc$is.teacher=="yes" ]<-"yes"
 annotations_inc$Parental.profession[annotations_inc$Parental.profession %in% c("don't know", "")]<-NA
 
 
