@@ -63,16 +63,21 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
-output            : papaja::apa6_word
+output            : papaja::apa6_pdf
 ---
 
 
 ```{r setup, include=FALSE}
-#Sys.setlocale("LC_CTYPE", "en_US_POSIX.UTF-8")
+Sys.setlocale("LC_CTYPE", "en_US_POSIX.UTF-8")
 #Sys.setlocale("LANG", "en_US_POSIX.UTF-8")
-Sys.setlocale(category = "LC_ALL", locale = "en_SE.utf8")
+#Sys.setlocale(category = "LC_ALL", locale = "en_SE.utf8")
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = FALSE)
+# Install remotes package if necessary
+if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+
+# Install the stable development version from GitHub
+remotes::install_github("crsh/papaja")
 library("papaja")
 library(psych)
 library(car)
@@ -402,10 +407,10 @@ For socioeconomic status, there were `r sum(is.na(annotations$SES.STDZD))` missi
 
 
 #### Education
- `r round(sum(annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% of the corpora (N =  `r round(sum(annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min)))`) include children whose parents had at least a graduate, if not a postgraduate, degree.  `r round(sum(annotations_inc$Education.min==1 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (N=`r sum(annotations_inc$Education.min==1 & !is.na(annotations_inc$Education.min))` ) had at least some parents with primary-level education;  `r round(sum(annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (N=`r round(sum(annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min)))`) had parents with secondary school education as the lower bound of the education range, and a further `r round(sum(annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (N=`r round(sum(annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min)))`) had some college as the lower bound. `r sum(annotations_inc$Education.STDZD=="diverse",na.rm=T)` corpora were described as "diverse", without clarifying the range of education covered. These numbers do not accurately represent the demographics of the countries they were obtained from. For instance, while the U.S. Census Bureau reported that only 36% of the adult population held a bachelor’s degree or higher in 2020, our data indicates that 100% of the corpora of the parents from the United States had a college education or higher. As seen in Figure 3, the same result is seen for corpus from China, Denmark, Egypt, Hong Kong, Hungary, Israel, Italy, Japan, Mexico, The Netherlands, Poland, Russia, Singapore, South Korea, Switzerland and the United States where 100% of parents with data are college-educated or above. Thus, it seems that our sub-samples of CHILDES are very skewed toward higher-educated parents. 
+ `r round(sum(annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% of the corpora (n =  `r round(sum(annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min)))`) include children whose parents had at least a graduate, if not a postgraduate, degree.  `r round(sum(annotations_inc$Education.min==1 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (n=`r sum(annotations_inc$Education.min==1 & !is.na(annotations_inc$Education.min))` ) had at least some parents with primary-level education;  `r round(sum(annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (n=`r round(sum(annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min)))`) had parents with secondary school education as the lower bound of the education range, and a further `r round(sum(annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (n=`r round(sum(annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min)))`) had some college as the lower bound. `r sum(annotations_inc$Education.STDZD=="diverse",na.rm=T)` corpora were described as "diverse", without clarifying the range of education covered. These numbers do not accurately represent the demographics of the countries they were obtained from. For instance, while the U.S. Census Bureau reported that only 36% of the adult population held a bachelor’s degree or higher in 2020, our data indicates that 100% of the corpora of the parents from the United States had a college education or higher. As seen in Figure 3, the same result is seen for corpus from China, Denmark, Egypt, Hong Kong, Hungary, Israel, Italy, Japan, Mexico, The Netherlands, Poland, Russia, Singapore, South Korea, Switzerland and the United States where 100% of parents with data are college-educated or above. Thus, it seems that our sub-samples of CHILDES are very skewed toward higher-educated parents. 
 
 
-```{r figure3,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Distribution of parental education by country".}
+```{r figure3 ,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Distribution of parental education by country."}
 
 annotations_inc$Education.ac = factor(annotations_inc$Education.ac, levels=c("College and above", "Some college", "Some secondary","Some primary"  ))
 
@@ -424,18 +429,72 @@ g + geom_bar(aes(fill=Education.ac), width = 0.9) +
   #guides(fill=FALSE ) + 
   scale_fill_manual(breaks=c("Some primary", "Some secondary", "Some college", "College and above"),values = c("#E6FFFF", "#99E6FF", "#4CA6FF", "#0040FF" )) +
   scale_x_discrete(name = "Countries or Territories") +
-  scale_y_continuous(name = "Number of corpus with Education data") +
+  scale_y_continuous(name = "Number of corpora with Education data") +
   labs(title="Education of caregivers", fill = "Education Level")
 
 
 ```
 #### Occupation
-Professions were overall varied. The majority, comprising `r round(sum(annotations_inc$is.education=="yes" & !is.na(annotations_inc$is.education))/sum(!is.na(annotations_inc$Parental.profession))*100)`%, was associated with the field of education. Notably, within this category, `r round(sum(annotations_inc$is.academic=="yes" & !is.na(annotations_inc$is.academic))/sum(!is.na(annotations_inc$Parental.profession))*100)`% of the individuals were identified as parents with professions linked to graduate-level education. This included roles such as Master's or Ph.D. students, professors, linguists, researchers, scientists, and academics. Some of the other occupations reported were psychologists, speech therapist or home makers.
+Professions were overall varied. The majority, comprising`r round(sum(annotations_inc$is.education=="yes" & !is.na(annotations_inc$is.education))/sum(!is.na(annotations_inc$Parental.profession))*100)`% (n=`r sum(annotations_inc$is.education=="yes" & !is.na(annotations_inc$is.education))`), was associated with the field of education. Notably, within this category, `r round(sum(annotations_inc$is.academic=="yes" & !is.na(annotations_inc$is.academic))/sum(!is.na(annotations_inc$Parental.profession))*100)`% (n=`r sum(annotations_inc$is.academic=="yes" & !is.na(annotations_inc$is.academic))`) of the individuals were identified as parents with professions linked to graduate-level education. This included roles such as Master's or Ph.D. students, professors, linguists, researchers, scientists, and academics. Some of the other occupations reported were psychologists, speech therapist or home makers.
 
 ### Urbanization
-58 corpora were described as industrialized or urban, and an additional one as both rural and urban. Only 7 corpora were described as farming or rural. In these same countries, the proportion of the population residing in urban settings was 76%, suggesting that samples were not representative of their countries in terms of rural versus urban settings either.
+`r round(sum(annotations_inc$Type.of.community=="urban" & !is.na(annotations_inc$Type.of.community))/sum(!is.na(annotations_inc$Type.of.community))*100)`% of the corpora (n=`r sum(annotations_inc$Type.of.community=="urban" & !is.na(annotations_inc$Type.of.community))`) corpora were described as industrialized or urban, and an additional one as both rural and urban. Only 7 corpora were described as farming or rural. In these same countries, the proportion of the population residing in urban settings was 76%, suggesting that samples were not representative of their countries in terms of rural versus urban settings either.
+
+```{r figure4,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Urbanization by country."}
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
+                                                                                                        "work-for-pay/industrial","industrial","Northeastern US urban","urban western", "industrial & service &trade activities...", "Mediterranean city of 1.6 million inhabitants", "modern city families, usually both working parents","Seaside tourist town","Industrial city (population: around 272,000 inhabitants)","mainly urban", "industrial city (3.000.000 inhabitants")]<-"urban"
+
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("farmer","rural","rural farming village")]<-"rural"
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("industrial, farmers")]<-"both"
+annotations_inc$Type.of.community = factor(annotations_inc$Type.of.community, levels=c("urban", "both", "rural"))
+
+# Plot this categorywise bar chart
+gurb <- ggplot(data=subset(annotations_inc, !is.na(Type.of.community)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+gurb + geom_bar(aes(fill=Type.of.community), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("rural", "both", "urban"),values = c("#BFAB57", "#966F56", "#808A8F" )) +
+  scale_x_discrete(name = "Countries or Territories") +
+  scale_y_continuous(name = "Number of corpora with Urbanization data") +
+  labs(title="Urbanization", fill = "Type of community")
+
+
+```
+
+
 
 ### Family structure
+
+```{r figure5,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Household by country."}
+annotations_inc$Household.structure = factor(annotations_inc$Household.structure, levels=c("nuclear", "extended", "varied"))
+
+# Plot this categorywise bar chart
+ghouse <- ggplot(data=subset(annotations_inc, !is.na(Household.structure)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+ghouse + geom_bar(aes(fill=Household.structure), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("nuclear", "varied", "extended"),values = c("#ADDFAD", "#D1BA97", "#F08080" )) +
+  scale_x_discrete(name = "Countries or Territories") +
+  scale_y_continuous(name = "Number of corpora with Household data") +
+  labs(title="Households", fill = "Type of househols arrangement")
+
+```
 #### Nuclear households
 As for household composition, `r  sum(annotations_inc$Household.structure=="nuclear" & !is.na(annotations_inc$Household.structure))` corpora (`r round(sum(annotations_inc$Household.structure=="nuclear" & !is.na(annotations_inc$Household.structure))/sum(!is.na(annotations_inc$Household.structure))*100)`%) were based on nuclear families;  `r  sum(annotations_inc$Household.structure=="extended" & !is.na(annotations_inc$Household.structure))` extended families(`r round(sum(annotations_inc$Household.structure=="extended" & !is.na(annotations_inc$Household.structure))/sum(!is.na(annotations_inc$Household.structure))*100)`%); and in `r  sum(annotations_inc$Household.structure=="varied" & !is.na(annotations_inc$Household.structure))` corpora the structure was varied (`r round(sum(annotations_inc$Household.structure=="varied" & !is.na(annotations_inc$Household.structure))/sum(!is.na(annotations_inc$Household.structure))*100)`%). We compare side by side the average per country of the nuclear households (the sum of the percentages of couples with children households, and single parents with children households; United Nations, 2022). 
 
@@ -443,6 +502,32 @@ As for household composition, `r  sum(annotations_inc$Household.structure=="nucl
 #### Sibling presence
 A majority of corpora in our sub-sample of CHILDES include children who have siblings. In fact, only 28% of corpora (among the 93 corpora having information on siblings) were constituted exclusively of children with no siblings, and the remaining had at least one sibling, with the overall average being 0.8 siblings. Since 83% of countries in CHILDES are in the OECD, we draw a comparison point for such countries: 46% of children had no siblings in OECD countries according to 2015 data. In this sense, children with no siblings appear to be under-represented in CHILDES.
 
+```{r figure6,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Siblings presence by country."}
+annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings >= 1] <- "yes"
+annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings == 0] <- "no"
+annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings %in% c("all firstborn (some newborn sibs)", "at least 1 (triplet)")] <- "yes"
+annotations_inc$siblings = factor(annotations_inc$siblings, levels=c("yes", "no"))
+
+
+# Plot this categorywise bar chart
+ghouse <- ggplot(data=subset(annotations_inc, !is.na(siblings)), aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+ghouse + geom_bar(aes(fill=siblings), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("yes", "no"),values = c("#B5A6DF", "#000080" )) +
+  scale_x_discrete(name = "Countries or Territories") +
+  scale_y_continuous(name = "Number of corpora with siblings data") +
+  labs(title="Siblings presence", fill = "")
+
+```
 ### Languages
 We had two variables of interest here: language spoken in the corpus and lingual status. A total of 62 different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora. 
 ```{r tab4,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}

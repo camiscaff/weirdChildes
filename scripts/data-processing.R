@@ -16,7 +16,7 @@ rm(list=ls()) #clean your environment
 # Read in data
 
 ##1.CHILDES annotations ####
-annotations<- read.csv("data/Table for authors - annotations.csv") 
+annotations<- read.csv("data/Table for authors - annotations.csv") ###FIX FILE!
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
 read.csv("data/ISO-3166-Countries-with-Regional-Codes.csv")->regions
@@ -61,6 +61,14 @@ annotations_inc <-  subset(annotations, (Inclusion %in% c("include")))
 xtabs(~Nb.of.participants, annotations_inc) #7 empty
 annotations_inc$Nb.of.participants[annotations_inc$Nb.of.participants==""]<-NA
 annotations_inc$Nb.of.participants=as.numeric(as.character(annotations_inc$Nb.of.participants))
+#add missing info for USA corpora
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("Demetras - Trevor")]<-1
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("McMillan")]<-2
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("Post")]<-3
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("Morisset")]<-206
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("Feldman (Andrea) ")]<-1
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("Demetras - Working")]<-3
+annotations_inc$Nb.of.participants[annotations_inc$Corpus%in% c("Davis")]<-21
 
 
 #Language or languages spoken in recordings 
@@ -157,8 +165,8 @@ country_info<- as.data.frame(xtabs(~country, annotations_inc))
 # annotations_inc$continent[grep("Poland|Estonia|Hungary|Czech|Romania|Serbia|Croatia|Slovenia|Sweden|Iceland|Norway|Denmark|Greece|Russia", annotations_inc$country)]  <- "Non-Western Europe"
 # annotations_inc$continent[grep("Turkey|Iran|Israel|Kuwait|India|China|Singapore|Indonesia|Thailand|Japan|South Korea|Hong Kong|Taiwan", annotations_inc$country)]  <- "Asia"
 # annotations_inc$continent[grep("Papua New Guinea", annotations_inc$country)]  <- "Oceania"
-# annotations_inc$continent[grep("United States|Canada", annotations_inc$country)]  <- "North America"
-# annotations_inc$continent[grep("Argentina|Brazil|Mexico|Jamaica", annotations_inc$country)]  <- "Latin America"
+# annotations_inc$continent[grep("United States|Canada|Mexico|Jamaica", annotations_inc$country)]  <- "North America & the Caribbean"
+# annotations_inc$continent[grep("Argentina|Brazil", annotations_inc$country)]  <- "South America"
 # annotations_inc$continent[grep("Egypt|Lesotho|Africa", annotations_inc$country)]  <- "Africa"
 
 #We are leaving continent as NA (because one country is Western & the other Eastern Europe)
@@ -283,10 +291,10 @@ annotations_inc$Parental.profession[annotations_inc$Parental.profession %in% c("
 xtabs(~Type.of.community, annotations_inc) 
 annotations_inc$Type.of.community[is.na(annotations_inc$Type.of.community)]<-annotations_inc$STDZD.community.type[is.na(annotations_inc$Type.of.community)]
 annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
-                                                                                                        "work-for-pay/industrial","industrial","Northeastern US urban","urban western")]<-"urban"
+                                                                                                        "work-for-pay/industrial","industrial","Northeastern US urban","urban western", "industrial & service &trade activities...", "Mediterranean city of 1.6 million inhabitants", "modern city families, usually both working parents","Seaside tourist town","Industrial city (population: around 272,000 inhabitants)","mainly urban", "industrial city (3.000.000 inhabitants")]<-"urban"
 
 annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("farmer","rural","rural farming village")]<-"rural"
-annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("industrial, farmers","mainly urban")]<-"both"
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("industrial, farmers")]<-"both"
 annotations_inc$Type.of.community[annotations_inc$Type.of.community==""]<-NA
 #table(annotations_inc$Type.of.community.at.the.time.of.the.recordings)
 

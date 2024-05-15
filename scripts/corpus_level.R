@@ -20,14 +20,25 @@ rm(list=ls()) #clean your environment
 # Read in data
 
 ##1.CHILDES annotations ####
-annotations_inc<- read.csv("../derived/annotations_included", sep="")
-ocde <- read.csv("../data/ocde_country.csv", sep=",")
-
+annotations_inc<- read.csv("derived/annotations_included", sep="")
+ocde <- read.csv("data/ocde_country.csv", sep=",")
 
 ##countries and corpora
-corpora <- as.data.frame((table(annotations_inc$country)))
+corpora <- as.data.frame((table(annotations_inc$Nb.of.participants)))
 names(corpora)<-c("country","Freq")
-#write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
+write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
+#50 in total but 2 Bilingual corpora so 48 different countries or territories
+corpora.ind <- annotations_inc %>%
+  select(country, Corpus, Nb.of.participants)
+write.table(corpora.ind,"derived/corpora.ind", row.names = FALSE, col.names = TRUE)
+
+summary_corpora <- corpora.ind %>%
+  group_by(country) %>%
+  summarise(
+    TimesRepeated = n(),
+    TotalParticipants = sum(Nb.of.participants)
+  )
+write.table(summary_corpora,"derived/summary_corpora", row.names = FALSE, col.names = TRUE)
 
 
 merge(x=corpora, y=ocde,  by = "country", all.x = T) -> ocde_country
