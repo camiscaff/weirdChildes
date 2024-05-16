@@ -448,6 +448,8 @@ annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("farm
 annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("industrial, farmers")]<-"both"
 annotations_inc$Type.of.community = factor(annotations_inc$Type.of.community, levels=c("urban", "both", "rural"))
 
+
+
 # Plot this categorywise bar chart
 gurb <- ggplot(data=subset(annotations_inc, !is.na(Type.of.community)), aes(country))
 # g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
@@ -465,6 +467,7 @@ gurb + geom_bar(aes(fill=Type.of.community), width = 0.9) +
   scale_x_discrete(name = "Countries or Territories") +
   scale_y_continuous(name = "Number of corpora with Urbanization data") +
   labs(title="Urbanization", fill = "Type of community")
+
 
 
 ```

@@ -18,21 +18,54 @@ library(rjson)
 
 ## READ IN DATA AND ORGANIZE ####
 rm(list=ls()) #clean your environment
-# Read in data
+
+# Read in data CHILDES
 annotations_inc<- read.csv("../derived/annotations_included", sep="")
+
+## Read in regions info
 read.csv("data/macro_level_measures/ISO-3166-Countries-with-Regional-Codes.csv")->regions #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("data/macro_level_measures/wdi-data.csv")->wdi_all
-## Read in Ourworld in data info on Education - Educated ####
+
+## Read in urbanization info
+#from WDI https://api.worldbank.org/v2/en/indicator/SP.RUR.TOTL.ZS?downloadformat=csv
+read.csv("data/macro_level_measures/urban.csv")->urbtot
+
+## Read in regions info GDP info
+gdp <- read.csv("data/macro_level_measures/GDP.csv", colClasses = "character", na.strings = "")
+# Convert numeric columns to numeric type
+numeric_cols <- sapply(gdp, function(x) all(grepl("^[-+]?[0-9]*\\.?[0-9]+$", x)))
+gdp[, numeric_cols] <- lapply(gdp[, numeric_cols], as.numeric)
+
+## Read in Education info 
+#From Our world in data
 # https://ourworldindata.org/primary-and-secondary-education
 read.csv("data/macro_level_measures/completion-rate-of-lower-secondary-education-OWID-20220303.csv")->owid_ed_basic
-UU_hh_composition <- read.csv("data/macro_level_measures//hh-size-composition.csv" ,sep=",") #https://population.un.org/household/#/countries/
-#https://www.oecd.org/about/document/ratification-oecd-convention.htm
+
+## Read in family composition from UN
+##https://population.un.org/household/#/countries/
+UU_hh_composition <- read.csv("data/macro_level_measures//hh-size-composition.csv" ,sep=",") 
+#https://www.oecd.org/about/document/ratification-oecd-convention.html
+
+#ocde info
 ocde <- read.csv("data/ocde_country.csv", sep=",")
 read.csv("data/oecd.txt",sep="\t",header=F, skip=1)->countries
 
-#Merge and cleanup codes
+
+## Merge and cleanup codes ####
 ##Remove regions and areas from WDI and OWID 
+
+# Rename the X2022 column to GDP
+gdp_latest$X2021 <-  as.numeric(gdp_latest$X2021)
+gdp_latest$log_gdp=log(gdp$X2021,10) #broken
+
+
 merge(regions, wdi_all, by.x = "alpha.2",  by.y = "iso2c", all.x=T) -> wdi
+
+## select only 2022 urbanization data
+urbtot_2022 <- urbtot[, c("Country.Name", "Country.Code", "Indicator.Name", "Indicator.Code", "X2022")]
+urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "X2022")]
+colnames(urbtot_2022)[colnames(urbtot_2022) == "X2022"] <- "SP.RUR.TOTL.ZS"
+100 - urbtot_2022$SP.RUR.TOTL.ZS -> urbtot_2022$SP.URB.TOTL.ZS
+urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "SP.URB.TOTL.ZS")]
 
 #Choose only data between 2006 and 2015 for ed_basic 
 owid_ed_basic[owid_ed_basic$Year>2006 & owid_ed_basic$Year<2015,]->owid_ed_basic
@@ -42,6 +75,8 @@ filtered_ed_basic <- owid_ed_basic %>%
   filter(Year == max(Year)) #pic the latest available data if duplicates
 
 merge(regions, filtered_ed_basic, by.x  = "alpha.3",by.y  = "Code", all.x=T) -> ed_basic
+
+
 
 filtered_hh_composition <- UU_hh_composition %>%
   group_by(ISO.Code) %>%
@@ -83,14 +118,16 @@ ind = ind_all[ind_all$alpha.3 %in% annotations_inc$alpha.3,] #50 -2 (2 corpora b
 write.table(ind_all,"derived/ind_all", row.names = FALSE, col.names = TRUE)
 write.table(ind,"derived/ind", row.names = FALSE, col.names = TRUE)
 
-##other education measure####
+## Archive ####
+
+##other education measure#
 
 #https://ourworldindata.org/tertiary-education
 # read.csv("share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->ed
 # ed[ed$Year==2010,]->ed #note, no data for 2011, data only every 10 years
 # colnames(ed)[colnames(ed)=="Barro.Lee..Percentage.of.population.age.15..with.tertiary.schooling..Completed.Tertiary"]<-"College"
 # 
-##other family structure measure ####
+##other family structure measure #
 
 # read.csv("Households-by-number-of-children-2015-OECD-20220217.csv",sep=";")->nkids
 # for(i in 2:dim(nkids)[2]) nkids[,c(i)]<-as.numeric(as.character(nkids[,c(i)]))
@@ -101,18 +138,18 @@ write.table(ind,"derived/ind", row.names = FALSE, col.names = TRUE)
 # nkids$single=(nkids$X1.child/nkids$anychildren)*100
 # #summary(nkids)
 # 
-# ## Read in Ourworld in data info on Democracy - Democratic ####
+# Read in Ourworld in data info on Democracy - Democratic ###
 # #https://ourworldindata.org/grapher/political-regimes
 # read.csv("political-regimes-OWID-20220215.csv")->democr
 # democr[democr$Year==2011,]->democr
 # 
-# ## Read in Ourworld in data info on Population Size  ####
+# ## Read in Ourworld in data info on Population Size  ###
 # #https://ourworldindata.org/grapher/population-past-future
 # read.csv("population-past-future-OWID-20220217.csv")->pop
 # pop[pop$Year==2011,]->pop
 # colnames(pop)[colnames(pop)=="Population..historical.estimates.and.future.projections."]<-"Population"
 # 
-# ## Read in Ourworld in data info on Children born per woman - Fertility ####
+# ## Read in Ourworld in data info on Children born per woman - Fertility ###
 # read.csv("children-born-per-woman-OWID-20220112.csv")->cpw
 # cpw[cpw$Year==2011,]->cpw
 # colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
@@ -134,7 +171,7 @@ write.table(ind,"derived/ind", row.names = FALSE, col.names = TRUE)
 
 
 
-##archive ####
+##archive bis####
 
 #remove areas
 # wdi_all=wdi_all[!(wdi_all$country %in% c( "Africa Eastern and Southern" ,"Africa Western and Central",
