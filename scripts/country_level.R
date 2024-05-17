@@ -20,7 +20,7 @@ library(rjson)
 rm(list=ls()) #clean your environment
 
 # Read in data CHILDES
-annotations_inc<- read.csv("../derived/annotations_included", sep="")
+annotations_inc<- read.csv("derived/annotations_included", sep="")
 
 ## Read in regions info
 read.csv("data/macro_level_measures/ISO-3166-Countries-with-Regional-Codes.csv")->regions #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
@@ -30,10 +30,8 @@ read.csv("data/macro_level_measures/ISO-3166-Countries-with-Regional-Codes.csv")
 read.csv("data/macro_level_measures/urban.csv")->urbtot
 
 ## Read in regions info GDP info
-gdp <- read.csv("data/macro_level_measures/GDP.csv", colClasses = "character", na.strings = "")
-# Convert numeric columns to numeric type
-numeric_cols <- sapply(gdp, function(x) all(grepl("^[-+]?[0-9]*\\.?[0-9]+$", x)))
-gdp[, numeric_cols] <- lapply(gdp[, numeric_cols], as.numeric)
+gdp <- read.csv("data/macro_level_measures/GDP.csv",na.strings = "")
+#https://data.worldbank.org/indicator/NY.GDP.PCAP.PP.KD
 
 ## Read in Education info 
 #From Our world in data
@@ -51,14 +49,11 @@ read.csv("data/oecd.txt",sep="\t",header=F, skip=1)->countries
 
 
 ## Merge and cleanup codes ####
-##Remove regions and areas from WDI and OWID 
+##Remove regions and areas from WDI and OWID
+gdp_latest <- gdp[, c("Country.Name", "Country.Code", "X2021")]
+gdp_latest$log_gdp=log(gdp_latest$X2021,10) #broken
 
-# Rename the X2022 column to GDP
-gdp_latest$X2021 <-  as.numeric(gdp_latest$X2021)
-gdp_latest$log_gdp=log(gdp$X2021,10) #broken
-
-
-merge(regions, wdi_all, by.x = "alpha.2",  by.y = "iso2c", all.x=T) -> wdi
+merge(regions, gdp_latest, by.x = "alpha.3",  by.y = "Country.Code", all.x=T) -> step1
 
 ## select only 2022 urbanization data
 urbtot_2022 <- urbtot[, c("Country.Name", "Country.Code", "Indicator.Name", "Indicator.Code", "X2022")]
@@ -66,6 +61,10 @@ urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "X2022")]
 colnames(urbtot_2022)[colnames(urbtot_2022) == "X2022"] <- "SP.RUR.TOTL.ZS"
 100 - urbtot_2022$SP.RUR.TOTL.ZS -> urbtot_2022$SP.URB.TOTL.ZS
 urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "SP.URB.TOTL.ZS")]
+
+#merge urb and gdp
+merge(step1, urbtot_2022, by.x = "alpha.3",  by.y = "Country.Code", all.x=T) -> step2
+
 
 #Choose only data between 2006 and 2015 for ed_basic 
 owid_ed_basic[owid_ed_basic$Year>2006 & owid_ed_basic$Year<2015,]->owid_ed_basic
@@ -99,8 +98,7 @@ ind_all = merge(x=temp,y=ed_basic[ , c("alpha.3","Entity","Year","Lower.secondar
 #Education##
 colnames(ind_all)[colnames(ind_all)=="Lower.secondary.completion.rate..total....of.relevant.age.group."]<-"Compl.LS"
 ind_all$Compl.LS[ind_all$Compl.LS>100]<-100  #cap to 100%
-#GDP##
-ind_all$log_gdp=log(ind_all$NY.GDP.PCAP.PP.KD,10)
+
 ##Urbanization####
 #ind_all$SP.URB.TOTL.ZS
 
