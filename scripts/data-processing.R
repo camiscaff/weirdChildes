@@ -19,7 +19,7 @@ rm(list=ls()) #clean your environment
 annotations<- read.csv("data/Table for authors - annotations.csv") ###FIX FILE!
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 #https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
-read.csv("data/ISO-3166-Countries-with-Regional-Codes.csv")->regions
+read.csv("data/macro_level_measures/ISO-3166-Countries-with-Regional-Codes.csv")->regions
 
 #some cleaning  of the col names
 #colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
@@ -237,8 +237,9 @@ annotations_inc$Average.number.of.siblings[annotations_inc$Average.number.of.sib
 xtabs(~Household.structure, annotations_inc) 
 
 #annotations_inc$Household.structure=tolower(annotations_inc$Household.structure)
-annotations_inc$Household.structure[annotations_inc$Household.structure %in% c("nuclear, extended","extended/nuclear")]<-"varied"
-annotations_inc$Household.structure[grep("nuclear|nucear|single|Nuclear|Nucear",annotations_inc$Household.structure)]<-"nuclear" # including single parent
+annotations_inc$Household.structure[grep("nuclear|nucear|single|Nuclear|Nucear|don't know in detail; largely nuclear|",annotations_inc$Household.structure)]<-"nuclear" # including single parent
+
+annotations_inc$Household.structure[annotations_inc$Household.structure %in% c("nuclear, extended","extended/nuclear", "extended, two grandparents, parents and the child")]<-"varied"
 annotations_inc$Household.structure[grep("extended|Nuclear family with a strong bond and contact with her grandparents, uncles, aunts and cousins. 
 ",annotations_inc$Household.structure)]<-"extended"
 annotations_inc$Household.structure[annotations_inc$Household.structure==""]<-NA
