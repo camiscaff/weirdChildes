@@ -513,11 +513,11 @@ annotations_inc$siblings = factor(annotations_inc$siblings, levels=c("yes", "no"
 
 
 # Plot this categorywise bar chart
-ghouse <- ggplot(data=subset(annotations_inc, !is.na(siblings)), aes(country))
+gsib <- ggplot(data=subset(annotations_inc, !is.na(siblings)), aes(country))
 # g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
 #   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
 #   labs(title="Education of caregivers") 
-ghouse + geom_bar(aes(fill=siblings), width = 0.9) + 
+gsib + geom_bar(aes(fill=siblings), width = 0.9) + 
   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
   #facet_grid(~ scenario_f) +
   theme_minimal()  +
@@ -553,6 +553,30 @@ apa_table(mytab4,caption="Total number of participants per language,", longtable
 #write.csv(mytab4,"output/table3.csv")
 ```
 
+```{r figure7,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Indo-European languages by country."}
+lang_fam<- read.csv("../derived/annotations_included_languagefamily.csv") 
+# xtabs(~indo_european, lang_fam) indoeuropean 122 / no 58
+#xtabs(~language_family, lang_fam)
+
+# Plot this categorywise bar chart
+glang_fam <- ggplot(data=lang_fam, aes(country))
+# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
+#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
+#   labs(title="Education of caregivers") 
+glang_fam + geom_bar(aes(fill=language_family), width = 0.9) + 
+  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
+  #facet_grid(~ scenario_f) +
+  theme_minimal()  +
+  #ggtitle("Education of caregivers")  + 
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  coord_flip() + 
+  #guides(fill=FALSE ) + 
+  scale_fill_manual(breaks=c("indo_european", "other"),labels=c("Indo-European", "Other"), values = c("#CC5700", "#008080" )) +
+  scale_x_discrete(name = "Countries or Territories") +
+  scale_y_continuous(name = "Number of Indo-European corpora") +
+  labs(title="Language Family", fill = "")
+
+```
 
 About a third (32%) of the included corpora that had available data for this variable (N = 110) were not monolingual. It is hard to find reliable estimates of the percentage of the population which is not monolingual in the world or in the countries represented in our sub-sample of CHILDES, but for instance, in Europe in 2016, 65% of adults reported knowing multiple languages (Eurostat, 2022). According to such estimates, even if samples are linguistically diverse, it would appear that input data in our sub-sample of CHILDES under-represents bilingual and multilingual households.
 
