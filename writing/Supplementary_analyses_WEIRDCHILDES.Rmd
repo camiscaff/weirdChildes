@@ -128,15 +128,7 @@ dev.off()
 ```
 
 
-### Code to reproduce information in the caption to Figure 1
-
-We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
-We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
-
-
-### Code to reproduce Figure 2
-
-Note that this Figure appears in a different page.
+## SM2 :Partial correlations of the four dimensions of interest
 
 ```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", results='hide'}
 
@@ -150,8 +142,45 @@ p
 dev.off()
 ```
 
-## Flowchart
+## SM3 Flowchart
 ![Flowchart.(n) represents the number of different corpora; (N) represents the number of different countries. ](../figures/flowchart.png){ width=% }
+
+
+## SM4: Sources used for Density plot
+
+
+```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+
+# Create a data frame
+mytab1 <- data.frame(
+  Dimension = c("SES", "SES", "Urbanization", "Family structure", "Family structure", "Language"),
+  `Macro-level variable` = c("Percent of the population completing lower secondary school*", "GDP per capita (log 10)", "Percent of the population living in urban areas", "Average household size", "Average number of member under 15 in households", "NA"),
+  Source = c("Data from 2007-2015; Our World in Data, 2022a", "World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021)", "WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables.", "UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)", "UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)", "NA")
+)
+
+apa_table(mytab1,caption="", longtable = T, align=c("lccccccccr"))
+#write.csv(mytab,"output/table1.csv")
+```
+
+
+## SM5: Distribution of CHILDES participants by country
+
+## SM6: Table of countries and urban indicators
+
+## SM7: Different languages or language combinations (for bilingual and multilingual children)
+
+## SM8: Number of participants per country
+
+# Archive
+
+### Code to reproduce information in the caption to Figure 1
+
+We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
+We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
+
+
+
+
 
 
 ```{r SM1,fig.width=8, fig.height=5.5, echo=F,warning=F,fig.cap = "Figure SM1. Effect sizes as a function of type of assessment and SES measure. PPVT samples are in green, LwL in red and TvT in blue SES measures are composites (circle), educational-based (triangle), income-based (square) and other (cross)."}
