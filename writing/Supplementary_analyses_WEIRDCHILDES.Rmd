@@ -180,8 +180,33 @@ apa_table(summary_corpora_summary_corpora_CONT,caption="Descriptives", longtable
 
 #write.csv(mytab3,"output/table3.csv")
 ```
-## SM5: Table of countries and urban indicators
+## SM5: Table of urban indicators by country, using most recent date available (2022)
 
+This indicator is based in the World Bank staff estimates based on the United Nations Population Division's World Urbanization Prospects: 2018 Revision.
+
+```{r tab4,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+
+## Read in urbanization info
+#from WDI https://api.worldbank.org/v2/en/indicator/SP.RUR.TOTL.ZS?downloadformat=csv
+read.csv("../data/macro_level_measures/urban.csv")->urbtot
+
+## select only 2022 urbanization data
+urbtot_2022 <- urbtot[, c("Country.Name", "Country.Code", "Indicator.Name", "Indicator.Code", "X2022")]
+urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "X2022")]
+colnames(urbtot_2022)[colnames(urbtot_2022) == "X2022"] <- "SP.RUR.TOTL.ZS"
+100 - urbtot_2022$SP.RUR.TOTL.ZS -> urbtot_2022$SP.URB.TOTL.ZS
+urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "SP.URB.TOTL.ZS")]
+
+#merge urb and gdp
+merge(annotations_inc, urbtot_2022, by.x = "alpha.3",  by.y = "Country.Code", all.x=T) -> urbtot_2022_childes
+
+urbantable <- urbtot_2022_childes[, c("Country.Name", "SP.URB.TOTL.ZS")]
+colnames(urbantable)<-c("Country", "% Urban")
+
+
+apa_table(urbantable,caption="Urban indicator by country included in CHILDES sample", longtable = T, align=c("lccccccccr"))
+
+```
 ## SM6: Different languages or language combinations (for bilingual and multilingual children)
 
 ## SM7: Number of participants per country
