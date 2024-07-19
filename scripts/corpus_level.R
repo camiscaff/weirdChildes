@@ -29,8 +29,13 @@ names(corpora)<-c("country","Freq")
 write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
 #50 in total but 2 Bilingual corpora so 48 different countries or territories
 corpora.ind <- annotations_inc %>%
-  select(country, Corpus, Nb.of.participants)
-write.table(corpora.ind,"derived/corpora.ind", row.names = FALSE, col.names = TRUE)
+  select(country, Corpus, Nb.of.participants, region)
+
+corpora.ind$region[corpora.ind$country =="Spain & Hungary"] = "Europe"
+corpora.ind$region[corpora.ind$country =="Sweden & Portugal"] = "Europe"
+
+write.table(corpora.ind,"derived/corpora_ind", row.names = FALSE, col.names = TRUE)
+
 
 summary_corpora <- corpora.ind %>%
   group_by(country) %>%
@@ -210,10 +215,6 @@ ggplot() +
 
 ggsave("figures/childes_country_participants.png", width = 6, height = 4, dpi = 300)
 
-
-library(ggplot2)
-
-# Assuming 'data' is your dataset
 
 library(ggplot2)
 

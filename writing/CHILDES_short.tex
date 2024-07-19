@@ -241,121 +241,72 @@ Our systematic analysis follows three steps. First, we screened the CHILDES data
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 (Wickham, 2016). Data, scripts, and online Supplementary Materials are available on OSF {[}\url{https://osf.io/q9w82/?view_only=a013f1b25b8c4556b8248f12870402c9}{]}.
+Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 {[}wickham2011ggplot2{]}. Data, scripts, and online Supplementary Materials are available on OSF {[}\url{https://osf.io/q9w82/?view_only=a013f1b25b8c4556b8248f12870402c9}{]}.
 
 \hypertarget{inclusion-criteria}{%
 \subsubsection{Inclusion criteria}\label{inclusion-criteria}}
 
-We excluded the following corpora: a) clinical populations or non-typically developing children, b) structured tasks such as toy narratives, personal narratives, frog stories, picture or movie descriptions, structured storytelling, and other elicitation tasks; c) only child or adult speech without a conversational partner; and d) non-naturalistic setups, such as recordings conducted exclusively in a lab environment or in a diary format.
-\#\#\# Screening
-Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified 180 corpora that met our inclusion criteria mentioned above. For a detailed breakdown of the included corpora, please refer to the flowchart in Supplementary Materials.
+Although valuable insights occur from corpora on clinical populations and elicitation tasks, we deliberately excluded them from our review. This is because they introduce additional sources of variation and biases. For example, the inclusion of clinical populations may highlight differences in the prevalence and access to diagnosis of language disorders in different regions or countries. Additionally, the structure of elicitation tasks may not reflect spontaneous language use in everyday conversations. We thus excluded the following corpora: a) clinical populations or non-typically developing children, b) structured tasks such as toy narratives, personal narratives, frog stories, picture or movie descriptions, structured storytelling, and other elicitation tasks; c) only child or adult speech without a conversational partner; and d) non-naturalistic setups, such as recordings conducted exclusively in a lab environment or in a diary format.
+
+\hypertarget{screening}{%
+\subsubsection{Screening}\label{screening}}
+
+Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified 180 corpora that met our inclusion criteria mentioned above. Please refer to the flowchart in Supplementary Materials (SM2) for a detailed breakdown of the included corpora.
 
 \hypertarget{descriptive-statistics}{%
 \subsubsection{Descriptive-statistics}\label{descriptive-statistics}}
 
 Descriptive statistics
-Firstly, we present an overview of the countries within the CHILDES database, specifically the distribution of participants by continent (Table 2 ) and geographical location (Figure 1) and examining three out of our four key dimensions: SES, urbanization, family structure (Figure 2). Our goal is to provide insights into the representativeness of our CHILDES sub-sample when compared to global statistics. Figure 2 draws data from official sources such as the World Bank, Our World in Data (WDI), and the United Nations (UN). It is noteworthy that information on the Language dimension is omitted due to the lack of official world statistics on multilingualism. This limitation arises from the exclusion of certain languages or dialects in official country counts (REF). For additional details on Figure 2 and the corresponding variables, please refer to the Supplementary Materials (SMX).
+Firstly, we show descriptive statistics of the countries represented in the CHILDES database presented in FigureS 1 and 2 of the results. Our goal is to provide insights into the representativeness of our CHILDES sub-sample when compared to global statistics. Figure 2 draws data from official sources: the CWorld Bank, Our World in Data (WDI), and the United Nations (UN). For additional details on Figure 2 and the corresponding variables, please refer to Supplementary Materials (SM3).
 
-Secondly, we offer corpus-level statistics to assess the representativeness of our sub-sample of CHILDES in a more detailed manner across our four dimensions: SES, urbanization, family structure, and languages (See Table 1 for the complete list of variables and definitions).
-Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (XX corpora, XX\%) provided additional data or confirmed missing information. Unfortunately, curators for 180 corpora (XX\%) could not be contacted due to unresponsive email addresses (38), or the curator's passing (12).
+Secondly, we present corpus-level statistics to assess the representativeness of our sub-sample of CHILDES in a more detailed manner across our four dimensions: SES, urbanization, family structure, and languages (See Table 1 for the complete list of variables and definitions).
 
-\begin{center}
-\begin{ThreePartTable}
+Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (103 corpora, 32\%) provided additional data or confirmed missing information. Unfortunately, curators for 50 corpora (15\%) could not be contacted due to unresponsive email addresses (38), or the curator's passing (12).
 
-\begin{longtable}{lcc}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:tab1}}\\
-\toprule
-Dimension & \multicolumn{1}{c}{Macro.level.variable} & \multicolumn{1}{c}{Source}\\
-\midrule
-\endfirsthead
-\caption*{\normalfont{Table \ref{tab:tab1} continued}}\\
-\toprule
-Dimension & \multicolumn{1}{c}{Macro.level.variable} & \multicolumn{1}{c}{Source}\\
-\midrule
-\endhead
-SES & Percent of the population completing lower secondary school* & Data from 2007-2015; Our World in Data, 2022a\\
-SES & GDP per capita (log 10) & World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021)\\
-Urbanization & Percent of the population living in urban areas & WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100\% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables.\\
-Family structure & Average household size & UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)\\
-Family structure & Average number of member under 15 in households & UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)\\
-Language & NA & NA\\
-\bottomrule
-\end{longtable}
-
-\end{ThreePartTable}
-\end{center}
+\begin{table}[tbp]
 
 \begin{center}
-\begin{ThreePartTable}
+\begin{threeparttable}
 
-\begin{longtable}{lccc}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:tab2}Definition of the corpus-level variables}\\
+\caption{\label{tab:tab1}Definition of the corpus-level variables}
+
+\begin{tabular}{llll}
 \toprule
 Dimension & \multicolumn{1}{c}{Corpus.level.variable} & \multicolumn{1}{c}{Definition.or.levels} & \multicolumn{1}{c}{N.of.corpus....}\\
 \midrule
-\endfirsthead
-\caption*{\normalfont{Table \ref{tab:tab2} continued}}\\
-\toprule
-Dimension & \multicolumn{1}{c}{Corpus.level.variable} & \multicolumn{1}{c}{Definition.or.levels} & \multicolumn{1}{c}{N.of.corpus....}\\
-\midrule
-\endhead
-SES & Parents' socio-economic status & Low, mid and/or high & 57.00\\
-SES & Parents' education level & Highest level of education completed: Primary, High school, Undergraduate, Masters, PhD & 44.00\\
-SES & Parents' occupation & Parents' activity or profession & 47.00\\
-Urb & Type of community & Urban, rural, mixed & 36.00\\
-Family structure & Household composition & Whether the family was composed primarily of caregivers and children (nuclear) or it also included other family members: grandparents, cousins, uncles, and aunts (extended) & 38.00\\
-Family structure & Percent children with sibling(s) & The percentage of children in the corpus who had at least one sibling & 52.00\\
-Family structure & Average number of siblings & How many siblings children had on average (including children with zero siblings) & 46.00\\
-Language & Language(s) spoken & Which languages were spoken in the transcripts and by the family & 100.00\\
-Language & Lingual status & Whether more than one language is spoken in the corpus (regardless of how many languages are spoken in the family or the community at large) & 61.00\\
+SES & Parents' socio-economic status & Low, mid and/or high & 102 (57\%)\\
+SES & Parents' education level & Highest level of education completed: Primary, High school, Undergraduate, Masters, PhD & 80 (44\%)\\
+SES & Parents' occupation & Parents' activity or profession & 84 (47\%)\\
+Urbanization & Type of community & Urban, rural, mixed & 65 (36\%)\\
+Family structure & Household composition & Whether the family was composed primarily of caregivers and children (nuclear) or it also included other family members: grandparents, cousins, uncles, and aunts (extended) & 69 (38\%)\\
+Family structure & Percent children with sibling(s) & The percentage of children in the corpus who had at least one sibling & 93 (52\%)\\
+Family structure & Average number of siblings & How many siblings children had on average (including children with zero siblings) & 83 (46\%)\\
+Language & Language(s) spoken & Which languages were spoken in the transcripts and by the family & 180 (100\%)\\
+Language & Lingual status & Whether more than one language is spoken in the corpus (regardless of how many languages are spoken in the family or the community at large) & 110 (61\%)\\
 \bottomrule
-\end{longtable}
+\end{tabular}
 
-\end{ThreePartTable}
+\end{threeparttable}
 \end{center}
+
+\end{table}
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-The 180 corpora included in this study represent 48 different countries across all populated continents. Out of the 48 different countries or areas included in the sample, 28 of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 149 out of 180 corpora or to 82.78\% of this sub-sample of CHILDES. OECD countries represent 19.5\% of world countries.
+The 180 corpora included in this study represent 48 different countries or territories across all populated continents. The country with the most corpora is the United States with 30 different corpora, followed by Spain with 24 (including a bilingual corpus), and a tie between the United Kingdom and France with 11 (see SM4 for a full summary by country and continent). The most represented country in terms of individual children recorded is the United Kingdom with 560, followed by the United States with 405 and then Spain with 212. The most represented continent in terms of individual children recorded is Europe with1090. The least represented continent is Oceania with only 5 recorded children (all from Papua New Guinea, Sarvasy, 2017).
 
-{[}1{]} 0
-
-\begin{center}
-\begin{ThreePartTable}
-
-\begin{longtable}{lccc}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
-\caption{\label{tab:tab3}Descriptives}\\
-\toprule
-Continent & \multicolumn{1}{c}{N.corpora} & \multicolumn{1}{c}{N.total.children} & \multicolumn{1}{c}{N.children.growing.in.continent}\\
-\midrule
-\endfirsthead
-\caption*{\normalfont{Table \ref{tab:tab3} continued}}\\
-\toprule
-Continent & \multicolumn{1}{c}{N.corpora} & \multicolumn{1}{c}{N.total.children} & \multicolumn{1}{c}{N.children.growing.in.continent}\\
-\midrule
-\endhead
-Africa & 3.00 & 16.00 & X\\
-Asia & 32.00 & 602.00 & X\\
-North America & 34.00 & 177.00 & X\\
-Latin America & 5.00 & 6.00 & X\\
-Europe & 105.00 & 1,091.00 & X\\
-Oceania & 1.00 & 5.00 & X\\
-\bottomrule
-\end{longtable}
-
-\end{ThreePartTable}
-\end{center}
+Out of the 48 countries or territories,28 belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 149 out of 180 corpora or 83\% of this sample of CHILDES. Meanwhile, OECD countries represent only 19.5\% of world countries.
 
 \begin{figure}
 \centering
 \includegraphics{CHILDES_short_files/figure-latex/unnamed-chunk-1-1.pdf}
-\caption{\label{fig:unnamed-chunk-1}World map showing corpus. Size proportional to number of children per corpus}
+\caption{\label{fig:unnamed-chunk-1}Geographical distribution of the different corpora of CHILDES. Each circle represents a corpus, and the size of the circle is proportional to the number of participants.}
 \end{figure}
 
 We assessed the extent to which the countries with data in our sub-sample of CHILDES were a representative sample of countries in the world. Density plots are portrayed in Figure 2.
 
-By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (\% compl. LSS, t(130.41)=-6.19, p = 0); they were more urban (\% urban, t(79.48)=-3.44, p = 0); richer (log GDP per capita, t(102.35)=-6.02, p = 0) and had smaller households (average household size, t(118.80)=7.12, p = 0) and less average number of members under the age of 15 (average under 15 size, t(26.12)=5.01, p = 0).
+By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (\% compl. LSS, t(130.41)=-6.19, p = 0); they were more urban (\% urban, t(79.48)=-3.44, p = 0); richer (log GDP per capita, t(102.35)=-6.02, p = 0) and had smaller households (average household size, t(118.80)=7.12, p = 0).
 
 \hypertarget{corpus-level}{%
 \subsection{Corpus-level}\label{corpus-level}}
@@ -617,6 +568,9 @@ Richman, A. L., Miller, P. M., \& LeVine, R. A. (1992). Cultural and educational
 
 \leavevmode\vadjust pre{\hypertarget{ref-rowe2018understanding}{}}%
 Rowe, M. L. (2018). Understanding socioeconomic differences in parents' speech to children. \emph{Child Development Perspectives}, \emph{12}(2), 122--127.
+
+\leavevmode\vadjust pre{\hypertarget{ref-sarvasy2017grammar}{}}%
+Sarvasy, H. (2017). \emph{A grammar of nungon: A papuan language of northeast new guinea} (Vol. 4). Brill.
 
 \leavevmode\vadjust pre{\hypertarget{ref-scaff2024characterization}{}}%
 Scaff, C., Casillas, M., Stieglitz, J., \& Cristia, A. (2024). Characterization of children's verbal input in a forager-farmer population using long-form audio recordings and diverse input definitions. \emph{Infancy}, \emph{29}(2), 196--215.

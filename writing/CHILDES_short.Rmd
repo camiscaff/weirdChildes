@@ -133,7 +133,11 @@ annotations$Inclusion[annotations$Inclusion %in% c("No","no")] <- "exclude"
 annotations$Inclusion[annotations$Inclusion %in% c("Yes","yes")] <- "include"
 #why_exclude
 excluded <-  subset(annotations, (Inclusion %in% c("exclude")))
-xtabs(~why_exclude, excluded)
+#xtabs(~why_exclude, excluded)
+
+
+
+
 ```
 
 ## Research highlights
@@ -176,25 +180,29 @@ Our systematic analysis follows three steps. First, we screened the CHILDES data
 
 # Methods
 
-Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 (Wickham, 2016). Data, scripts, and online Supplementary Materials are available on OSF [https://osf.io/q9w82/?view_only=a013f1b25b8c4556b8248f12870402c9]. 
+Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 [wickham2011ggplot2]. Data, scripts, and online Supplementary Materials are available on OSF [https://osf.io/q9w82/?view_only=a013f1b25b8c4556b8248f12870402c9].
 
 ### Inclusion criteria
-We excluded the following corpora: a) clinical populations or non-typically developing children, b) structured tasks such as toy narratives, personal narratives, frog stories, picture or movie descriptions, structured storytelling, and other elicitation tasks; c) only child or adult speech without a conversational partner; and d) non-naturalistic setups, such as recordings conducted exclusively in a lab environment or in a diary format.
+Although valuable insights occur from corpora on clinical populations and elicitation tasks, we deliberately excluded them from our review. This is because they introduce additional sources of variation and biases. For example, the inclusion of clinical populations may highlight differences in the prevalence and access to diagnosis of language disorders in different regions or countries. Additionally, the structure of elicitation tasks may not reflect spontaneous language use in everyday conversations. We thus excluded the following corpora: a) clinical populations or non-typically developing children, b) structured tasks such as toy narratives, personal narratives, frog stories, picture or movie descriptions, structured storytelling, and other elicitation tasks; c) only child or adult speech without a conversational partner; and d) non-naturalistic setups, such as recordings conducted exclusively in a lab environment or in a diary format.
+
 ### Screening
-Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified `r nrow(annotations_inc)` corpora that met our inclusion criteria mentioned above. For a detailed breakdown of the included corpora, please refer to the flowchart in Supplementary Materials.
+Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified `r nrow(annotations_inc)` corpora that met our inclusion criteria mentioned above. Please refer to the flowchart in Supplementary Materials (SM2) for a detailed breakdown of the included corpora.
 
 
 ### Descriptive-statistics
 
 Descriptive statistics
-Firstly, we present an overview of the countries within the CHILDES database, specifically the distribution of participants by continent (Table 2 ) and geographical location (Figure 1) and examining three out of our four key dimensions: SES, urbanization, family structure (Figure 2). Our goal is to provide insights into the representativeness of our CHILDES sub-sample when compared to global statistics. Figure 2 draws data from official sources such as the World Bank, Our World in Data (WDI), and the United Nations (UN). It is noteworthy that information on the Language dimension is omitted due to the lack of official world statistics on multilingualism. This limitation arises from the exclusion of certain languages or dialects in official country counts (REF). For additional details on Figure 2 and the corresponding variables, please refer to the Supplementary Materials (SMX).
+Firstly, we show descriptive statistics of the countries represented in the CHILDES database presented in FigureS 1 and 2 of the results. Our goal is to provide insights into the representativeness of our CHILDES sub-sample when compared to global statistics. Figure 2 draws data from official sources: the CWorld Bank, Our World in Data (WDI), and the United Nations (UN). For additional details on Figure 2 and the corresponding variables, please refer to Supplementary Materials (SM3).
 
-Secondly, we offer corpus-level statistics to assess the representativeness of our sub-sample of CHILDES in a more detailed manner across our four dimensions: SES, urbanization, family structure, and languages (See Table 1 for the complete list of variables and definitions).
- Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (XX corpora, XX%) provided additional data or confirmed missing information. Unfortunately, curators for `r nrow(annotations_inc)` corpora (XX%) could not be contacted due to unresponsive email addresses (38), or the curator’s passing (12). 
+Secondly, we present corpus-level statistics to assess the representativeness of our sub-sample of CHILDES in a more detailed manner across our four dimensions: SES, urbanization, family structure, and languages (See Table 1 for the complete list of variables and definitions).
 
+Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (103 corpora, `r round((103*100)/324)`%) provided additional data or confirmed missing information. Unfortunately, curators for 50 corpora  (`r round((50*100)/324)`%) could not be contacted due to unresponsive email addresses (38), or the curator’s passing (12). 
 
 
 ```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+library(kableExtra)
+
+
 #SES
 SES = sum(!is.na(annotations_inc$SES.STDZD))
 SES_missing =round(sum(is.na(annotations_inc$SES.STDZD))/length(annotations_inc$SES.STDZD)*100)
@@ -240,41 +248,75 @@ multiling_missing =round(sum(is.na(annotations_inc$Bilingualism.Multilingualism.
 multiling_present = 100- multiling_missing
 #Language
 
+intermediate_SES <- paste(SES, " (", round(SES_present), "%)", sep = "")
+intermediate_ED <- paste(ED_ses, " (", round(ED_ses_present), "%)", sep = "")
+intermediate_ocup <- paste(Ocup_ses, " (", round(Ocup_ses_present), "%)", sep = "")
+intermediate_urb <- paste(urbrur, " (", round(urbrur_present), "%)", sep = "")
+intermediate_HHS <- paste(Household.structure, " (", round(Household.structure_present), "%)", sep = "")
+intermediate_percsib <- paste(per_sibs, " (", round(per_sibs_present), "%)", sep = "")
+intermediate_avgsib <- paste(avg_sibs, " (", round(avg_sibs_present), "%)", sep = "")
+intermediate_langspo <- paste(Langspoken, " (", round(Langspoken_present), "%)", sep = "")
+intermediate_multiling <- paste(multiling, " (", round(multiling_present), "%)", sep = "")
+
+
 # Create a data frame
-mytab2 <- data.frame(
-  Dimension = c("SES", "SES", "SES", "Urb", "Family structure", "Family structure", "Family structure", "Language", "Language"),
+mytab1 <- data.frame(
+  Dimension = c("SES", "SES", "SES", "Urbanization", "Family structure", "Family structure", "Family structure", "Language", "Language"),
   `Corpus-level variable` = c("Parents' socio-economic status", "Parents' education level", "Parents' occupation", "Type of community", "Household composition", "Percent children with sibling(s)", "Average number of siblings", "Language(s) spoken", "Lingual status"),
   `Definition or levels` = c("Low, mid and/or high", "Highest level of education completed: Primary, High school, Undergraduate, Masters, PhD", "Parents' activity or profession", "Urban, rural, mixed", "Whether the family was composed primarily of caregivers and children (nuclear) or it also included other family members: grandparents, cousins, uncles, and aunts (extended)", "The percentage of children in the corpus who had at least one sibling", "How many siblings children had on average (including children with zero siblings)", "Which languages were spoken in the transcripts and by the family", "Whether more than one language is spoken in the corpus (regardless of how many languages are spoken in the family or the community at large)"),
-  `N of corpus (%)` = c(round(SES_present), ED_ses_present , Ocup_ses_present, urbrur_present, Household.structure_present, per_sibs_present, avg_sibs_present, Langspoken_present, multiling_present)
+  `N of corpus (%)` = c(intermediate_SES, intermediate_ED , intermediate_ocup, intermediate_urb, intermediate_HHS, intermediate_percsib, intermediate_avgsib, intermediate_langspo, intermediate_multiling)
 )
 
+# Create the table using kableExtra # currently not working
+# mytab1 %>%
+#   kbl(caption = "Definition of the corpus-level variables", align = c("lccccccccr")) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+#   column_spec(1, width = "2cm") %>%
+#   column_spec(2, width = "3cm") %>%
+#   column_spec(3, width = "6cm") %>%
+#   column_spec(4, width = "3cm") %>%
+#   scroll_box(width = "100%", height = "500px")
 
-apa_table(mytab1,caption="Definition of the corpus-level variables", longtable = T, align=c("lccccccccr"))
+apa_table(mytab1,caption="Definition of the corpus-level variables", longtable = F)
 #write.csv(mytab1,"output/table1.csv")
+
 ```
 
 
 # Results
 
-The `r nrow(annotations_inc)`  corpora included in this study represent 48 different countries across all populated continents. Out of the 48 different countries or areas included in the sample, `r sum(ocde_country$ocde == "yes", na.rm = TRUE)` of them belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to `r sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)` out of `r nrow(annotations_inc)` corpora or to `r (sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)*100)/nrow(annotations_inc)`% of this sub-sample of CHILDES. OECD countries represent 19.5% of world countries.  
+```{r demoinfo, echo = FALSE, eval=T}
 
-```{r tab3,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
-# Create another data frame for the third set of information
-sum(annotations$continent=="Africa")
+corpora.ind <- annotations_inc %>%
+  select(country, Corpus, Nb.of.participants, region)
 
-mytab3 <- data.frame(
-  Continent = c("Africa", "Asia", "North America", "Latin America", "Europe", "Oceania"),
-  `N corpora` = c(3, 32, 34, 5, 105, 1),
-  `N total children` = c(16, 602, 177, 6, 1091, 5),
-  `N children growing in continent` = c("X", "X", "X", "X", "X", "X")
-)
+corpora.ind$region[corpora.ind$country =="Spain & Hungary"] = "Europe"
+corpora.ind$region[corpora.ind$country =="Sweden & Portugal"] = "Europe"
+
+summary_corpora_COUNTRY <- corpora.ind %>%
+  group_by(country) %>%
+  summarise(
+    TimesRepeated = n(),
+    TotalParticipants_country = sum(Nb.of.participants)
+  )
+
+summary_corpora_CONT <- corpora.ind %>%
+  group_by(region) %>%
+  summarise(
+    TimesRepeated = n(),
+    TotalParticipants_continent = sum(Nb.of.participants)
+  )
 
 
-apa_table(mytab3,caption="Descriptives", longtable = T, align=c("lccccccccr"))
-#write.csv(mytab3,"output/table3.csv")
 ```
 
-```{r worldmapecho = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "World map showing corpus. Size proportional to number of children per corpus"}
+The `r nrow(annotations_inc)` corpora included in this study represent `r length(levels(as.factor(annotations_inc$country)))-2` <!-- minus 2 bilingual corpora counting twice Hungary/ Spain and Sweden/Portugal -->different countries or territories across all populated continents. The country with the most corpora is the United States with `r length(annotations_inc$country[annotations_inc$country == "United States"])` different corpora, followed by Spain with `r length(annotations_inc$country[annotations_inc$country == "Spain"]) + 1` (including a bilingual corpus), and a tie between the United Kingdom and France with `r length(annotations_inc$country[annotations_inc$country == "France"])` (see SM4 for a full summary by country and continent). The most represented country in terms of individual children recorded is the United Kingdom with `r summary_corpora_COUNTRY$TotalParticipants_country[summary_corpora_COUNTRY$country == "United Kingdom"]`, followed by the United States with  `r summary_corpora_COUNTRY$TotalParticipants_country[summary_corpora_COUNTRY$country == "United States"]` and then Spain with  `r summary_corpora_COUNTRY$TotalParticipants_country[summary_corpora_COUNTRY$country == "Spain"] + summary_corpora_COUNTRY$TotalParticipants_country[summary_corpora_COUNTRY$country == "Spain & Hungary"] `. The most represented continent in terms of individual children recorded is Europe with`r summary_corpora_CONT$TotalParticipants_continent[summary_corpora_CONT$region == "Europe"]`. The least represented continent is Oceania with only `r summary_corpora_CONT$TotalParticipants_continent[summary_corpora_CONT$region == "Oceania"]` recorded children [all from Papua New Guinea, @sarvasy2017grammar].
+
+Out of the `r length(levels(as.factor(annotations_inc$country)))-2` countries or territories,`r sum(ocde_country$ocde == "yes", na.rm = TRUE)` belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to `r sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)` out of `r nrow(annotations_inc)` corpora or `r round((sum(ocde_country$Freq[ocde_country$ocde == "yes"],na.rm=T)*100)/nrow(annotations_inc))`%  of this sample of CHILDES. Meanwhile, OECD countries represent only 19.5% of world countries. 
+
+
+
+```{r worldmapecho = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Geographical distribution of the different corpora of CHILDES. Each circle represents a corpus, and the size of the circle is proportional to the number of participants."}
 
 ## Figure
 # Creating a subset with specific columns
@@ -383,19 +425,16 @@ ggsave("../figures/density_plot.png", width = 6, height = 4, dpi = 300)
 
 ```
 
-By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (% compl. LSS, t(`r round(edt$parameter,2)`)=`r round(edt$statistic,2)`, p = `r round(edt$p.value,2)`); they were more urban (% urban, t(`r round(urbt$parameter,2)`)=`r round(urbt$statistic,2)`, p = `r round(urbt$p.value,2)`); richer (log GDP per capita, t(`r round(gdpt$parameter,2)`)=`r round(gdpt$statistic,2)`, p = `r round(gdpt$p.value,2)`) and had smaller households (average household size, t(`r round(hh$parameter,2)`)=`r round(hh$statistic,2)`, p = `r round(hh$p.value,2)`) and less average number of members under the age of 15 (average under 15 size,  t(`r round(und15$parameter,2)`)=`r round(und15$statistic,2)`, p = `r round(und15$p.value,2)`). 
+By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (% compl. LSS, t(`r round(edt$parameter,2)`)=`r round(edt$statistic,2)`, p = `r round(edt$p.value,2)`); they were more urban (% urban, t(`r round(urbt$parameter,2)`)=`r round(urbt$statistic,2)`, p = `r round(urbt$p.value,2)`); richer (log GDP per capita, t(`r round(gdpt$parameter,2)`)=`r round(gdpt$statistic,2)`, p = `r round(gdpt$p.value,2)`) and had smaller households (average household size, t(`r round(hh$parameter,2)`)=`r round(hh$statistic,2)`, p = `r round(hh$p.value,2)`). 
+<!--FIX P value reporting -->
 
-
-## Corpus-level
-
-We then investigated at the corpus level the variables described in Table 2.  The information collected allows us to have more detail about the characteristics of the individual families that compose our sub-sample of CHILDES. However, it is important to acknowledge that for the majority of the corpora, this information was missing, not known, or not provided.
+We then investigated at the corpus level the variables described in Table 1.  The information collected gives us more detail about the characteristics of the individual families that compose our sub-sample of CHILDES. However, it is important to acknowledge that this information was missing for a substantial number of the corpora. 
 
 ### SES
-Of the  `r length(annotations_inc$SES.STDZD) - sum(is.na(annotations_inc$SES.STDZD))` (`r round(sum(is.na(annotations_inc$SES.STDZD))/length(annotations_inc$SES.STDZD)*100)`%) corpora,  `r sum(annotations_inc$SES.STDZD==1 & !is.na(annotations_inc$SES.STDZD))` were described as having low SES; `r sum(annotations_inc$SES.STDZD=="1-2" & !is.na(annotations_inc$SES.STDZD))` were described as spanning both lower and middle or higher SES; and `r sum(annotations_inc$SES.STDZD==2 & !is.na(annotations_inc$SES.STDZD))`  were described as middle or higher SES exclusively (`r round((sum(annotations_inc$SES.STDZD==2 & !is.na(annotations_inc$SES.STDZD))/ (length(annotations_inc$SES.STDZD) - sum(is.na(annotations_inc$SES.STDZD))))*100)`%). Given that most countries represented in our sub-sample of CHILDES are in the OECD, we can compare this proportion with the proportion of the population in these countries that are middle class. According to a 2016 report, “Almost two-thirds of people live in middle-income households in OECD countries”, for whom “household net income [is] between 0.75 and 2 times the median”. Thus, middle and higher-class participants appear to be over-represented in our sub-sample of CHILDES data. 
 
-
-For socioeconomic status, there were `r sum(is.na(annotations$SES.STDZD))` missing values (`r round(sum(is.na(annotations$SES.STDZD))/length(annotations$SES.STDZD)*100)`%). Of the remaining `r sum(!is.na(annotations$SES.STDZD))` samples, were described as having low SES;  were described as spanning both lower and middle or higher SES; and were described as middle or higher SES exclusively. Given that most countries represented in CHILDES are in the Organization for Economic Cooperation and Development (OECD, `r sum(annotations$oecd)` out of the `r dim(annotations)[1]` corpora), we can compare this proportion with the proportion of the population in these countries that are middle class. According to a 2016 report, “Almost two-thirds of people live in middle-income households in OECD countries”, for whom “household net income [is] between 0.75 and 2 times the median”. Thus, middle and higher class participants appear to be over-represented in CHILDES data, composing 81% of available data.
-
+Our analysis of `r length(annotations_inc$SES.STDZD) - sum(is.na(annotations_inc$SES.STDZD))` corpora including SES information reveals that only `r round((sum(annotations_inc$SES.STDZD==1 & !is.na(annotations_inc$SES.STDZD))/ (length(annotations_inc$SES.STDZD) - sum(is.na(annotations_inc$SES.STDZD))))*100)`% (n = `r sum(annotations_inc$SES.STDZD==1 & !is.na(annotations_inc$SES.STDZD))` corpora) were described as families of low SES,  `r round((sum(annotations_inc$SES.STDZD=="1-2" & !is.na(annotations_inc$SES.STDZD))/ (length(annotations_inc$SES.STDZD) - sum(is.na(annotations_inc$SES.STDZD))))*100)` (n = `r sum(annotations_inc$SES.STDZD=="1-2" & !is.na(annotations_inc$SES.STDZD))`) described as a mixed sample spanning between lower and middle or higher SES. The vast majority, `r round((sum(annotations_inc$SES.STDZD==2 & !is.na(annotations_inc$SES.STDZD))/ (length(annotations_inc$SES.STDZD) - sum(is.na(annotations_inc$SES.STDZD))))*100)`% (n = `r sum(annotations_inc$SES.STDZD==2 & !is.na(annotations_inc$SES.STDZD))`), exclusively represented families of middle or higher SES.
+Most countries in our CHILDES sample are members of the OECD. According to a 2016 report, "Almost two-thirds of people live in middle-income households in OECD countries." While less than 66% of families from OECD countries are considered middle-to-high SES, over 80% of our sample falls into this category.
+It's important to note that OECD countries generally have higher SES populations compared to the global average. Given this context, it's likely that CHILDES overrepresents middle-to-high SES families to an even greater extent when considered on a global scale.
 
 #### Education
  `r round(sum(annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% of the corpora (n =  `r round(sum(annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min)))`) include children whose parents had at least a graduate, if not a postgraduate, degree.  `r round(sum(annotations_inc$Education.min==1 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (n=`r sum(annotations_inc$Education.min==1 & !is.na(annotations_inc$Education.min))` ) had at least some parents with primary-level education;  `r round(sum(annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (n=`r round(sum(annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min)))`) had parents with secondary school education as the lower bound of the education range, and a further `r round(sum(annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min))/sum(!is.na(annotations_inc$Education.min))*100)`% (n=`r round(sum(annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min)))`) had some college as the lower bound. `r sum(annotations_inc$Education.STDZD=="diverse",na.rm=T)` corpora were described as "diverse", without clarifying the range of education covered. These numbers do not accurately represent the demographics of the countries they were obtained from. For instance, while the U.S. Census Bureau reported that only 36% of the adult population held a bachelor’s degree or higher in 2020, our data indicates that 100% of the corpora of the parents from the United States had a college education or higher. As seen in Figure 3, the same result is seen for corpus from China, Denmark, Egypt, Hong Kong, Hungary, Israel, Italy, Japan, Mexico, The Netherlands, Poland, Russia, Singapore, South Korea, Switzerland and the United States where 100% of parents with data are college-educated or above. Thus, it seems that our sub-samples of CHILDES are very skewed toward higher-educated parents. 

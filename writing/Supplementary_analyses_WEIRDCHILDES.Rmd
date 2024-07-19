@@ -26,7 +26,6 @@ knitr::opts_chunk$set(echo = FALSE,warning = FALSE, message = FALSE)
 ```{r libraries, message=FALSE, warning=FALSE}
 
 #Load libraries
-
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -61,78 +60,37 @@ return(data_)
 #Load datasets
 annotations_inc<- read.csv("../derived/annotations_included", sep="")
 ocde <- read.csv("../data/ocde_country.csv", sep=",")
-read.csv("../derived/", sep=",")
+ind<- read.csv("../derived/ind", sep="")
+ind_all<- read.csv("../derived/ind_all", sep="")
+
+## for flowchart
+annotations<- read.csv("../data/Table for authors - annotations.csv") 
+#original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
+
+#some cleaning  of the col names
+colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
+colnames(annotations)[colnames(annotations)=="Number.of.participants"]<-"Nb.of.participants"
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+colnames(annotations)[colnames(annotations)=="Language.or.Languages.spoken.in.recordings..be.specific.if.possible.e.g..French.Quebec."]<-"Language"
+colnames(annotations)[colnames(annotations)=="Location..Neighbourhood..village.city..province..state..country."]<-"Location"
+colnames(annotations)[colnames(annotations)=="X..of.children.with.siblings"]<-"Nb.of.children.with.siblings"
+colnames(annotations)[colnames(annotations)=="X..of.children.with.older.siblings"]<-"Nb.of.children.with.older.siblings"
+colnames(annotations)[colnames(annotations)=="Our.coding.of"]<-"Our.coding.of.community.type"
+
+#Inclusion
+annotations$Inclusion[annotations$Inclusion %in% c("No","no")] <- "exclude"
+annotations$Inclusion[annotations$Inclusion %in% c("Yes","yes")] <- "include"
+#why_exclude
+excluded <-  subset(annotations, (Inclusion %in% c("exclude")))
+
 ```
 
+## SM1 :Partial correlations of the four dimensions of interest
 
-## SM1:Partial correlations of the four dimensions of interest
-
-```{r confounds2, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing lower secondary school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", echo=F,message=F, warning=F, results='hide'}
-
-
-ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. LSS") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-urb <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% urban") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
-rich <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("GDP (log 10)") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+```{r scatterplot matrix, fig.cap="Evidence of partial correlations of the four continous dimensions of interest. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., proportion completed highschool and percentage urban for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita.", results='hide'}
 
 
-fert <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Western") +  ylab("Fert. (log 2)") 
-
-
-
-
-ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t) & ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-urb_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-rich_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-
-fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Political regime") +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
-
-x = ggarrange( ed, ed_d,  rich,rich_d,   
-          urb, urb_d,   fert, fert_d,
-           ncol = 2, nrow = 4)
-x
-pdf("Fig1.pdf")
-x
-dev.off()
-```
-
-
-## SM2 :Partial correlations of the four dimensions of interest
-
-```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", results='hide'}
-
-p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="",columnLabels=c("% compl. LSS","% urban","GDP (log 10)","Fert. (log 2)"), 
+p <- ggpairs(ind_all,c('Compl.LS','SP.URB.TOTL.ZS','log_gdp',"Avg.hs"), title="",columnLabels=c("% compl. LSS","% urban","GDP (log 10)", "Avg HH size"), 
                lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
   theme_bw()
 
@@ -142,12 +100,20 @@ p
 dev.off()
 ```
 
-## SM3 Flowchart
-![Flowchart.(n) represents the number of different corpora; (N) represents the number of different countries. ](../figures/flowchart.png){ width=% }
+## SM2 Flowchart
+![Flowchart](../figures/flowchart.png){ width=% }
 
 
-## SM4: Sources used for Density plot
+## SM3: Sources used for Density plot
 
+The goal of the country-level analysis is to assess the representativeness of our sub-sample of CHILDES against world statistics. For this, we first identified the country where the recordings were collected. The following variables were used for this level of analysis, all derived from official sources including the World Bank, Our World in Data (WDI), and the United Nations (UN). For each macro-dimension described in the Introduction, we looked for relevant world statistics available (see the annotated code for more details about the indicators). 
+SES
+For the SES dimension we choose two measures representing education and income. For the education measure, we turned to Our World in Data (WDI), an organization that collates information from various official sources. We downloaded information on the proportion of the population that had completed lower secondary school (data from 2007-2015; Our World in Data, 2022a;  see Supplementary Materials (SMX) for figures using the proportion of the population completing high school instead). For the income measure, we relied on the World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021). We choose the Gross Domestic Product (GDP) per capita (based on log 10), a measure that represents how relatively rich countries are based on 2017 US dollars purchasing power parity. It is expressed in 2017 US dollars. 
+
+Urbanization
+We used the percentage of the population living in urban areas indicator, from the WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables. 
+Family structure
+We used two measures pertaining to household size from the UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022). First, the average number of household members, and second, the average number of members under the age of 15. 
 
 ```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
@@ -163,13 +129,66 @@ apa_table(mytab1,caption="", longtable = T, align=c("lccccccccr"))
 ```
 
 
-## SM5: Distribution of CHILDES participants by country
+## SM4: Distribution of CHILDES participants by country and continent
 
-## SM6: Table of countries and urban indicators
 
-## SM7: Different languages or language combinations (for bilingual and multilingual children)
+```{r tab2,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+# Create another data frame for the third set of information
 
-## SM8: Number of participants per country
+corpora.ind <- annotations_inc %>%
+  select(country, Corpus, Nb.of.participants, region)
+
+summary_corpora_COUNTRY <- corpora.ind %>%
+  group_by(country) %>%
+  summarise(
+    TimesRepeated = n(),
+    TotalParticipants_country = sum(Nb.of.participants)
+  )
+
+apa_table(summary_corpora_COUNTRY,caption="Descriptives", longtable = T, align=c("lccccccccr"))
+
+#write.csv(mytab2,"output/table3.csv")
+```
+
+```{r tab3,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+# Create another data frame for the third set of information
+
+corpora.ind <- annotations_inc %>%
+  select(country, Corpus, Nb.of.participants, region)
+
+corpora.ind$region[corpora.ind$country =="Spain & Hungary"] = "Europe"
+corpora.ind$region[corpora.ind$country =="Sweden & Portugal"] = "Europe"
+
+summary_corpora_CONT <- corpora.ind %>%
+  group_by(region) %>%
+  summarise(
+    TimesRepeated = n(),
+    TotalParticipants_continent = sum(Nb.of.participants)
+  )
+
+
+
+# sum(annotations$continent=="Africa")
+# 
+# mytab3 <- data.frame(
+#   Continent = c("Africa", "Asia", "North America", "Latin America", "Europe", "Oceania"),
+#   `N corpora` = c(3, 32, 34, 5, 105, 1),
+#   `N total children` = c(16, 602, 177, 6, 1091, 5),
+#   `N children growing in continent` = c("X", "X", "X", "X", "X", "X")
+# )
+apa_table(summary_corpora_summary_corpora_CONT,caption="Descriptives", longtable = T, align=c("lccccccccr"))
+
+#write.csv(mytab3,"output/table3.csv")
+```
+## SM5: Table of countries and urban indicators
+
+## SM6: Different languages or language combinations (for bilingual and multilingual children)
+
+## SM7: Number of participants per country
+
+## SM8: Further ackowledgments
+
+We would like to thank the curators of the corpora who replied to our email: Andra Kütt, Caroline Rowland, Carrie Dyck, David Dickinson, Dominique Bassano, Juana Liceras, Klára Matiasovitsová, Luigi Rizzi, Maria João Freitas, Michelle McGillion, Sanne Kuijper, Sinead McNally, Tina Hickey, Ur Shlonsky, Zhang Yibin, Amy Strekas, Donna Thal , Frank Wijnen, Gaja Jarosz, Gerardo Aguado Alonso, Jane Herbert, Jasmina Moskovljević Popović, Jing Zhou, Pilar Prieto, Rebecca Burns, Stephen Matthews, Teresa da Costa, Ulrich Frauenfelder, Uri Tadmor, Virginia Yip, Yvan Rose, Ana Isabel Ojea Lopez, Andra Kütt, Bob Wilson, Christophe Parisse, Elena Lieven, Elena Nicoladis, Elizabeth Nixon, Filip Smolik, Folkert Kuiken, Huang Yue-Yuan, Janet Bang, Jeannine Goh, Julian Pine, Linhui Li, Luigi Rizzi, Maja Roch, Mara Steinberg Lowe, Marguerite Mackenzie, Michelle White, Nada Ševa, Nicola Botting, Stephanie Durrleman, Stephen Matthews, Virginia Yip, Yvan Rose, 404 Not Found, Airi Kapanen, Alan Cruttenden, Alison Henry, Aliyah Morgenstern, Amye Warren-Leubecker, Ana Lúcia Santos, Ana Maria Guimarães, Andra Kütt, Andrea Biró, Andrea Feldman, Angela Grimm, Ann Peters, Anna Chromá, Anna Theakston, Anne Van Kleeck, Anne-Marie Schaerlaekens, Annick De Houwer, Annick DeHouwer, Antje van Oosten, Aparna Nadig, Astrid Klammler, Aurora Bel Gaya, Aviya Hacohen, Ayhan Aksu Koç, Barbara Davis, Barbara Pearson, Bernadette Plunkett, Bernd Möbius, Bob Jones, Brian MacWhinney, Britta Lintfert, Carina Koroschetz, Carmen Silva-Corvalán, Caroline Rowland, Catherine Snow, Cécile De Cat, Charles Watkins, Chiara Roggero, Chien-ju Chang, Christian Champaud, Christiane von Stutterheim, Christina Gildersleeve-Neumann, Christine Howe, Claartje Levelt, Claudine Hammelrath, Colleen Huebner Morisset, Conxita Lleo, Conxita Lleó, Cornelia Hamann, Darinka Anđelković, David Gil, Dmitar Popov, Donella Antelmi, Donna Jackson-Maldonado, Dorit Ravid, Eithne Guilfoyle, Ekaterina Protassova, Elena Pizzuto, Elena Tribushinina, Elena V. M. Lieven, Elisabet Serrat Sellabona, Eliseo Diez-Itza, Elizabeth Bates, Eon-Suk Ko, Eva Bar-Shalom, Eve Clark, Evelien Krikhaar, Feyza Altinkamis, Francisco De Lacerda, Frank Wijnen, Fred Genesee, Frenette Southwood, Gerard Bol, Ghada Khattab, Gina Conti-Ramsden, Gisela Szagun, Giuseppe Cappelli, Gordana Hržica, Gordon Wells, Habibeh Samadi, Hanna Batoréo, Hannah Sarvasy, Harriet Jisa, Heather Goad, Heba Salama, Heidi Feldman, Heike Behrens, Helen Körgesaar, Hervé Hunkeler, Hintat Cheung, Hiro Yuki Nisisawa, Hrafnhildur Ragnarsdóttir, Hye-Ree Ghim, Igor Žagar, Iliana Reyes, Inge Zink, Ioana Goga, Isabelle Barrière, Isabelle Maillochon, Jacqueline Sachs, Jacqueline van Kampen, Jan Edwards, Jane S. Tsay, Javier Aguado Orea, Jean Berko Gleason, Jean Quigley, Jean-Adolphe Rondal, Jeannine Goh, Jeroen Aarssen, Jing Zhou, Jody Tommerdahl, Joe Pater, Johanna Nicholas, Jóhanna Thelma Einarsdóttir, Johanne Paradis, John Neil Bohannon III, Jordan Zlatev, José L. Linaza, Ju-Yeon Ryu, Judit Navracsics, Julian Pine, Julie Brittain, Julie McMillan, Jürgen Weissenborn, Kaja Kohler, Karina Hess Zimmermann, Karme Beek, Katerina Palasis, Katherine Demuth, Katherine Nelson, Kathy Post, Keith Sawyer, Kim Plunkett, Klaus Wagner, L. Haggerty, Laetitia de Almeida, Larisa Avram, Larry F. Guthrie, Leonor Scliar-Cabral, Liliana Tolchinsky, Linda Kelly, Linhui Li, LinHui Li, Lise Menn, Livia Tonelli, Lois Bloom, Lori Van Houten, Lorraine McCune, Lynn S. Bliss, Madalena Cruz-Ferreira, Madeleine Leveillé, Magda Krupa-Kwiatkowska, Magdalena Smoczynska, Maigi Vija, Maja Roch, Manuela Wagner, Marc Bornstein, Margaret Deuchar, Maria del Carmen Aguirre Martínez, Maria Emma Ticio, María Jesús Pérez-Bazán, Maria-Llanos Luque Sánchez, Marie-Thérèse Le Normand, Mariko Hayashi, Marilyn Vihman, Marta Fernández Vázquez, Martha Shiro, Marty Demetras, Mary Ann Evans, Mary Beckman, Mary Erbaugh, Masayuki Yokoyama, Mats Andrén, Max Miller, Megan Devlin, Melanie Soderstrom, Melissa Redford, Melita Kovacevic, Michael Brent, Michael Forrester, Milagros Fernández Pérez, Miquel Serra, Mirco Fasolo, Mireas Llinas, Mireia Llinàs-Grau, Mitsuhiko Ota, Mohamed Lahrouchi, Monique Vion, Myron Korman, Nan Bernstein Ratner, Naomi Hamasaki, Naomi Yamaguchi, Natalia Gagarina, Neil Smith, Neiloufar Family, Nina Gram Garmann, Norio Naka, Not Found, Núria Esteve-Gibert, Oksana Bailleul, Ondene Van Dulm, Oralia Rodríguez Arredondo, Outi Bat-El, Pamela Rollins, Patrick Suppes, Paul Fletcher, Paula Fikkert, Péter Bodor, Petra Bos, Petra Hendriks, Petra Sleeman, Rangaswamy Narasimhan, Raquel Fernández Fuertes, Reili Argus, Richard Sprott, Richard Weist, Roberto Soto Valle, Roger Brown, Ron Gillam, Rosa Graciela Montes, Roy Higginson, Ruth Berman, Sam Leung, Seba Al-Hindawy, Shaima AlQattan, Sharon Inkelas, Silvia Nieva, Silvia Romero Contreras, Sirli Zupping, Sophie Kern, Sotaro Kita, Stan Kuczaj, Steven Gillis, Sudaporn Luksaneeyanawin, Susan Ellis Weismer, Susan Gelman, Susan R. Braunwald, Susana Correia, Susana López Ornat, Susanne Miyata, Sven Strömqvist, Takeo Ishii, Tamirand De Lisser, Tania Ionin, Thea Cameron-Faulkner, Thomas Doukas, Thomas Lee, Tina Ringstad, Twila Tardif, Ursula Stephany, Valentin Remedi, Victoria Marrero, Virginia C. Gathercole, Virginia Gathercole, Virginia Valian, Virginia Yip, William Hall, William Snyder, Xiangjun Deng, Yasuhiro Shirai, Yonata Levy, Yoshiki Ogawa, Yow Wei Quin, and Yow Wei Quin.
 
 # Archive
 
@@ -177,136 +196,6 @@ apa_table(mytab1,caption="", longtable = T, align=c("lccccccccr"))
 
 We classified countries as Western and Democratic. For Western, we classified as Western all of the countries in Western Europe (according to EuroVoc: Andorra, Austria, Belgium, France, Germany, Ireland, Liechtenstein, Luxembourg, Monaco, Netherlands, Switzerland, United Kingdom) as well as a few others in Europe (Italy, Portugal, Spain, Norway, Sweden, Iceland, Denmark), most of North America (with the exception of Bermuda and Greenland), and two countries in Oceania (Australia, New Zealand). This resulted in `r sum(ind_all$western == "Western")` Western and `r sum(ind_all$western == "non-Western")` non-Western countries. For democratic, we simplified the OWID's classification of closed and electoral autocracies into autocracies, versus electoral and liberal democracies into democracies (Our World in data, 2022c). 
 We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
-
-
-
-
-
-
-```{r SM1,fig.width=8, fig.height=5.5, echo=F,warning=F,fig.cap = "Figure SM1. Effect sizes as a function of type of assessment and SES measure. PPVT samples are in green, LwL in red and TvT in blue SES measures are composites (circle), educational-based (triangle), income-based (square) and other (cross)."}
-
-comp_measure_cat <- ggplot(all, aes(x=comp_measure_cat, y=yi, fill=comp_measure_cat)) + geom_boxplot(aes(x=comp_measure_cat)) + geom_jitter(aes(x=comp_measure_cat, shape=SES_measure_cat)) + labs(x="Type of comprehension measure", y="Fisher's Z Transformed correlation coefficient") + guides(fill=F, shape=F) + theme(panel.background = element_blank()) 
-
-SES_measure_cat <- ggplot(all, aes(x=SES_measure_cat, y=yi, shape=SES_measure_cat)) + geom_boxplot(aes(x=SES_measure_cat)) + geom_jitter(aes(x=SES_measure_cat, color=comp_measure_cat, size=4)) + labs(x="Type of SES measure", y="") +scale_x_discrete(labels=c("composite"="Composite", "education_based"="Education Based", "income_based"="Income Based" )) +guides(shape=F, color=F, size=F) + theme(panel.background = element_blank()) 
-
-grid.arrange(comp_measure_cat, SES_measure_cat, nrow = 1)
-```
-
-## given that most samples are nuclear families with well-educated parents living in urban sites, it will be impossible to tease apart these three dimensions, which are in effect confounded in these CHILDES corpora (and probably in the world, see Supplementary Materials SMX)
-
-
-```{r SM2, fig.width=8, fig.height=5.5,echo = FALSE, warning=F,  fig.cap = "Figure SM2. Effect sizes as a function of purpose of the study (SES was not a priority of the study (No), or it was (Yes). PPVT samples are in green, LwL in red and TvT in blue SES measures are composites (circle), educational-based (triangle), income-based (square) and other (cross)."}
-
-ggplot(all, aes(x=SES_as_primary_measure, y=yi)) + geom_boxplot(aes(x=SES_as_primary_measure)) + labs(x="Purpose of the study", y="Fisher's Z Transformed correlation coefficient") + geom_jitter(aes(x=SES_as_primary_measure, shape=SES_measure_cat, color=comp_measure_cat, size=3)) + guides(color=guide_legend(title = "Comprehension measure"),size=F, shape=guide_legend(title = "SES measure")) + theme(legend.key = element_rect(fill = "white", color =NA)) + theme(panel.background = element_blank()) + scale_shape_discrete(labels=c("composite"="Composite", "education_based"="Education Based", "income_based"="Income Based")) + scale_x_discrete(labels=c("no"="No", "yes"="Yes"))
-
-```
-
-
-## SM3:  Integration with previous research on indirect measures of word comprehension
-
-In the Introduction, we argued that direct measures are less subject than indirect (parental report) ones to reporting biases in the context of at potential association with SES. Indeed, the research suggests that the strength and even sign of the correlation between SES and vocabulary depends on which particular version of the MacArthur-Bates Communicative Development Inventory (MB-CDI) is used Chapter 6, @frank2021variability].
-The MB-CDI is an *indirect* method because, rather than the investigator directly testing the child, a caregiver is asked to complete a questionnaire about the words that their child understands and/or says, thus yielding a comprehension vocabulary estimate (based on "understands" reports) and/or expressive vocabulary estimate (based on "says" reports). 
-
-An analysis of WordBank, a repository containing data from more than 32,000 children learning at least one of 11 different languages used maternal education as a proxy for SES, finding that, for all 11 languages, there is a positive correlation between expressive vocabulary and SES, whereas for comprehension this correlation was negative for 8 of them [Chapter 6, @frank2021variability].
-The authors put forward the idea that reporting biases might explain these results, whereby low SES mothers might have a greater tendency to overestimate their children's vocabulary comprehension. 
-
-Additionally, @frank2021variability argue that memory demands and educational attainment, in particular, may affect parents' accuracy in completing the checklist. If so, direct measurements of young children's word comprehension may show more consistent results and a clearer ensuing picture with respect to the potential association between SES and word comprehension. This idea reinforced our choice to focused on *direct* measurements of word comprehension for the present meta-analysis.
-
-However, one could argue that indirect measures are better in other ways. Indeed, direct measures measure word comprehension in a rather isolated context, are affected by online processing, and some of them further required an overt decision. In these, children are supposed to hear the labelled word then point, touch, or look at a decontextualized image (or often, a sketch or drawing) of the corresponding item, and they are tested by unfamiliar adults. It stands to reason that a very different perspective may be visible in work relying on contextualized word comprehension by people familiar with the child. 
-Although we do not have an answer to the question of whether direct or indirect measurements are better, we undertook the following analyses to check whether the distribution of correlations obtained through our meta-analytic approached was compatible with the distribution of correlations found in comprehension MB-CDI data deposited in WordBank [@frank2021variability]. 
-
-
-
-```{r fitrmawb, include=FALSE,echo=F,warning=FALSE, results="asis"}
-#fit  WB data 
-all_wb=escalc("ZCOR",ri=r_calc,ni=N,data=all_wb,slab=infant_group)
-#with age moderator
-#rma.wbmodage=rma(ri=wb_effectsz$r_calc,ni=wb_effectsz$N,measure="ZCOR",slab=wb_effectsz$uniqueID, mods=~wb_effectsz$mean_age) 
-#without age moderator
-# rma.wbonly=rma(ri=wb_effectsz$r_calc,ni=wb_effectsz$N,measure="ZCOR",slab=wb_effectsz$uniqueID) 
-# summary(rma.wbonly)
-
-#fit  meta-regression on the joined datasets, declaring centered age in interaction with whether the test was direct (PPVT, CCT, LwL) or not (CDI)
-#rma.wb=rma(ri=all_wb$r_calc,ni=all_wb$N,measure="ZCOR",slab=all_wb$uniqueID, mods=~all_wb$direct*all_wb$mean_age) 
-#summary(rma.wb)
-
-#allwb_effectsz=escalc("ZCOR",ri=r_calc,ni=N,data=all_wb,slab=uniqueID)
-
-robu_fit_age_wb <- robu(yi ~ age.min*direct, data = all_wb,
-                 modelweights = "HIER", studynum = infant_group,
-                  var.eff.size = vi)
-# robu_fit_age_wb <- robu(yi ~ age.min, data = subset(allwb_effectsz, direct),
-#                  modelweights = "HIER", studynum = infant_group,
-#                   var.eff.size = vi)
-robu_fit_age_wb
-
-```
-
-
-#### Joining datasets and running meta-regression
-
-For this we downloaded WordBank data on 2022-08-24, focusing on comprehension using the Words and Gestures (WG) form (for simplicity, we excluded the Words and Sentences form). We excluded records where maternal education was missing, and converted the categorical levels of WordBank into the following years of education levels: Primary = 7; Some Secondary = 10, Secondary = 12, Some College = 14, College = 16, Some Graduate=18, Graduate = 20. Then, for each language and age group, we estimated a correlation coefficient between the years of education and the comprehension score (we used a Spearman's correlation coefficient, as it is more robust and more in line with the categorical nature of the original data). 
-
-We merged our meta-analytic data with the correlation coefficients calculated in Wordbank's Comprehension data, as explained above. We then fit a robust variance estimation meta-regression with method (direct versus CDI) and age in interaction. This revealed a significant interaction (b = `r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min.directDirect","b.r"],3)`, 
-t(`r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min.directDirect","dfs"],1)`) 
-= `r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min.directDirect","t"],3)`, 
-p `r pfun(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min.directDirect","prob"])`), because the correlation between SES and word comprehension increased with age more slowly for direct methods than for Wordbank comprehension scores. There was also a significant main effect of age (b = `r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min","b.r"],3)`, 
-t(`r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min","dfs"],1)`) 
-= `r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min","t"],3)`, 
-p `r pfun(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="age.min","prob"])`), because correlation coefficients increased with age. And finally, there was a significant main effect of method (b = `r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="directDirect","b.r"],3)`, 
-t(`r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="directDirect","dfs"],1)`) 
-= `r round(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="directDirect","t"],3)`, 
-p `r pfun(robu_fit_age_wb$reg_table[robu_fit_age_wb$reg_table$labels=="directDirect","prob"])`), because there was a significantly higher association between children's word comprehension and SES for direct methods than Wordbank comprehension scores. 
-Together, these results suggest that direct and indirect measurements of infants' word comprehension relate differently to familial SES.
-
-
-```{r SM3, fig.width=8, fig.height=5.5,echo = FALSE, warning=F,  fig.cap = "Figure SM3. Effect sizes as a function of age and type of measure. Each point is one correlation coefficient either from our meta-analysis on direct methods (Direct) or from Wordbank comprehension data (CDI). Shaded areas represent 95 percent confidence intervals from linear regressions weighted by sample size using the geom smooth function of the ggplot R package)."}
-
-
-ggplot(all_wb, aes(x=mean_age.y, y= yi, color=direct, size=N)) +
-  geom_jitter(aes(x=mean_age.y) ) + labs(x="Age in years", y="Fisher's Z Transformed correlation coefficient") +
-  guides(color=guide_legend(title = "Comprehension measure"), fill=F, size=guide_legend(title="Sample size"))  +
-  theme(panel.background = element_blank())  + 
-  geom_smooth(method=lm,  aes(fill=direct,weight=N), color="black", size= .3) +
-  geom_hline(yintercept=0) +
-  theme(legend.position = "top", legend.key = element_rect(fill = "white", color =NA),legend.title = element_text( size=9), legend.text=element_text(size=9), legend.direction="vertical", legend.background = element_rect(fill="white",color = "black", size=0.5, linetype="solid"))
-
-
-```
-
-
-## SM4: Analyses separating USA samples from all others
-
-
-```{r USA,  include=FALSE,echo=F,warning=FALSE, results="asis"}
-robu_fit_USA <- robu(yi ~ isUSA*age.min, data = all,
-                 modelweights = "HIER", studynum = infant_group,
-                 var.eff.size = vi)
-```
-
-
-
-
-This is a first, admittedly rough, approach to looking at country-level variation, since here we are putting together data from e.g. Argentina and Norway. Nonetheless, it is useful just to have an idea of the extent to which we can extrapolate from the most common, namely American (in the sense of residing in USA) samples. We fit a robust variance estimation meta-regression with both a binary factor (USA versus not USA) and age in interaction. This revealed a main effect of country of origin, with a higher estimate for USA versus all of the others 
-(b = `r round(robu_fit_USA$reg_table[robu_fit_USA$reg_table$labels=="isUSATRUE","b.r"],3)`, 
-t(`r round(robu_fit_USA$reg_table[robu_fit_USA$reg_table$labels=="isUSATRUE","dfs"],1)`) 
-= `r round(robu_fit_USA$reg_table[robu_fit_USA$reg_table$labels=="isUSATRUE","t"],3)`, 
-p `r pfun(robu_fit_USA$reg_table[robu_fit_USA$reg_table$labels=="isUSATRUE","prob"])`). Note that this effect was also present in an analysis not controlling for age; and the interpretation for effects being larger in USA versus elsewhere is also warranted in view of the Figure SM4.
-
-
-```{r SM4, fig.width=8, fig.height=5.5,echo = FALSE, warning=F,  fig.cap = "Figure SM4. Effect sizes as a function of country of the study (Other countries vs United States). PPVT samples are in green, LwL in red and TvT in blue SES measures are composites (circle), educational-based (triangle), income-based (square) and other (cross)."}
-
-
-ggplot(all, aes(x=isUSA, y=yi)) + geom_boxplot(aes(x=isUSA)) + labs(x="USA versus all others", y="Fisher's Z Transformed correlation coefficient") + geom_jitter(aes(x=isUSA, shape=SES_measure_cat, color=comp_measure_cat, size=3)) + guides(color=guide_legend(title = "Comprehension measure"),size=F, shape=guide_legend(title = "SES measure")) + theme(legend.key = element_rect(fill = "white", color =NA)) + theme(panel.background = element_blank()) + scale_shape_discrete(labels=c("composite"="Composite", "education_based"="Education Based", "income_based"="Income Based")) + scale_x_discrete(labels=c("FALSE"="Others", "TRUE"="USA"))
-
-```
-
-
-## SM5 Variation in inequality in the represented countries
-
-In the main manuscript, we describe represented countries as follows: "Nearly all are also high income, the exceptions being Argentina and Chile, which are middle-income countries, such that no low-income country is represented. These countries also do not represent extremes in income inequality, with GINI coefficients ranging from 31 (France) to 45 (Mexico), whereas the observed distribution of GINI in the world in 2020 spanned from 24 (Sweden) to 54 (Colombia; see SM5)."
-
-The numbers we provide for included countries were the latest available from World Bank data (https://data.worldbank.org/indicator/SI.POV.GINI, visited on 2023-04-21). The numbers we provide from all countries also come from the same World Bank data, but focus on 2020 as the most recent year with a high proportion of available data.
 
 
 In this document, we provide code that allows readers to reproduce information provided in the main text that depend on calculations computed here.
@@ -386,24 +275,6 @@ We classified countries as Western and Democratic. For Western, we classified as
 We had data on political regime for `r sum(!is.na(ind_all$Political.regime_t))` countries (from Our World in Data, OWID, 2011); on the proportion of the population having completed lower secondary school `r sum(!is.na(ind_all$Compl.LS))` (from OWID, 2007-2014); on GDP  for `r sum(!is.na(ind_all$NY.GDP.PCAP.PP.KD))` countries (from WDI, 2011); on the proportion of the population that was urban for `r sum(!is.na(ind_all$SP.URB.TOTL.ZS))` countries (from WDI, 2011); on fertility for `r sum(!is.na(ind_all$Fertility))` countries (from OWID, 2011). 
 
 
-### Code to reproduce Figure 2
-
-Note that this Figure appears in a different page.
-
-```{r scatterplot matrix, fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated, with a focus on continuous variables. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., GDP and proportion completed highschool for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", results='hide'}
-
-p <- ggpairs(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),c('Compl.LS','SP.URB.TOTL.ZS','log_gdp','log2_fert')], title="",columnLabels=c("% compl. LSS","% urban","GDP (log 10)","Fert. (log 2)"), 
-               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
-  theme_bw()
-
-p
-pdf("Fig2.pdf")
-p
-dev.off()
-```
-
-
-
 ### Code to reproduce text on p. 13
 
 The answer to the question of who surrounds the child may also depend on how large the nuclear family is. There is considerable cross-population variation in terms of the average number of children a woman has in her reproductive lifetime, varying between a little over 1 (`r paste0(ind_all[which(ind_all$Fertility==min(ind_all$Fertility,na.rm=T)),"Fertility"],", ",ind_all[which(ind_all$Fertility==min(ind_all$Fertility,na.rm=T)),"country"])`) to over 6 (`r paste0(ind_all[which(ind_all$Fertility==max(ind_all$Fertility,na.rm=T)),"Fertility"],", ",ind_all[which(ind_all$Fertility==max(ind_all$Fertility,na.rm=T)),"country"])`). 
@@ -421,7 +292,7 @@ x$tfr<-(x$X1+x$X2*2+x$X3*3+x$X4*4)/100
 
 ### Code to reproduce text on p. 16
 
-A total of `r nrow(all_annotations)` corpora were initially considered. We excluded  `r excl["Clinical"]` because at least some of the children were not typically developing;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only child transcribed"]` because only the child was transcribed; `r excl["Diary"]` because they were diary studies; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults. After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
+A total of `r nrow(annotations)` corpora were initially considered. We excluded  `r excluded["Clinical"]` because at least some of the children were not typically developing;  `r excl["In lab/school"]` because data was collected in the lab or school; `r excl["Not available"]` because data was not available; `r excl["Only child transcribed"]` because only the child was transcribed; `r excl["Diary"]` because they were diary studies; `r excl["Task-oriented"]` because speech was triggered by a task (elicitation, story-telling, etc.); `r excl["Unfamiliar adult"]` because the conversation involved exclusively unfamiliar adults. After these exclusions, `r nrow(annotations)` remained. The following analyses will continue only on these included corpora.
 
 
 
@@ -562,6 +433,69 @@ annotations$sib_all[is.na(annotations$sib_all)]<-"NA"
 annotations$sib_all=factor(annotations$sib_all,levels=c("None","1+","NA"))
 
 table(annotations$ed_all,annotations$sib_all)
+```
+
+
+## SM1:Partial correlations of the four dimensions of interest
+
+```{r confounds2, echo=FALSE, out.height="200%", fig.cap="Evidence that values in the multidimensional WEIRD complex are only partially correlated (continued). Violin plots of continuous variables as a function of the two discrete variables: Western and type of political regime. Education is represented by proportion of the population completing lower secondary school; industrialization by percentage of the population living in urban (as opposed to rural) sites; richness by GDP per capita. In addition, we show women's average total fertility.", echo=F,message=F, warning=F, results='hide'}
+
+
+ed <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% compl. LSS") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+urb <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("% urban") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+rich <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +  ylab("GDP (log 10)") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+
+fert <- ggplot(ind_all[ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(western, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Western") +  ylab("Fert. (log 2)") 
+
+
+
+
+ed_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t) & ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, Compl.LS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+urb_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, SP.URB.TOTL.ZS)) + geom_violin() + geom_jitter(height = 0, width = 0.1)  +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+rich_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log_gdp)) + geom_violin() + geom_jitter(height = 0, width = 0.1)   +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+
+fert_d <- ggplot(ind_all[!is.na(ind_all$Political.regime_t)& ind_all$Population>10^6 & !is.na(ind_all$Population),], aes(Political.regime_t, log2_fert)) + geom_violin() + geom_jitter(height = 0, width = 0.1) + xlab("Political regime") +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+x = ggarrange( ed, ed_d,  rich,rich_d,   
+          urb, urb_d,   fert, fert_d,
+           ncol = 2, nrow = 4)
+x
+pdf("Fig1.pdf")
+x
+dev.off()
 ```
 
 
