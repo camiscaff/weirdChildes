@@ -465,22 +465,18 @@ annotations_inc$Education.ac = factor(annotations_inc$Education.ac, levels=c("Co
 
 # Plot this categorywise bar chart
 g <- ggplot(data=subset(annotations_inc, !is.na(Education.ac)), aes(country))
-# g + geom_bar(aes(fill=Education.ac), width = 0.6, position = "fill") + 
-#   theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() +
-#   labs(title="Education of caregivers") 
 g + geom_bar(aes(fill=Education.ac), width = 0.9) + 
-  theme(axis.text.x = element_text(vjust=0.4)) +  coord_flip() + 
-  #facet_grid(~ scenario_f) +
-  theme_minimal()  +
-  #ggtitle("Education of caregivers")  + 
-  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  theme(axis.text.x = element_text(vjust=0.4)) +  
   coord_flip() + 
-  #guides(fill=FALSE ) + 
-  scale_fill_manual(breaks=c("Some primary", "Some secondary", "Some college", "College and above"),values = c("#E6FFFF", "#99E6FF", "#4CA6FF", "#0040FF" )) +
+  theme_minimal()  +
+  theme(plot.title = element_text(size = 10, face = "bold"),
+        strip.text.x = element_text(size = 10)) +
+  scale_fill_manual(breaks=c("Some primary", "Some secondary", "Some college", "College and above"),
+                    values = c("#E6FFFF", "#99E6FF", "#4CA6FF", "#0040FF" )) +
   scale_x_discrete(name = "Countries or Territories") +
-  scale_y_continuous(name = "Number of corpora with Education data") +
+  scale_y_continuous(name = "Number of corpora with Education data", 
+                     breaks = seq(0,12 , by=1)) +
   labs(title="Education of caregivers", fill = "Education Level")
-
 
 ```
 
@@ -514,12 +510,12 @@ gurb + geom_bar(aes(fill=Type.of.community), width = 0.9) +
   #facet_grid(~ scenario_f) +
   theme_minimal()  +
   #ggtitle("Education of caregivers")  + 
-  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 10)) +
+  theme(plot.title = element_text(size = 10, face = "bold"),strip.text.x = element_text(size = 12)) +
   coord_flip() + 
   #guides(fill=FALSE ) + 
   scale_fill_manual(breaks=c("rural", "both", "urban"),values = c("#BFAB57", "#966F56", "#808A8F" )) +
   scale_x_discrete(name = "Countries or Territories") +
-  scale_y_continuous(name = "Number of corpora with Urbanization data") +
+  scale_y_continuous(name = "Number of corpora with Urbanization data", breaks = seq(0, 16, by=1)) +
   labs(title="Urbanization", fill = "Type of community")
 
 
@@ -548,8 +544,8 @@ ghouse + geom_bar(aes(fill=Household.structure), width = 0.9) +
   #guides(fill=FALSE ) + 
   scale_fill_manual(breaks=c("nuclear", "varied", "extended"),values = c("#ADDFAD", "#D1BA97", "#F08080" )) +
   scale_x_discrete(name = "Countries or Territories") +
-  scale_y_continuous(name = "Number of corpora with Household data") +
-  labs(title="Households", fill = "Type of househols arrangement")
+  scale_y_continuous(name = "Number of corpora with Household data", breaks = seq(0, 13, by=1)) +
+  labs(title="Households", fill = "Type of household arrangement")
 
 ```
 
@@ -582,8 +578,8 @@ gsib + geom_bar(aes(fill=siblings), width = 0.9) +
   #guides(fill=FALSE ) + 
   scale_fill_manual(breaks=c("yes", "no"),values = c("#B5A6DF", "#000080" )) +
   scale_x_discrete(name = "Countries or Territories") +
-  scale_y_continuous(name = "Number of corpora with siblings data") +
-  labs(title="Siblings presence", fill = "")
+  scale_y_continuous(name = "Number of corpora with Singletons data", breaks = seq(0, 11, by=1)) +
+  labs(title="Singletons", fill = "Only singletons")
 
 ```
 
@@ -619,8 +615,8 @@ glang_fam + geom_bar(aes(fill=language_family), width = 0.9) +
   #guides(fill=FALSE ) + 
   scale_fill_manual(breaks=c("indo_european", "other"),labels=c("Indo-European", "Other"), values = c("#CC5700", "#008080" )) +
   scale_x_discrete(name = "Countries or Territories") +
-  scale_y_continuous(name = "Number of Indo-European corpora") +
-  labs(title="Language Family", fill = "")
+  scale_y_continuous(name = "Number of corpora", breaks = seq(0, 31, by=1)) + 
+  labs(title="Language Family", fill = "Language Family")
 
 ```
 
