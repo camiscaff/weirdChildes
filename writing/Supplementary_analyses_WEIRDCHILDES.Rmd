@@ -62,11 +62,19 @@ return(data_)
 
 #Load datasets
 annotations_inc<- read.csv("../derived/annotations_included", sep="")
-ocde <- read.csv("../data/ocde_country.csv", sep=",")
 ind<- read.csv("../derived/ind", sep="")
 ind_all<- read.csv("../derived/ind_all", sep="")
+ocde <- read.csv("../data/ocde_country.csv", sep=",")
 
-## for flowchart
+
+##countries and corpora
+corpora <- as.data.frame((table(annotations_inc$country)))
+names(corpora)<-c("country","Freq")
+#write.table(corpora,"derived/corpora", row.names = FALSE, col.names = TRUE)
+
+
+merge(x=corpora, y=ocde,  by = "country", all.x = T) -> ocde_country
+
 annotations<- read.csv("../data/Table for authors - annotations.csv") 
 #original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 
@@ -85,110 +93,66 @@ annotations$Inclusion[annotations$Inclusion %in% c("No","no")] <- "exclude"
 annotations$Inclusion[annotations$Inclusion %in% c("Yes","yes")] <- "include"
 #why_exclude
 excluded <-  subset(annotations, (Inclusion %in% c("exclude")))
+#xtabs(~why_exclude, excluded)
+
+
 
 ```
 
-## SM1 :Partial correlations of the four dimensions of interest
 
-```{r scatterplot matrix, fig.cap="Evidence of partial correlations of the four continous dimensions of interest. The diagonal shows density of the distribution of each of the variables. Panels below the diagonal show the scatter plot for the two variables involved (e.g., proportion completed highschool and percentage urban for the second row, first column). Those above the diagonal show the Pearson correlation for the two variables involved. Education is represented by proportion of the population completing lower secondary school; industrialization by proportion of the population living in urban (as opposed to rural) sites; richness by GDP per capita.", results='hide'}
+## SM1: Sources used for Figure 2
 
 
-p <- ggpairs(ind_all,c('Compl.LS','SP.URB.TOTL.ZS','log_gdp',"Avg.hs"), title="",columnLabels=c("% compl. LSS","% urban","GDP (log 10)", "Avg HH size"), 
-               lower = list(continuous = wrap("smooth", alpha = 0.3, size=0.7))) +
-  theme_bw()
+The goal of this figure is to represent the representativeness of countries in our sample of CHILDES against distributions across all countries in the world. 
+For the SES dimension we choose two measures representing education and income. For the education measure, we turned to Our World in Data (WDI), an organization that collates information from various official sources. We downloaded information on the proportion of the population that had completed lower secondary school (data from 2007-2015; Our World in Data, 2022a). For the income measure, we relied on the World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021). We choose the Gross Domestic Product (GDP) per capita (based on log 10), a measure that represents how relatively rich countries are based on 2017 US dollars purchasing power parity. 
+For the urbanization measure, we used the percentage of the population living in urban areas indicator, from the WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2022 because this was the year in which we had the maximum amount of data available for those variables. 
+For family structure we used the household size from the UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022). First, the average number of household members
 
-p
-pdf("Fig2.pdf")
-p
-dev.off()
+## SM2: The SES of families in our sample of CHILDES is not reasonable given source countries
+As mentioned in the main text, the vast majority of families were of middle or higher SES. Since 84% of corpora were collected in OECD countries, we use OECD data for comparison. While less than 66% of families in OECD countries are middle-to-high SES, over 80% of our sample falls into this category. Moreover, OECD countries generally have higher SES populations compared to the global average, suggesting that our CHILDES sample likely overrepresents middle-to-high SES families even more on a global scale.
+
+
+## SM3: The education of caregivers in our sample of CHILDES is not reasonable given source countries
+
+
+```{r}
+read.csv("../share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->college
+college<-subset(college,Year == 2010 & Entity %in% levels(factor(annotations_inc[!is.na(annotations_inc$Education.ac),"country"])))
+
+with_ed = subset(annotations_inc, !is.na(Education.ac))
+
+#we want to get a table with the % of corpora by country for matching with the country-level info below
+
+ed_tab = table(with_ed$country,with_ed$Education.ac=="College and above")
+
+ed_tab_pc<-ed_tab[,2]/rowSums(ed_tab)
+
+
+ed_tab_pc=ed_tab_pc[names(ed_tab_pc)%in%college$Entity]
+#check: names(ed_tab_pc)==college$Entity
+ed_tab_joint <- cbind(ed_tab_pc,college[,4])
+colnames(ed_tab_joint)<-c("pc_corpora","pc_population")
+#plot(ed_tab_joint)
+#ed_tab_joint[order(ed_tab_joint[,"pc_corpora"]),]
 ```
 
-## SM2 Flowchart
-![Flowchart](../figures/flowchart.png){ width=% }
+To check whether the levels of education were reasonable, we calculated the proportion of corpora in each country for which all caregivers had completed college, setting aside the corpus collected in two countries, for a total of 27 countries. This percentage varied between 0 (Greece, Lesotho, Serbia, or Portugal) and 100% (for 16 countries). In contrast, for the same 27 countries, the proportion of the population aged 25-65 years with completed tertiary education did not go above 30% (data from 2010). Zooming into one particular case, 100% of families in the corpora collected in the United States had a college education or higher, which is true of only 36% of US adults (U.S. Census Bureau, 2020).  
 
+Professions linked with graduate level education include: Master's or Ph.D. students, professors, linguists, researchers, scientists, and academics. If we additionally count psychologists and speech therapists, this represents 62% of the corpora. In fact, 50% of the samples contained parents who were described as (Masters or PhD) students, professors, linguists, researchers, scientists, or academics. To give an idea of the extent to which this is not representative, consider the fact that in 2020, 6% of the American population would be included in that list of professions. Similar data is hard to find for all countries represented in CHILDES, but we suspect that the proportion of scientists, professors, Masters and PhD students found in most other countries will be the same or lower.
 
-## SM3: Sources used for Density plot
-
-The goal of the country-level analysis is to assess the representativeness of our sub-sample of CHILDES against world statistics. For this, we first identified the country where the recordings were collected. The following variables were used for this level of analysis, all derived from official sources including the World Bank, Our World in Data (WDI), and the United Nations (UN). For each macro-dimension described in the Introduction, we looked for relevant world statistics available (see the annotated code for more details about the indicators). 
-SES
-For the SES dimension we choose two measures representing education and income. For the education measure, we turned to Our World in Data (WDI), an organization that collates information from various official sources. We downloaded information on the proportion of the population that had completed lower secondary school (data from 2007-2015; Our World in Data, 2022a;  see Supplementary Materials (SMX) for figures using the proportion of the population completing high school instead). For the income measure, we relied on the World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021). We choose the Gross Domestic Product (GDP) per capita (based on log 10), a measure that represents how relatively rich countries are based on 2017 US dollars purchasing power parity. It is expressed in 2017 US dollars. 
-
-Urbanization
-We used the percentage of the population living in urban areas indicator, from the WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables. 
-Family structure
-We used two measures pertaining to household size from the UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022). First, the average number of household members, and second, the average number of members under the age of 15. 
-
-```{r tab1,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
-
-# Create a data frame
-mytab1 <- data.frame(
-  Dimension = c("SES", "SES", "Urbanization", "Family structure", "Family structure", "Language"),
-  `Macro-level variable` = c("Percent of the population completing lower secondary school*", "GDP per capita (log 10)", "Percent of the population living in urban areas", "Average household size", "Average number of member under 15 in households", "NA"),
-  Source = c("Data from 2007-2015; Our World in Data, 2022a", "World Development Indicators (WDI) from the World Bank, available via the WDI package in R (Vincent Arel-Bundock, 2021)", "WDI from the World Bank. It represents the proportion of the population that was rural, so we estimated the complement to 100% to conceptually align this variable to the others. We employed indicators for the year 2011 because this was the year in which we had the maximum amount of data available for those variables.", "UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)", "UN database on Household Size and Composition 2022 (data from 2000-2022 United Nations, 2022)", "NA")
-)
-
-apa_table(mytab1,caption="", longtable = T, align=c("lccccccccr"))
-#write.csv(mytab,"output/table1.csv")
-```
-
-
-## SM4: Distribution of CHILDES participants by country and continent
-
-
-```{r tab2,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
-# Create another data frame for the third set of information
-
-corpora.ind <- annotations_inc %>%
-  select(country, Corpus, Nb.of.participants, region)
-
-summary_corpora_COUNTRY <- corpora.ind %>%
-  group_by(country) %>%
-  summarise(
-    TimesRepeated = n(),
-    TotalParticipants_country = sum(Nb.of.participants)
-  )
-
-apa_table(summary_corpora_COUNTRY,caption="Descriptives", longtable = T, align=c("lccccccccr"))
-
-#write.csv(mytab2,"output/table3.csv")
-```
-
-```{r tab3,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
-# Create another data frame for the third set of information
-
-corpora.ind <- annotations_inc %>%
-  select(country, Corpus, Nb.of.participants, region)
-
-corpora.ind$region[corpora.ind$country =="Spain & Hungary"] = "Europe"
-corpora.ind$region[corpora.ind$country =="Sweden & Portugal"] = "Europe"
-
-summary_corpora_CONT <- corpora.ind %>%
-  group_by(region) %>%
-  summarise(
-    TimesRepeated = n(),
-    TotalParticipants_continent = sum(Nb.of.participants)
-  )
-
-
-
-# sum(annotations$continent=="Africa")
-# 
-# mytab3 <- data.frame(
-#   Continent = c("Africa", "Asia", "North America", "Latin America", "Europe", "Oceania"),
-#   `N corpora` = c(3, 32, 34, 5, 105, 1),
-#   `N total children` = c(16, 602, 177, 6, 1091, 5),
-#   `N children growing in continent` = c("X", "X", "X", "X", "X", "X")
-# )
-apa_table(summary_corpora_CONT,caption="Descriptives", longtable = T, align=c("lccccccccr"))
-
-#write.csv(mytab3,"output/table3.csv")
-```
-
-## SM5: Table of urban indicators by country, using most recent date available (2022)
+## SM4: The number of corpora in our sample of CHILDES with urban versus rural families is reasonable given source countries
 
 This indicator is based in the World Bank staff estimates based on the United Nations Population Division's World Urbanization Prospects: 2018 Revision.
 
 ```{r tab4,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("academic","capital city of the Soviet Union","city","industial","industrial ","work-for-pay",
+                                                                                                        "work-for-pay/industrial","industrial","Northeastern US urban","urban western", "industrial & service &trade activities...", "Mediterranean city of 1.6 million inhabitants", "modern city families, usually both working parents","Seaside tourist town","Industrial city (population: around 272,000 inhabitants)","mainly urban", "industrial city (3.000.000 inhabitants")]<-"urban"
+
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("farmer","rural","rural farming village")]<-"rural"
+annotations_inc$Type.of.community[annotations_inc$Type.of.community %in% c("industrial, farmers")]<-"both"
+annotations_inc$Type.of.community = factor(annotations_inc$Type.of.community, levels=c("urban", "both", "rural"))
+
+with_rur<-annotations_inc[!is.na(annotations_inc$Type.of.community),]
 
 ## Read in urbanization info
 #from WDI https://api.worldbank.org/v2/en/indicator/SP.RUR.TOTL.ZS?downloadformat=csv
@@ -201,19 +165,59 @@ colnames(urbtot_2022)[colnames(urbtot_2022) == "X2022"] <- "SP.RUR.TOTL.ZS"
 100 - urbtot_2022$SP.RUR.TOTL.ZS -> urbtot_2022$SP.URB.TOTL.ZS
 urbtot_2022 <- urbtot_2022[, c("Country.Name", "Country.Code", "SP.URB.TOTL.ZS")]
 
-#merge urb and gdp
-merge(annotations_inc, urbtot_2022, by.x = "alpha.3",  by.y = "Country.Code", all.x=T) -> urbtot_2022_childes
+#subset to countries that have community type data
+urbtot_2022=subset(urbtot_2022,Country.Code%in% levels(factor(with_rur$alpha.3)))
 
-urbantable <- urbtot_2022_childes[, c("country", "SP.URB.TOTL.ZS")]
-colnames(urbantable)<-c("Country", "% Urban")
-urbantable <- unique(urbantable)
+#now work towards a table with the key info
+urb_tab = table(with_rur$alpha.3,with_rur$Type.of.community=="urban")
+urb_tab_pc<-urb_tab[,2]/rowSums(urb_tab)
+urb_tab_pc=urb_tab_pc[urbtot_2022$Country.Code]
 
-
-apa_table(urbantable,caption="Urban indicator by country included in CHILDES sample", longtable = T, align=c("lccccccccr"))
-
+urb_tab_joint <- cbind(urb_tab_pc,urbtot_2022[,3])
+colnames(urb_tab_joint)<-c("pc_corpora","pc_population")
+#plot(urb_tab_joint)
+#urb_tab_joint[order(urb_tab_joint[,"pc_corpora"]),]
+#table(urb_tab_joint[,"pc_corpora"])
+#range(urb_tab_joint[,"pc_population"])
+#urb_tab_joint[order(urb_tab_joint[,"pc_population"]),]
+#range(urb_tab_joint[urb_tab_joint[,"pc_corpora"]==1,"pc_population"])
+#range(urb_tab_joint[urb_tab_joint[,"pc_corpora"]!=1,"pc_population"])
 ```
 
-## SM6: Different languages or language combinations (for bilingual and multilingual children)
+
+To check whether the levels of urban sampling were reasonable, we calculated the proportion of corpora in each country for which all families were urban, setting aside the corpus collected in two countries, for a total of 26 countries. This percentage varied between (Jamaica, Lesotho, Papua New Guinea) and 100% (for 20 countries). For the same 26 countries, the proportion of the population that was urban varied more continuously, ranging from 14 (Papua New Guinea) to 100% (Kuwait). Among the 20 countries for which 100% of families were urban, this percentage varied between 43 and 100%. For the remaining 6 countries, it went from 14 to 83%.
+
+## SM5: Singletons are underrepresented in our sample of CHILDES given source countries
+
+```{r}
+annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings != 0] <- "yes"
+annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings == 0] <- "no"
+annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings %in% c("all firstborn (some newborn sibs)", "at least 1 (triplet)")] <- "yes"
+annotations_inc$siblings = factor(annotations_inc$siblings, levels=c("yes", "no"))
+
+with_sib<-subset(annotations_inc,!is.na(siblings))
+with_sib$singleton<-with_sib$siblings=="no"
+
+read.csv("../children-born-per-woman-OWID-20220112.csv")->cpw
+cpw[cpw$Year==2011,]->cpw
+colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
+cpw=subset(cpw,Entity %in% levels(factor(annotations_inc$country)))
+
+sib_tab = table(with_sib$country,with_sib$singleton)
+sib_tab_pc<-sib_tab[,2]/rowSums(sib_tab)
+sib_tab_pc=sib_tab_pc[cpw$Entity]
+
+sib_tab_joint <- cbind(sib_tab_pc,cpw[,4])
+colnames(sib_tab_joint)<-c("pc_corpora","fertility_rate")
+#plot(sib_tab_joint)
+table(sib_tab_joint[,"pc_corpora"])
+range(sib_tab_joint[sib_tab_joint[,"pc_corpora"]==0,"fertility_rate"])
+
+range(urb_tab_joint[urb_tab_joint[,"pc_corpora"]!=1,"pc_population"])
+```
+
+
+## SM6: Languages represented
 
 ```{r lang_dif,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
 
@@ -233,34 +237,12 @@ levels(as.factor(annotations_inc$Language))
 #apa_table(mytab,caption="Total number of participants per language,", longtable = T, align=c("lccccccccr"))
 ```
 
-## SM7: Number of participants and Language
-
-```{r country_participants,echo = FALSE, as.is=T, ig.pos = "T!",results="asis"}
-
-annotations_inc <- annotations_inc %>%
-  mutate(Language = as.factor(Language))
+## SM7: Monolinguals are over-represented given source countries
 
 
-freq_languages <- as.data.frame(table(annotations_inc$Language))
-colnames(freq_languages) = c("Language", "Freq")
+## SM8:  Acknowledgments
 
-lang_dif <- annotations_inc %>%
-  group_by(Language) %>%
-  summarise(Total_Participants = sum(Nb.of.participants, na.rm = TRUE))
-
-merge(freq_languages, lang_dif, by.x ="Language", by.y = "Language", all=T) -> corpora_ind_lang
-colnames(corpora_ind_lang) = c("Language", "Number of Corpus", "Number of participants")
-
-
-apa_table(corpora_ind_lang,caption="Number of participants by Language", longtable = T, align=c("lccccccccr"))
-
-  
-  
-``` 
-
-## SM8: Further ackowledgments
-
-We would like to thank the curators of the corpora who replied to our email: Andra Kütt, Caroline Rowland, Carrie Dyck, David Dickinson, Dominique Bassano, Juana Liceras, Klára Matiasovitsová, Luigi Rizzi, Maria João Freitas, Michelle McGillion, Sanne Kuijper, Sinead McNally, Tina Hickey, Ur Shlonsky, Zhang Yibin, Amy Strekas, Donna Thal , Frank Wijnen, Gaja Jarosz, Gerardo Aguado Alonso, Jane Herbert, Jasmina Moskovljević Popović, Jing Zhou, Pilar Prieto, Rebecca Burns, Stephen Matthews, Teresa da Costa, Ulrich Frauenfelder, Uri Tadmor, Virginia Yip, Yvan Rose, Ana Isabel Ojea Lopez, Andra Kütt, Bob Wilson, Christophe Parisse, Elena Lieven, Elena Nicoladis, Elizabeth Nixon, Filip Smolik, Folkert Kuiken, Huang Yue-Yuan, Janet Bang, Jeannine Goh, Julian Pine, Linhui Li, Luigi Rizzi, Maja Roch, Mara Steinberg Lowe, Marguerite Mackenzie, Michelle White, Nada Ševa, Nicola Botting, Stephanie Durrleman, Stephen Matthews, Virginia Yip, Yvan Rose, 404 Not Found, Airi Kapanen, Alan Cruttenden, Alison Henry, Aliyah Morgenstern, Amye Warren-Leubecker, Ana Lúcia Santos, Ana Maria Guimarães, Andra Kütt, Andrea Biró, Andrea Feldman, Angela Grimm, Ann Peters, Anna Chromá, Anna Theakston, Anne Van Kleeck, Anne-Marie Schaerlaekens, Annick De Houwer, Annick DeHouwer, Antje van Oosten, Aparna Nadig, Astrid Klammler, Aurora Bel Gaya, Aviya Hacohen, Ayhan Aksu Koç, Barbara Davis, Barbara Pearson, Bernadette Plunkett, Bernd Möbius, Bob Jones, Brian MacWhinney, Britta Lintfert, Carina Koroschetz, Carmen Silva-Corvalán, Caroline Rowland, Catherine Snow, Cécile De Cat, Charles Watkins, Chiara Roggero, Chien-ju Chang, Christian Champaud, Christiane von Stutterheim, Christina Gildersleeve-Neumann, Christine Howe, Claartje Levelt, Claudine Hammelrath, Colleen Huebner Morisset, Conxita Lleo, Conxita Lleó, Cornelia Hamann, Darinka Anđelković, David Gil, Dmitar Popov, Donella Antelmi, Donna Jackson-Maldonado, Dorit Ravid, Eithne Guilfoyle, Ekaterina Protassova, Elena Pizzuto, Elena Tribushinina, Elena V. M. Lieven, Elisabet Serrat Sellabona, Eliseo Diez-Itza, Elizabeth Bates, Eon-Suk Ko, Eva Bar-Shalom, Eve Clark, Evelien Krikhaar, Feyza Altinkamis, Francisco De Lacerda, Frank Wijnen, Fred Genesee, Frenette Southwood, Gerard Bol, Ghada Khattab, Gina Conti-Ramsden, Gisela Szagun, Giuseppe Cappelli, Gordana Hržica, Gordon Wells, Habibeh Samadi, Hanna Batoréo, Hannah Sarvasy, Harriet Jisa, Heather Goad, Heba Salama, Heidi Feldman, Heike Behrens, Helen Körgesaar, Hervé Hunkeler, Hintat Cheung, Hiro Yuki Nisisawa, Hrafnhildur Ragnarsdóttir, Hye-Ree Ghim, Igor Žagar, Iliana Reyes, Inge Zink, Ioana Goga, Isabelle Barrière, Isabelle Maillochon, Jacqueline Sachs, Jacqueline van Kampen, Jan Edwards, Jane S. Tsay, Javier Aguado Orea, Jean Berko Gleason, Jean Quigley, Jean-Adolphe Rondal, Jeannine Goh, Jeroen Aarssen, Jing Zhou, Jody Tommerdahl, Joe Pater, Johanna Nicholas, Jóhanna Thelma Einarsdóttir, Johanne Paradis, John Neil Bohannon III, Jordan Zlatev, José L. Linaza, Ju-Yeon Ryu, Judit Navracsics, Julian Pine, Julie Brittain, Julie McMillan, Jürgen Weissenborn, Kaja Kohler, Karina Hess Zimmermann, Karme Beek, Katerina Palasis, Katherine Demuth, Katherine Nelson, Kathy Post, Keith Sawyer, Kim Plunkett, Klaus Wagner, L. Haggerty, Laetitia de Almeida, Larisa Avram, Larry F. Guthrie, Leonor Scliar-Cabral, Liliana Tolchinsky, Linda Kelly, Linhui Li, LinHui Li, Lise Menn, Livia Tonelli, Lois Bloom, Lori Van Houten, Lorraine McCune, Lynn S. Bliss, Madalena Cruz-Ferreira, Madeleine Leveillé, Magda Krupa-Kwiatkowska, Magdalena Smoczynska, Maigi Vija, Maja Roch, Manuela Wagner, Marc Bornstein, Margaret Deuchar, Maria del Carmen Aguirre Martínez, Maria Emma Ticio, María Jesús Pérez-Bazán, Maria-Llanos Luque Sánchez, Marie-Thérèse Le Normand, Mariko Hayashi, Marilyn Vihman, Marta Fernández Vázquez, Martha Shiro, Marty Demetras, Mary Ann Evans, Mary Beckman, Mary Erbaugh, Masayuki Yokoyama, Mats Andrén, Max Miller, Megan Devlin, Melanie Soderstrom, Melissa Redford, Melita Kovacevic, Michael Brent, Michael Forrester, Milagros Fernández Pérez, Miquel Serra, Mirco Fasolo, Mireas Llinas, Mireia Llinàs-Grau, Mitsuhiko Ota, Mohamed Lahrouchi, Monique Vion, Myron Korman, Nan Bernstein Ratner, Naomi Hamasaki, Naomi Yamaguchi, Natalia Gagarina, Neil Smith, Neiloufar Family, Nina Gram Garmann, Norio Naka, Not Found, Núria Esteve-Gibert, Oksana Bailleul, Ondene Van Dulm, Oralia Rodríguez Arredondo, Outi Bat-El, Pamela Rollins, Patrick Suppes, Paul Fletcher, Paula Fikkert, Péter Bodor, Petra Bos, Petra Hendriks, Petra Sleeman, Rangaswamy Narasimhan, Raquel Fernández Fuertes, Reili Argus, Richard Sprott, Richard Weist, Roberto Soto Valle, Roger Brown, Ron Gillam, Rosa Graciela Montes, Roy Higginson, Ruth Berman, Sam Leung, Seba Al-Hindawy, Shaima AlQattan, Sharon Inkelas, Silvia Nieva, Silvia Romero Contreras, Sirli Zupping, Sophie Kern, Sotaro Kita, Stan Kuczaj, Steven Gillis, Sudaporn Luksaneeyanawin, Susan Ellis Weismer, Susan Gelman, Susan R. Braunwald, Susana Correia, Susana López Ornat, Susanne Miyata, Sven Strömqvist, Takeo Ishii, Tamirand De Lisser, Tania Ionin, Thea Cameron-Faulkner, Thomas Doukas, Thomas Lee, Tina Ringstad, Twila Tardif, Ursula Stephany, Valentin Remedi, Victoria Marrero, Virginia C. Gathercole, Virginia Gathercole, Virginia Valian, Virginia Yip, William Hall, William Snyder, Xiangjun Deng, Yasuhiro Shirai, Yonata Levy, Yoshiki Ogawa, Yow Wei Quin, and Yow Wei Quin.
+We would like to thank the corpora curators: Airi Kapanen, Alan Cruttenden, Alison Henry, Aliyah Morgenstern, Amy Strekas, Amye Warren-Leubecker, Ana Isabel Ojea Lopez, Ana Lúcia Santos, Ana Maria Guimarães, Andrea Biró, Andrea Feldman, Angela Grimm, Ann Peters, Anna Chromá, Anna Theakston, Anne Van Kleeck, Anne-Marie Schaerlaekens, Annick De Houwer, Antje van Oosten, Aparna Nadig, Astrid Klammler, Aurora Bel Gaya, Aviya Hacohen, Ayhan Aksu Koç, Barbara Davis, Barbara Pearson, Bernadette Plunkett, Bernd Möbius, Bob Jones, Bob Wilson, Brian MacWhinney, Britta Lintfert, Carina Koroschetz, Carmen Silva-Corvalán, Caroline Rowland, Catherine Snow, Cécile De Cat, Charles Watkins, Chiara Roggero, Chien-ju Chang, Christian Champaud, Christiane von Stutterheim, Christina Gildersleeve-Neumann, Christine Howe, Claartje Levelt, Claudine Hammelrath, Colleen Huebner Morisset, Conxita Lleo, Conxita Lleó, Cornelia Hamann, Darinka Anđelković, David Dickinson, David Gil, Dmitar Popov, Donella Antelmi, Donna Jackson-Maldonado, Donna Thal, Dorit Ravid, Eithne Guilfoyle, Ekaterina Protassova, Elena Lieven, Elisabet Serrat Sellabona, Eliseo Diez-Itza, Elizabeth Bates, Elizabeth Nixon, Eon-Suk Ko, Eva Bar-Shalom, Eve Clark, Evelien Krikhaar, Feyza Altinkamis, Filip Smolik, Folkert Kuiken, Francisco De Lacerda, Frank Wijnen, Fred Genesee, Frenette Southwood, Gaja Jarosz, Gerard Bol, Gerardo Aguado Alonso, Ghada Khattab, Gina Conti-Ramsden, Gisela Szagun, Giuseppe Cappelli, Gordana Hržica, Gordon Wells, Habibeh Samadi, Hanna Batoréo, Hannah Sarvasy, Harriet Jisa, Heather Goad, Heba Salama, Heidi Feldman, Heike Behrens, Helen Körgesaar, Hervé Hunkeler, Hintat Cheung, Hiro Yuki Nisisawa, Hrafnhildur Ragnarsdóttir, Hye-Ree Ghim, Igor Žagar, Iliana Reyes, Inge Zink, Ioana Goga, Isabelle Barrière, Isabelle Maillochon, Jacqueline Sachs, Jacqueline van Kampen, Jane Herbert, Jane S. Tsay, Janet Bang, Jan Edwards, Javier Aguado Orea, Jean Berko Gleason, Jean Quigley, Jean-Adolphe Rondal, Jeannine Goh, Jeroen Aarssen, Jing Zhou, Jody Tommerdahl, Joe Pater, Johanna Nicholas, Jóhanna Thelma Einarsdóttir, Johanne Paradis, John Neil Bohannon III, Jordan Zlatev, José L. Linaza, Ju-Yeon Ryu, Judit Navracsics, Julian Pine, Julie Brittain, Julie McMillan, Jürgen Weissenborn, Juana Liceras, Kaja Kohler, Karina Hess Zimmermann, Karme Beek, Katerina Palasis, Katherine Demuth, Katherine Nelson, Kathy Post, Keith Sawyer, Kim Plunkett, Klaus Wagner, Klára Matiasovitsová, L. Haggerty, Laetitia de Almeida, Larisa Avram, Larry F. Guthrie, Leonor Scliar-Cabral, Liliana Tolchinsky, Linda Kelly, Linhui Li, Lise Menn, Livia Tonelli, Lois Bloom, Lori Van Houten, Lorraine McCune, Lynn S. Bliss, Madalena Cruz-Ferreira, Madeleine Leveillé, Magda Krupa-Kwiatkowska, Magdalena Smoczynska, Maigi Vija, Maja Roch, Manuela Wagner, Marc Bornstein, Margaret Deuchar, Maria del Carmen Aguirre Martínez, Maria Emma Ticio, María Jesús Pérez-Bazán, Maria João Freitas, Maria-Llanos Luque Sánchez, Marie-Thérèse Le Normand, Mariko Hayashi, Marilyn Vihman, Marta Fernández Vázquez, Martha Shiro, Marty Demetras, Mary Ann Evans, Mary Beckman, Mary Erbaugh, Masayuki Yokoyama, Mats Andrén, Max Miller, Megan Devlin, Melanie Soderstrom, Melissa Redford, Melita Kovacevic, Michael Brent, Michael Forrester, Michelle McGillion, Michelle White, Milagros Fernández Pérez, Miquel Serra, Mirco Fasolo, Mireas Llinas, Mireia Llinàs-Grau, Mitsuhiko Ota, Mohamed Lahrouchi, Monique Vion, Myron Korman, Nan Bernstein Ratner, Naomi Hamasaki, Naomi Yamaguchi, Natalia Gagarina, Neil Smith, Neiloufar Family, Nina Gram Garmann, Níria Esteve-Gibert, Norio Naka, Núria Esteve-Gibert, Oksana Bailleul, Ondene Van Dulm, Oralia Rodríguez Arredondo, Outi Bat-El, Pamela Rollins, Patrick Suppes, Paul Fletcher, Paula Fikkert, Péter Bodor, Petra Bos, Petra Hendriks, Petra Sleeman, Pilar Prieto, Rangaswamy Narasimhan, Raquel Fernández Fuertes, Rebecca Burns, Reili Argus, Richard Sprott, Richard Weist, Roberto Soto Valle, Roger Brown, Ron Gillam, Rosa Graciela Montes, Roy Higginson, Ruth Berman, Sam Leung, Sanne Kuijper, Seba Al-Hindawy, Shaima AlQattan, Sharon Inkelas, Silvia Nieva, Silvia Romero Contreras, Sirli Zupping, Sophie Kern, Sotaro Kita, Stan Kuczaj, Stephen Matthews, Steven Gillis, Sudaporn Luksaneeyanawin, Susan Ellis Weismer, Susan Gelman, Susan R. Braunwald, Susana Correia, Susana López Ornat, Susanne Miyata, Sven Strömqvist, Takeo Ishii, Tamirand De Lisser, Tania Ionin, Teresa da Costa, Thea Cameron-Faulkner, Thomas Doukas, Thomas Lee, Tina Ringstad, Twila Tardif, Ursula Stephany, Valentin Remedi, Victoria Marrero, Virginia C. Gathercole, Virginia Gathercole, Virginia Valian, Virginia Yip, William Hall, William Snyder, Xiangjun Deng, Yasuhiro Shirai, Yonata Levy, Yoshiki Ogawa, Yow Wei Quin, Yvan Rose, Zhang Yibin.
 
 
 ## Package and environment version

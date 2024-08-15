@@ -1,0 +1,183 @@
+Family,Sub_family,Code,Description,National,Subnational,Subnational_harmonized
+Household (H),Size and age composition (S),HS01,Proportion of 1-person households,1,1,1
+Household (H),Size and age composition (S),HS02,Proportion of 2-persons households,1,1,1
+Household (H),Size and age composition (S),HS03,Proportion of 3-persons households,1,1,1
+Household (H),Size and age composition (S),HS04,Proportion of 4-persons households,1,1,1
+Household (H),Size and age composition (S),HS05,Proportion of 5-persons households,1,1,1
+Household (H),Size and age composition (S),HS06,Proportion of 6-persons households,1,1,1
+Household (H),Size and age composition (S),HS07,Proportion of 7-persons households,1,1,1
+Household (H),Size and age composition (S),HS08,Proportion of 8-persons households,1,1,1
+Household (H),Size and age composition (S),HS09,Proportion of 9-persons households,1,1,1
+Household (H),Size and age composition (S),HS10,Proportion of 10-persons households,1,1,1
+Household (H),Size and age composition (S),HS11,Proportion of 11+persons households,1,1,1
+Household (H),Size and age composition (S),HS12,Proportion of 2-3 persons households,1,1,1
+Household (H),Size and age composition (S),HS13,Proportion of 4-5 persons households,1,1,1
+Household (H),Size and age composition (S),HS14,Proportion of 6+ persons households,1,1,1
+Household (H),Size and age composition (S),HS15,Proportion of households with at least one person 0-4 years old,1,1,1
+Household (H),Size and age composition (S),HS16,Proportion of households with at least one person 65+ years old,1,1,1
+Household (H),Size and age composition (S),HS17,Average household size,1,1,1
+Household (H),Size and age composition (S),HS18,Average number of 0-4 children in the household,1,1,1
+Household (H),Size and age composition (S),HS19,Average number of adults in the household (aged 18+),1,1,1
+Household (H),Size and age composition (S),HS20,Average number of children in the household (aged < 18),1,1,1
+Household (H),Size and age composition (S),HS21,Average number of persons aged 65+ in the household,1,1,1
+Household (H),Size and age composition (S),HS22,Average number of 0-9 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS23,Average number of 10-19 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS24,Average number of 20-29 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS25,Average number of 30-39 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS26,Average number of 40-49 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS27,Average number of 50-59 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS28,Average number of 60-69 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS29,Average number of 70-79 individuals in the household,1,1,1
+Household (H),Size and age composition (S),HS30,Average number of 80+ individuals in the household,1,1,1
+Household (H),Relationship to head (R),HR01,Average number of heads in the household,1,1,1
+Household (H),Relationship to head (R),HR02,Average number of spouses of the head in the household,1,1,1
+Household (H),Relationship to head (R),HR03,Average number of children of the head in the household,1,1,1
+Household (H),Relationship to head (R),HR04,Average number of other relatives of the head in the household,1,1,1
+Household (H),Relationship to head (R),HR05,Average number of non relatives of the head in the household,1,1,1
+Household (H),Relationship to head (R),HR06,Average number of other relatives and/or non relatives of the head in the household,1,1,1
+Household (H),Relationship to head (R),HR07,Average number of Heads in 2 persons household,1,1,1
+Household (H),Relationship to head (R),HR08,Average number of Spouses in 2 persons household,1,1,1
+Household (H),Relationship to head (R),HR09,Average number of Children in 2 persons household,1,1,1
+Household (H),Relationship to head (R),HR10,Average number of Other relatives in 2 persons household,1,1,1
+Household (H),Relationship to head (R),HR11,Average number of Non relatives in 2 persons household,1,1,1
+Household (H),Relationship to head (R),HR12,Average number of Other relative or Non relatives in 2 persons household,1,1,1
+Household (H),Relationship to head (R),HR13,Average number of Heads in 3 persons household,1,1,1
+Household (H),Relationship to head (R),HR14,Average number of Spouses in 3 persons household,1,1,1
+Household (H),Relationship to head (R),HR15,Average number of Children in 3 persons household,1,1,1
+Household (H),Relationship to head (R),HR16,Average number of Other relatives in 3 persons household,1,1,1
+Household (H),Relationship to head (R),HR17,Average number of Non relatives in 3 persons household,1,1,1
+Household (H),Relationship to head (R),HR18,Average number of Other relatives or Non relatives in  3 persons household,1,1,1
+Household (H),Relationship to head (R),HR19,Average number of Heads in 4 persons household,1,1,1
+Household (H),Relationship to head (R),HR20,Average number of Spouses in 4 persons household,1,1,1
+Household (H),Relationship to head (R),HR21,Average number of Children in 4 persons household,1,1,1
+Household (H),Relationship to head (R),HR22,Average number of Other relatives in 4 persons household,1,1,1
+Household (H),Relationship to head (R),HR23,Average number of Non relatives in 4 persons household,1,1,1
+Household (H),Relationship to head (R),HR24,Average number of Other Relatives or Non relatives in 4 persons household,1,1,1
+Household (H),Relationship to head (R),HR25,Average number of Heads in 5 persons household,1,1,1
+Household (H),Relationship to head (R),HR26,Average number of Spouses in 5 persons household,1,1,1
+Household (H),Relationship to head (R),HR27,Average number of Children in 5 persons household,1,1,1
+Household (H),Relationship to head (R),HR28,Average number of Other relatives in 5 persons household,1,1,1
+Household (H),Relationship to head (R),HR29,Average number of Non relatives in 5 persons household,1,1,1
+Household (H),Relationship to head (R),HR30,Average number of Other relatives or Non relatives in 5 persons household,1,1,1
+Household (H),Household typology (T),HT01,Proportion of unipersonal households,1,1,1
+Household (H),Household typology (T),HT02,Proportion of households with nuclear relationships to head,1,1,1
+Household (H),Household typology (T),HT03,Proportion of households with nuclear and other family relationships to head,1,1,1
+Household (H),Household typology (T),HT04,Proportion of households with nuclear and non family relationships to head,1,1,1
+Household (H),Household typology (T),HT05,"Proportion of households with nuclear, other family, and non family relationships to head",1,1,1
+Household (H),Household typology (T),HT06,Proportion of households with non nuclear family relationships to head,1,1,1
+Household (H),Household typology (T),HT07,Proportion of households with non family relationships to head,1,1,1
+Household (H),Household typology (T),HT08,Proportion of households with non nuclear family and non family relationships to head,1,1,1
+Household (H),Household typology (T),HT09,Proportion of households with non nuclear family and / or non family relationships to head,1,1,1
+Household (H),Household typology (T),HT10,Average size of unipersonal households,1,1,1
+Household (H),Household typology (T),HT11,Average size of households with nuclear relationships to head,1,1,1
+Household (H),Household typology (T),HT12,Average size of households with nucelar and other family relionships to head,1,1,1
+Household (H),Household typology (T),HT13,Average size of households with nuclear and non family relationships to head,1,1,1
+Household (H),Household typology (T),HT14,"Average size of households with nuclear, other family, and non family relationships to head",1,1,1
+Household (H),Household typology (T),HT15,Average size of households with non nuclear family relationships to head,1,1,1
+Household (H),Household typology (T),HT16,Average size of households with non family relationships to head,1,1,1
+Household (H),Household typology (T),HT17,Average size of households with non nuclear family and non family relationships to head,1,1,1
+Household (H),Household typology (T),HT18,Average size of households with non nuclear family and / or non family relationships to head,1,1,1
+Household (H),Household typology (T),HT20,Proportion of unipersonal households,1,1,1
+Household (H),Household typology (T),HT21,Proportion of households with nuclear relationships to head,1,1,1
+Household (H),Household typology (T),HT22,Proportion of stem-family households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT23,Proportion of other family households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT24,Proportion non family households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT25,Proportion of other relative and / or non relative households based on relationship to head (residual category),1,1,1
+Household (H),Household typology (T),HT26,Average size of unipersonal households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT27,Average size of nuclear households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT28,Average size of stem-family households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT29,Average size of other family households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT30,Average  size of other non family households based on relationship to head,1,1,1
+Household (H),Household typology (T),HT31,Average size of other relative and/or non relative households based on relationship to head (residual category),1,1,1
+Household (H),Household headship (H),HH01,Proportion of male-headed households,1,1,1
+Household (H),Household headship (H),HH02,Proportion of female-headed households,1,1,1
+Household (H),Household headship (H),HH03,Proportion of 1-person households of male-headed households,1,1,1
+Household (H),Household headship (H),HH04,Proportion of 2-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH05,Proportion of 3-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH06,Proportion of 4-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH07,Proportion of 5-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH08,Proportion of 6-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH09,Proportion of 7-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH10,Proportion of 8-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH11,Proportion of 9-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH12,Proportion of 10-persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH13,Proportion of 11+persons households of male-headed households,1,1,1
+Household (H),Household headship (H),HH14,Proportion of 1-person households of female-headed households,1,1,1
+Household (H),Household headship (H),HH15,Proportion of 2-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH16,Proportion of 3-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH17,Proportion of 4-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH18,Proportion of 5-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH19,Proportion of 6-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH20,Proportion of 7-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH21,Proportion of 8-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH22,Proportion of 9-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH23,Proportion of 10-persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH24,Proportion of 11+persons households of female-headed households,1,1,1
+Household (H),Household headship (H),HH25,Proportion of unipersonal households of male-headed households,1,1,1
+Household (H),Household headship (H),HH26,Proportion of households with nuclear relationships to head of male-headed households,1,1,1
+Household (H),Household headship (H),HH27,Proportion of stem-family households based on relationship to head of male-headed households,1,1,1
+Household (H),Household headship (H),HH28,Proportion of other family households based on relationship to head of male-headed households,1,1,1
+Household (H),Household headship (H),HH29,Proportion non family households based on relationship to head of male-headed households,1,1,1
+Household (H),Household headship (H),HH30,Proportion of other relative and / or non relative households based on relationship to head (residual category) of male-headed households,1,1,1
+Household (H),Household headship (H),HH31,Proportion of unipersonal households of female-headed households,1,1,1
+Household (H),Household headship (H),HH32,Proportion of households with nuclear relationships to head of female-headed households,1,1,1
+Household (H),Household headship (H),HH33,Proportion of stem-family households based on relationship to head of female-headed households,1,1,1
+Household (H),Household headship (H),HH34,Proportion of other family households based on relationship to head of male-headed households,1,1,1
+Household (H),Household headship (H),HH35,Proportion non family households based on relationship to head of female-headed households,1,1,1
+Household (H),Household headship (H),HH36,Proportion of other relative and / or non relative households based on relationship to head (residual category) of female-headed households,1,1,1
+Household (H),Household headship (H),HH37,Average household size of male-headed households,1,1,1
+Household (H),Household headship (H),HH38,Average household size of female-headed households,1,1,1
+Household (H),Household headship (H),HH39,Average number of children in male-headed households,1,1,1
+Household (H),Household headship (H),HH40,Average number of children in female-headed households,1,1,1
+Household (H),Household headship (H),HH41,Average number of adults in male-headed households,1,1,1
+Household (H),Household headship (H),HH42,Average number of adults in female-headed households,1,1,1
+Household (H),Household headship (H),HH43,Average number of persons aged 65+ in female-headed households,1,1,1
+Household (H),Household headship (H),HH44,Average number of persons aged 65+ in male-headed households,1,1,1
+Household (H),Household headship (H),HH45,Average number of spouses in male-headed households,1,1,1
+Household (H),Household headship (H),HH46,Average number of spouses in female-headed households,1,1,1
+Household (H),Household headship (H),HH47,Average number of childs in male-headed households,1,1,1
+Household (H),Household headship (H),HH48,Average number of childs in female-headed households,1,1,1
+Household (H),Household headship (H),HH49,Average number of other relatives of male-headed households,1,1,1
+Household (H),Household headship (H),HH50,Average number of other relatives of female-headed households,1,1,1
+Household (H),Household headship (H),HH51,Average number of other non relatives of male-headed households,1,1,1
+Household (H),Household headship (H),HH52,Average number of other non relatives of female-headed households,1,1,1
+Household (H),Household headship (H),HH53,Average number of males adults in male-headed households,1,1,1
+Household (H),Household headship (H),HH54,Average number of males adults in female-headed households,1,1,1
+Household (H),Household headship (H),HH55,Average number of female adults in male-headed households,1,1,1
+Household (H),Household headship (H),HH56,Average number of female adults in female-headed households,1,1,1
+Time(T),NA,T1,Year,1,1,1
+Time(T),NA,T2,Census round,1,1,1
+Time(T),NA,T3,Most recent year,1,1,1
+Time(T),NA,T5,Five years,1,1,1
+Time(T),NA,T10,Decade,1,1,1
+Geography (C),NA,C0,Country ISO nomenclature 2 digits,1,1,1
+Geography (C),NA,C1,Country ISO nomenclature 3 digits,1,1,1
+Geography (C),NA,C2,Country,1,1,1
+Geography (C),NA,C3,Continent,1,1,1
+Geography (C),NA,C4,Sub continent,1,1,1
+Geography (C),NA,C5,Region,NA,1,1
+Geography (C),NA,C6,Region Name,NA,1,1
+Sample and source (S),NA,S1,Sample identification,1,1,1
+Sample and source (S),NA,S2,Data source,1,1,1
+Sample and source (S),NA,S3,Sample region identification,NA,1,1
+Sample and source (S),NA,S3H,Sample region identification harmonized,NA,NA,1
+Contextual (P-D),NA,P1,Population,1,NA,NA
+Contextual (P-D),NA,P2,Population 2021,1,NA,NA
+Contextual (P-D),NA,P3,Fertily rate,1,NA,NA
+Contextual (P-D),NA,P4,Life expectancy,1,NA,NA
+Contextual (P-D),NA,P5,Life expectancy female,1,NA,NA
+Contextual (P-D),NA,P6,Life expectancy male,1,NA,NA
+Contextual (P-D),NA,D1,Human development index,1,NA,NA
+Contextual (P-D),NA,D2,Human development index 2021,1,NA,NA
+Contextual (P-D),NA,D3,Expected years of schooling,1,NA,NA
+Contextual (P-D),NA,D4,Mean years of schooling,1,NA,NA
+Contextual (P-D),NA,D5,Gross Domestic income,1,NA,NA
+Contextual (P-D),NA,D6,Gross National Income per capita,1,NA,NA
+Contextual (P-D),NA,D7,Human development index female,1,NA,NA
+Contextual (P-D),NA,D8,Expected years of schooling female,1,NA,NA
+Contextual (P-D),NA,D9,Mean years of schooling female,1,NA,NA
+Contextual (P-D),NA,D10,Gross National Income per capita female,1,NA,NA
+Contextual (P-D),NA,D11,Human development index male,1,NA,NA
+Contextual (P-D),NA,D12,Expected years of schooling male,1,NA,NA
+Contextual (P-D),NA,D13,Mean years of schooling male,1,NA,NA
+Contextual (P-D),NA,D14,Gross National Income per capita male,1,NA,NA
