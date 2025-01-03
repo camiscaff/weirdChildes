@@ -3,48 +3,29 @@ title: "Demographic Biases in Naturalistic Language Recordings in the CHILDES Da
 shorttitle        : "WEIRD CHILDES"
 
 author: 
-  - name          : "Camila Scaff*"
+  - name          : "Anon"
     affiliation   : "1,2"
-  - name          : "Georgia Loukatou*"
+  - name          : "Anon"
     affiliation   : "2"
-  - name          : "Alejandrina Cristia"
+  - name          : "Anon"
     affiliation   : "2"
-  - name          : "Naomi Havron"
+  - name          : "Anon"
     affiliation   : "3"
     
 affiliation:
   - id: "1"
-    institution: University of Zurich, Institute of Evolutionary Medicine (IEM), Switzerland
+    institution: Anon
   - id: "2"
-    institution: PSL University, Laboratoire de Sciences Cognitives et de Psycholinguistique (ENS, EHESS, CNRS, DEC), France
+    institution: Anon
   - id: "3"
-    institution: Haifa Univerity, Israel
-
-
-
-  # - code: "2"
-  #   address: ENS, EHESS, CNRS, PSL University, Laboratoire de Sciences Cognitives et de Psycholinguistique, Département d études cognitives, 29 rue d ulm, Paris, 75005, France
+    institution: Anon
 
 # corresp_author_name:  "ANON"
 # corresp_author_email: "ANON"
 
 abstract: |
-  In recent years, the importance of estimating demographic biases in research has become apparent. Here we provide a systematic review of the CHILDES database, the major source of naturalistic recordings of children’s linguistic environment. We analyzed the database according to four dimensions considered central to language learning: SES, urbanization, family structure, and language. We present descriptive statistics of each dimension to assess whether naturalistic recordings were biased regarding the demographics of the countries and the families recorded within them. We find that CHILDES’s recordings overrepresented wealthier countries and higher parental education levels; urban settings; and smaller households. Middle- and higher-class participants were likewise over-represented. The corpora were not representative of their countries in terms of urbanization either - with a larger percentage of families residing in urban settings than is overall true for their respective countries. In terms of family structure, nuclear families were more prevalent than in the countries where the data was collected. Last, we found that corpora were linguistically diverse, but we estimate that these recordings underrepresent bilingual and multilingual households. We conclude that researchers should be careful when generalizing from naturalistic recordings of children's input and output obtained from CHILDES. 
-
-
-
-## Remove this if not required
-funding: |
-  AC acknowledges financial and institutional support from Agence Nationale de la Recherche (ANR-16-DATA-0004 ACLEW, ANR-17-EURE-0017, ANR-14-CE30-0003 MechELex); the J. S. McDonnell Foundation Understanding Human Cognition Scholar Award; and the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (ExELang, Grant agreement No. 101001095). GL acknowledges financial support from Fondation Fyssen.
-
-
-
-
-## Remove this if not required
-acknowledgements: |
-  We are grateful to Lara Oliel and Clara Daoud for help entering corpus-level data; Sara Pisani for organizing communication with corpus curators; Brian MacWhinney for support and encouragement when retrieving information from corpus curators. We particularly want to thank the literally hundreds of researchers who contributed data to CHILDES, without which this project would be unthinkable; and the 103 curators who replied to our request.
-
-# ac2cs shall we add their names? Do we have permission for that?
+  In recent years, the importance of estimating demographic biases in research has become apparent. Here we provide a systematic review of the CHILDES database, the major source of naturalistic recordings of children’s linguistic environment. We analyzed the database according to four dimensions considered central to language learning: SES, urbanization, family structure, and language. We present descriptive statistics of each dimension to assess whether naturalistic recordings were biased regarding the demographics of the countries and the families recorded within them. We find that CHILDES’s recordings overrepresented wealthier countries and higher parental education levels; urban settings; and smaller households. Middle- and higher-class participants were likewise over-represented. The corpora were not representative of their countries in terms of urbanization either - with a larger percentage of families residing in urban settings than is overall true for their respective countries. In terms of family structure, nuclear families were more prevalent than in the countries where the data was collected. Last, we found that corpora were linguistically diverse, but we estimate that these recordings underrepresent bilingual and multilingual households. We conclude that researchers should be careful when generalizing from naturalistic recordings of children's input and output obtained from CHILDES.
+  
 
 
 keywords          : "childes, verbal input, infant-directed speech, language, weird"
@@ -63,7 +44,7 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
-output            : papaja::apa6_pdf
+output            : papaja::apa6_word
 ---
 
 
@@ -116,7 +97,6 @@ names(corpora)<-c("country","Freq")
 merge(x=corpora, y=ocde,  by = "country", all.x = T) -> ocde_country
 
 annotations<- read.csv("../data/Table for authors - annotations.csv") 
-#original link https://docs.google.com/spreadsheets/d/1s-ytfQf7WsZFDDZ6QkOQnZhTodHpQp7D2Wja8YFvjQY/edit?usp=sharing
 
 #some cleaning  of the col names
 colnames(annotations)=gsub("\\.\\..*","",colnames(annotations))
@@ -235,8 +215,10 @@ lang_dif <- annotations_inc %>%
 
 
 ### Do Countries in Our CHILDES Sample Represent the World's Countries?
+The `r nrow(annotations_inc)` corpora included in this study represent `r length(levels(as.factor(annotations_inc$country)))-2` <!-- minus 2 bilingual corpora counting twice Hungary/ Spain and Sweden/Portugal --> different countries or territories across all populated continents (see Figure 1), although `r sum(ocde_country$ocde == "yes", na.rm = TRUE)` countries, representing `r sum(ocde_inc$ocde == "yes",na.rm=T)` corpora (`r round((sum(ocde_inc$ocde == "yes",na.rm=T)*100)/nrow(annotations_inc))`%), belong to the OECD (Organisation for Economic Co-operation and Development). Meanwhile, OECD countries represent only 19.5% of the world’s countries. The country with the most corpora is the United States with  `r length(annotations_inc$country[annotations_inc$country == "United States"])` different corpora, followed by Spain with `r length(annotations_inc$country[annotations_inc$country == "Spain"]) + 1`<!-- +1 bilingual corpora -->, followed by the United Kingdom and France with  `r length(annotations_inc$country[annotations_inc$country == "France"])`.
 
-```{r worldmapecho, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Geographical Distribution of the Corpora in CHILDES. Each circle represents a corpus, and its size is proportional to the number of participants."}
+
+```{r worldmapecho, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Geographical Distribution of the Corpora in CHILDES. Each circle represents a corpus, and its size is proportional to the number of participants.."}
 
 ## Figure
 # Creating a subset with specific columns
@@ -257,13 +239,7 @@ ggsave("../figures/childes_country_participants.png", width = 6, height = 4, dpi
 
 ```
 
-The `r nrow(annotations_inc)` corpora included in this study represent `r length(levels(as.factor(annotations_inc$country)))-2` <!-- minus 2 bilingual corpora counting twice Hungary/ Spain and Sweden/Portugal --> different countries or territories across all populated continents (see Figure 1), although `r sum(ocde_country$ocde == "yes", na.rm = TRUE)` countries, representing `r sum(ocde_inc$ocde == "yes",na.rm=T)` corpora (`r round((sum(ocde_inc$ocde == "yes",na.rm=T)*100)/nrow(annotations_inc))`%), belong to the OECD (Organisation for Economic Co-operation and Development). Meanwhile, OECD countries represent only 19.5% of the world’s countries. The country with the most corpora is the United States with  `r length(annotations_inc$country[annotations_inc$country == "United States"])` different corpora, followed by Spain with `r length(annotations_inc$country[annotations_inc$country == "Spain"]) + 1`<!-- +1 bilingual corpora -->, followed by the United Kingdom and France with  `r length(annotations_inc$country[annotations_inc$country == "France"])`.
-
-
-
-
 ```{r densityplot, echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Comparison of Country-Level Descriptors Between World Countries and Our CHILDES Sample. Density plots show the distribution of country-level descriptors for all world countries (gray) versus countries represented in our sample of CHILDES (orange). % complete. LSS is the percentage of the country's population completing lower secondary school. % urban is the percent of the country's population residing in urban (as opposed to rural) locations. GDP stands for Gross Domestic Product. Avg Household size stands for average household size. Data from the World Bank, Our World in Data, and the United Nations. See SM1 for additional details."}
-
 library(ggplot2)
 
 
@@ -345,10 +321,9 @@ density_plot <- ggarrange(ed, urb, rich, HH,
                labels = c("A", "B", "C", "D"),
                ncol = 2, nrow = 2)
 density_plot
-
 ggsave("../figures/density_plot.png", width = 6, height = 4, dpi = 300)
-```
 
+```
 
 We checked for representativeness given the four key dimensions described in the Introduction (see Figure 2), by using public information on the represented countries (see SM1 for details). Countries in our sample of CHILDES differed significantly from the distribution of countries in the world according to unpaired tests that did not assume equality of variances (Welch's t): a higher proportion of the population completed lower secondary school than the worldwide sample (% compl. LSS, t(`r round(edt$parameter,2)`)=`r round(edt$statistic,2)`, p < .001); the countries were more urban  (% urban, t(`r round(urbt$parameter,2)`)=`r round(urbt$statistic,2)`, p < .001) and richer (log GDP per capita, t(`r round(gdpt$parameter,2)`)=`r round(gdpt$statistic,2)`, p < .001); and they had smaller households (average household size, t(`r round(hh$parameter,2)`)=`r round(hh$statistic,2)`,p < .001).<!--FIX P value reporting -->
 
@@ -446,7 +421,6 @@ Most corpora provided global SES information. Among these, the vast majority of 
 A smaller proportion of corpora (additionally) reported parental education level (Figure 3). Among them, three-quarters included at least some children whose parents had a graduate or postgraduate degree. In fact, over half of the corpora did not contain data from any children whose parents had not completed a graduate degree. Overall, more educated parents are overrepresented given the source countries, which is reinforced by the observations that parents had professions linked to graduate-level education in over half of corpora (see SM3).
 
 
-
 ```{r figure3,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Distribution of Minimum Levels of Parental Education by Country.  Spain & Hungary corresponds to a corpus collected in two countries. The same applies for Figures 4-7."}
 
 annotations_inc$Education.ac = factor(annotations_inc$Education.ac, levels=c("College and above", "Some college", "Some secondary","Some primary"  ))
@@ -535,7 +509,7 @@ ghouse + geom_bar(aes(fill=Household.structure), width = 0.9) +
 
 ```
 
-```{r figure6,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Distribution of Singletons by Country."}
+```{r figure6,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Siblings presence by country."}
 
 # Plot this categorywise bar chart
 gsib <- ggplot(data=subset(annotations_inc, !is.na(siblings)), aes(country))
@@ -559,7 +533,7 @@ gsib + geom_bar(aes(fill=siblings), width = 0.9) +
 
 ### Languages
 
-```{r figure7,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Distribution of Indo-European Languages by Country."}
+```{r figure7,echo = FALSE, ig.pos = "T!", fig.width=8, fig.height=5.5, fig.cap = "Indo-European languages by country."}
 lang_fam<- read.csv("../derived/annotations_included_languagefamily.csv") 
 #xtabs(~indo_european, lang_fam) #indoeuropean 122 / no 58
 #xtabs(~language_family, lang_fam)
@@ -623,18 +597,6 @@ Second, the absence of comprehensive data for certain variables restricted a tho
 In addition, as computational modeling becomes more prevalent, it is important to keep in mind what are the generalizations that modeling based on such data might arrive at, and how they represent the overarching mechanisms of language acquisition. A relevant example is the BabyLM Challenge, created with the aim of fostering consideration of developmental plausibility when developing language-related machine learning tools [@warstadt2023call]. We recommend that researchers re-using CHILDES' input and output data inform themselves about the characteristics of the people recorded and acknowledge potential limitations in demographic representation.
 
 To conclude, we found that data from many countries and languages are represented in CHILDES, but that these countries did not constitute a representative sample of the world's countries, and that families were not representative of their own countries. We also noted low variability along certain dimensions (saliently SES and family structure) and the predominance of Indo-European languages, with English having the most recorded participants. Our discussion leads us to argue for the systematic inclusion of certain descriptors in speaker-level and corpus-level metadata, to track and quantify both diversity and representativity.
-
-```{r writedown, include=FALSE"}
-
-lang_fam$indo_european <- NULL
-lang_fam$X <- NULL
-
-lang_fam <- lang_fam[, !(names(lang_fam) %in% c("indo_european", "X"))]
-
-write.csv(lang_fam,"../derived/clean/short_childes.csv",row.names=F)
-
-```
-
 
 \newpage
 # References

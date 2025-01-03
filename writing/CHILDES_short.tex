@@ -167,14 +167,14 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={How WEIRD-biased is CHILDES' data on children's linguistic input},
+  pdftitle={Demographic Biases in Naturalistic Language Recordings in the CHILDES Database},
   pdfauthor={Camila Scaff*1,2, Georgia Loukatou*2, Alejandrina Cristia2, \& Naomi Havron3},
   pdflang={en-EN},
   pdfkeywords={childes, verbal input, infant-directed speech, language, weird},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{How WEIRD-biased is CHILDES' data on children's linguistic input}
+\title{Demographic Biases in Naturalistic Language Recordings in the CHILDES Database}
 \author{Camila Scaff*\textsuperscript{1,2}, Georgia Loukatou*\textsuperscript{2}, Alejandrina Cristia\textsuperscript{2}, \& Naomi Havron\textsuperscript{3}}
 \date{}
 
@@ -184,7 +184,7 @@
 \affiliation{\vspace{0.5cm}\textsuperscript{1} University of Zurich, Institute of Evolutionary Medicine (IEM), Switzerland\\\textsuperscript{2} PSL University, Laboratoire de Sciences Cognitives et de Psycholinguistique (ENS, EHESS, CNRS, DEC), France\\\textsuperscript{3} Haifa Univerity, Israel}
 
 \abstract{%
-In recent years, the importance of estimating demographic biases in research has become apparent. Here we provide a systematic review of the CHILDES archive, the major source of data on naturalistic recordings of children's linguistic environment. We analyzed the archive at the country and corpus level for four dimensions considered central for language learning: SES, urbanization, family structure and language. We compared these descriptive statistics to world statistics to assess whether the archive was biased in terms of the demographics of the countries represented and the families recorded within them. We found that at the country level, the 47 countries from which there were recordings in CHILDES overrepresented countries with higher educational level; were more urban; and had smaller households with less children. At the corpus level, middle- and higher-class participants were over-represented in relation to the statistics of their own countries. Corpora also included more educated families, with academics being especially over-represented. The corpora were not representative of their countries in terms of urbanization either - with a larger percentage of families residing in urban settings than is overall true for the respective countries. In terms of family structure, nuclear families were more prevalent than in the countries the data was collected in, and - surprisingly - children with no siblings appeared to be under-represented. Last, we found that corpora were linguistically diverse, but we estimate that data in CHILDES under-represents bilingual and multilingual households. We conclude that when generalizing from analysis of data obtained from CHILDES, researchers should acknowledge the potential biases of the archive.
+In recent years, the importance of estimating demographic biases in research has become apparent. Here we provide a systematic review of the CHILDES database, the major source of naturalistic recordings of children's linguistic environment. We analyzed the database according to four dimensions considered central to language learning: SES, urbanization, family structure, and language. We present descriptive statistics of each dimension to assess whether naturalistic recordings were biased regarding the demographics of the countries and the families recorded within them. We find that CHILDES's recordings overrepresented wealthier countries and higher parental education levels; urban settings; and smaller households. Middle- and higher-class participants were likewise over-represented. The corpora were not representative of their countries in terms of urbanization either - with a larger percentage of families residing in urban settings than is overall true for their respective countries. In terms of family structure, nuclear families were more prevalent than in the countries where the data was collected. Last, we found that corpora were linguistically diverse, but we estimate that these recordings underrepresent bilingual and multilingual households. We conclude that researchers should be careful when generalizing from naturalistic recordings of children's input and output obtained from CHILDES.
 }
 
 
@@ -195,73 +195,98 @@ In recent years, the importance of estimating demographic biases in research has
 \hypertarget{research-highlights}{%
 \subsection{Research highlights}\label{research-highlights}}
 
-\emph{We examined CHILDES, the major source of data on children's linguistic environment for potential sampling bias in terms of SES, urbanization, family structure and languages.
-}We found that the 47 countries present in CHILDES overrepresented rich, educated, urbanized countries with small nuclear families.
-\emph{Within these countries, corpora overrepresented rich, educated, urban and nuclear families - and single-child families, as well as bilingual families were underrepresented.
-}Interpretation of studies based on CHILDES should acknowledge these biases.
+\begin{itemize}
+\tightlist
+\item
+  We examined CHILDES, the major source of data on children's linguistic environment for potential sampling bias in terms of SES, urbanization, family structure, and language.
+\item
+  We found that the 48 countries represented in CHILDES overrepresented rich, educated, urbanized countries with small nuclear families.
+\item
+  Within these countries, corpora overrepresented rich, educated, urban, nuclear, and non-bilingual families.
+\item
+  Interpretation of studies using CHILDES should acknowledge these biases.
+\end{itemize}
 
 \newpage
 
-Since its foundation in 1984, CHILDES (the Child Language Data Exchange System, MacWhinney, 2000) has been the major source of naturalistic recordings and transcript data for researchers studying language acquisition. Naturalistic recordings provide insight into how children acquire language in everyday contexts and capture the richness and complexity of language use in everyday conversations. They also constitute a valuable and ecologically valid source of data necessary for computational models seeking to reverse engineer language acquisition or simulate natural language development. This repository of naturalistic recordings has been the foundation for many influential concepts in developmental science and beyond, illustrated by more than 7,000 scientific publications (MacWhinney, 2019). It has contributed to establishing seminal work in various domains such as the theory of mind (Bartsch \& Wellman, 1995) and human memory (Anderson \& Schooler, 1991). It has also inspired theories that help us understand the connection between language input and language development (Christiansen, Allen, \& Seidenberg, 1998).
+Since its foundation in 1984, CHILDES (the Child Language Data Exchange System, MacWhinney, 2000) has been the major source of naturalistic recordings and transcript data for researchers studying language acquisition. Moreover, it has contributed to establishing seminal work in various domains such as Theory of Mind (Bartsch \& Wellman, 1995) and memory (Anderson \& Schooler, 1991). It has also inspired theories that help understand the connection between language input and development (Christiansen, Allen, \& Seidenberg, 1998). This paper aims to answer the question: Do CHILDES' naturalistic recordings, containing information about both input and output, come from a representative sample of the world's populations? If the answer is no, the generalizability of related findings may be limited, necessitating cautious interpretation.
 
-However, naturalistic recordings may also contain potential biases. One notable concern is that participants might not represent the diverse socio-economic backgrounds, cultures, or linguistic environments children typically experience. As a result, the generalizability of the related findings may be limited, necessitating cautious interpretation. Researchers in many fields are increasingly aware of the bias towards WEIRD populations (Western, Educated, Industrial, Rich, Democratic, Henrich, Heine, \& Norenzayan, 2010) in the samples they study (Cychosz \& Cristia, 2022 ; Moriguchi, 2022; Nielsen, Haun, K??rtner, \& Legare, 2017; Singh, Cristia, Karasik, Rajendra, \& Oakes, 2023). Recent calls have been made to diversify research in psychology, cognitive, and developmental science to address this issue (Blasi, Henrich, Adamou, Kemmerer, \& Majid, 2022; Kidd \& Garcia, 2022; Majid \& Levinson, 2010). For instance, Kidd and Garcia (2022) systematically reviewed publications from child-language journals. They revealed biases towards specific continents (North America and Europe) and languages (English. Spanish, French), highlighting the need for increased diversity in populations and languages studied. Similarly, Blasi et al. (2022) emphasize the potential consequences of generalizing observations derived solely from English speakers and how fit they are to represent our entire human species. While these studies focused on biases towards specific languages, other sources of variance might be as important for research on language development.
-Every area of research conceptualizes different dimensions relevant to explaining variance for a given research topic. In what follows we present the four most relevant dimensions thought to play a role in child language acquisition, particularly related to naturalistic recordings: socioeconomic status, urbanization, family structure, and language.
+Researchers in many fields are increasingly aware of the bias towards WEIRD populations (i.e., Western, Educated, Industrial, Rich, Democratic, Henrich, Heine, \& Norenzayan, 2010) in the samples they study (Cychosz \& Cristia, 2022 ; Moriguchi, 2022; Nielsen, Haun, K??rtner, \& Legare, 2017; Singh, Cristia, Karasik, Rajendra, \& Oakes, 2023). Recent calls have been made to diversify research in psychology, cognitive, and developmental science to address this issue (Blasi, Henrich, Adamou, Kemmerer, \& Majid, 2022; Kidd \& Garcia, 2022; Majid \& Levinson, 2010). For instance, Kidd and Garcia (2022) systematically reviewed publications from child-language journals. They revealed biases towards specific continents (North America and Europe) and languages (English, Spanish, French), highlighting the need for increased diversity in the populations and languages studied.
+
+Every area of research conceptualizes different dimensions relevant to explaining variance for a given research topic. In what follows we present the four most relevant dimensions thought to play a role in language acquisition, particularly related to naturalistic recordings: socioeconomic status, urbanization, family structure, and language.
 
 \hypertarget{socioeconomic-status}{%
 \subsubsection{Socioeconomic Status}\label{socioeconomic-status}}
 
-Decades of research have examined the linguistic differences among families with varying socio-economic status (SES). In the developmental literature, this is primarily indexed by parents' education (Ensminger \& Fothergill, 2014; Hoff, 2014), but can also be indexed otherwise, such as by parental income, occupation, or a composite measure of these three (e.g.~Hollingshead, 1975).
-It is beyond the scope of this paper to detail all the theories that attempt to account for the complex causal pathways that may connect SES to children's language environments. We recommend Rowe (2018) as a starting point for readers interested in this literature, along with Golinkoff, Hoff, Rowe, Tamis-LeMonda, and Hirsh-Pasek (2019) and Sperry, Sperry, and Miller (2019) for diverse theoretical perspectives. It should be noted, however, that some of this literature has been found to reflect Global North biases, including what kinds of language input are counted, and what features of linguistic experiences are valued (Scaff, Casillas, Stieglitz, \& Cristia, 2024; Sperry et al., 2019). Without desiring to take a stance on how SES and language environments relate to each other, we merely indicate here that SES is undoubtedly one of the factors that has been repeatedly studied in the context of early language acquisition, particularly related to input. For example, Hoff (2014) compared the speech of high- versus low-SES American mothers. College-educated parents produced more utterances to their child, with more diverse vocabulary, longer phrases, and higher number of utterances continuing a topic the child had brought up. Similar findings can be seen in other studies {[}Hart and Risley (1995); Hoff-Ginsberg (1990); Hoff (2003); Huttenlocher, Vasilyeva, Waterfall, Vevea, and Hedges (2007); see also Dailey and Bergelson (2022); Leonardo, Havron, and Cristia (2022); for meta-analyses supporting the link; and Bergelson et al. (2023) for a large-scale study finding non-significant SES effects{]}.
+It is beyond the scope of this paper to detail all the theories that attempt to account for the complex causal pathways that may connect socio-economic status (SES) to children's language environments. We recommend Rowe (2018) as a starting point for readers interested in this literature, along with Golinkoff, Hoff, Rowe, Tamis-LeMonda, and Hirsh-Pasek (2019) and Sperry, Sperry, and Miller (2019) for diverse theoretical perspectives. In this paper, we do not take a stance on whether, how, or why SES and language environments relate to each other, but merely indicate that SES is one of the factors that has been repeatedly studied in the context of early language acquisition, particularly related to input. For example, hoff2003specificity compared the speech of high- versus low-SES American mothers. College-educated mothers produced more utterances to their children, with more diverse vocabulary, longer phrases, and a higher number of utterances continuing a topic the child had brought up. Similar findings can be seen in other studies {[}Hart and Risley (1995); Hoff-Ginsberg (1990); Huttenlocher, Vasilyeva, Cymerman, and Levine (2002); Huttenlocher, Vasilyeva, Waterfall, Vevea, and Hedges (2007); see also Dailey and Bergelson (2022); Leonardo, Havron, and Cristia (2022); for meta-analyses supporting the link; and Bergelson et al., 2023 for a large-scale study finding no significant SES effects).
+In the developmental literature, SES is primarily indexed by parents' education (Ensminger \& Fothergill, 2014; Hoff, 2003), but can also be indexed by parental income, occupation, or a composite measure of these three (e.g.~using the Hollingshead index, Hollingshead et al. (1975)).
 
 \hypertarget{urbanization}{%
 \subsubsection{Urbanization}\label{urbanization}}
 
-Urbanization is the process of moving from rural to urban areas along with noticeable changes in job opportunities and living conditions. It involves the growth and development of cities, leading to increased access to infrastructure and amenities. Within the general theoretical framework of language socialization, there have been proposals that societies varying in their urbanization process have differing views and values about the role of children in conversations, and more generally in the community (Sharma \& LeVine, 1998 ; Draper \& Harpending, 2017; Keller, 2012; Richman, Miller, \& LeVine, 1992). For instance, Keller (2012) discusses three prototypical cases: urban, rural, and hybrid. These three groups differ in terms of their goals for children, with urban families aiming for child psychological independence, rural families for child physical autonomy and interdependence, and hybrid families aiming for some mix across these values. Vogt, Masson-Carro, and Jong (n.d.) employ this conceptual classification to interpret their results on multimodal language use across three samples: urban Dutch, urban Mozambique, and rural Mozambique. They found that the number of gestures, gesture-speech alignment, and gesture types all vary across the three groups in ways that can be related to Keller's typology. Similarly, Cristia (2023) systematic review concludes that children's urbanization status maps onto the amount of input afforded by caregivers: children from rural communities are exposed to less input from caregivers than children in urban ones.
+This dimension represents differences across populations in terms of the extent to which they are organized around urban sites, which often entail differences in job opportunities, living conditions, and infrastructure. Within the general theoretical framework of language socialization, there have been proposals that societies varying in their urbanization have differing views and values about the role of children in conversations (e.g., Sharma \& LeVine, 1998 ; Draper \& Harpending, 2017; Keller, 2012; Richman, Miller, \& LeVine, 1992). For instance, Keller (2012) discusses three prototypical cases, urban, rural, and hybrid, which differ in terms of their goals for children: Urban families aim for child psychological independence, rural families for child physical autonomy and interdependence, and hybrid families for some mix. Vogt, Masson-Carro, and Jong (n.d.) employed this classification to interpret their results on multimodal language use across three samples: urban Dutch, urban Mozambique, and rural Mozambique. They found that the number of gestures, gesture-speech alignment, and gesture types all vary across the three groups in ways that can be related to Keller's typology. Similarly, Cristia (2023) systematic review uses urbanization status to describe the frequency of child-directed vocalization, finding that it is far less frequent in rural than urban communities.
 
 \hypertarget{family-structure}{%
 \subsubsection{Family structure}\label{family-structure}}
 
-Family structure refers to the arrangement within a household, forming the basis of a family unit. This dimension encompasses aspects such as the number of siblings, birth order, the number of caregivers in the household, and the number of individuals sharing or competing for household resources (including caregiving attention); each of which has a significant impact on child and language development (Blake, 1981; Bornstein, Putnick, \& Suwalsky, 2019; Duncan \& Paradis, 2020; Havron et al., 2022, 2019; Hoff-Ginsberg \& Krueger, 1991; Tomasello \& Mannle, 1985). For example, birth order effects reveal that children with older siblings show lower language skills than first-born children in various cultures (e.g., Peyre et al., 2016 in France; Havron et al., 2022 for Singapore; Zambrana, Ystrom, \& Pons, 2012 for Norway). Other birth order effects suggest that second-born children might benefit in production through overheard speech from their caregivers and older siblings (Oshima-Takane, Goodz, \& Derevensky, 1996).
-Regarding household composition, in many middle-class Euro-American families, parents typically assume primary responsibility for children, often focusing on the mother as the primary caregiver (e.g.~Bakermans-Kranenburg et al., 2004; Huttenlocher et al., 2010; Ispa et al., 2004; Pan et al., 2005). However, certain cultures, like Turkish families described by Isleyen (2021), may adopt a different approach, with nuclear families living in separate apartments but sharing common spaces and caregiving responsibilities, resulting in extensive support networks.
+In this paper, we use the concept of family structure to encompass a variety of related aspects such as birth order and the way that caregiving is structured, each of which has an impact on child and language development (e.g., Blake, 1981; Bornstein, Putnick, \& Suwalsky, 2019; Duncan \& Paradis, 2020; Havron et al., 2022, 2019; Hoff-Ginsberg \& Krueger, 1991; Tomasello \& Mannle, 1985). For instance, children with older siblings exhibit lower language skills compared to first-born children across various cultures (e.g., Peyre et al., 2016 in France; Havron et al., 2022 for Singapore; Zambrana, Ystrom, \& Pons, 2012 for Norway), although second-born children might benefit from overhearing conversations between their caregivers and older sibling (Oshima-Takane, Goodz, \& Derevensky, 1996). As for caregiving structures, in many middle-class Euro-American families, parents typically assume primary responsibility for children, with the mother as the primary caregiver (e.g.~Bakermans-Kranenburg et al., 2004; Huttenlocher et al., 2010; Ispa et al., 2004; Pan et al., 2005). However, certain cultures, like the Turkish families described by Isleyen (2021), adopt a different approach, with nuclear families living in separate apartments but sharing common spaces and caregiving responsibilities, resulting in extensive support networks.
 
 \hypertarget{languages}{%
 \subsubsection{Languages}\label{languages}}
 
-Characterizing the diversity of participant samples in terms of language (Blasi et al., 2022; Kidd \& Garcia, 2022) is an important factor in language acquisition, as variations in language exposure and language use among different groups allow to explore how purely linguistic factors shape and influence the development of language skills in children. For example, based on transcriptions of conversations, it was shown that K'iche' Mayan children frequently use and understand passive constructions from a very young, unlike their English-speaking peers, refuting the idea that passive constructions can only emerge later in development (C. L. Pye, 1980; C. Pye \& Poz, 1988).
-Similarly, many Indo-European languages show a strong noun bias in early vocabularies (a bias for acquiring words for concrete referential objects rather than actions), it has been claimed to be a universal feature of early language acquisition. However, studies have shown that in some Mayan languages, including Tseltal and Tsotsil (Casillas, Foushee, Méndez Girón, Polian, \& Brown, 2024; De León, 1999), there is little to no evidence for a noun bias and argue for a verb bias instead. This highlights significant cross-linguistic variation and underscores the importance of studying naturalistic children's recordings for describing different linguistic developmental trajectories (Casillas et al., 2024).
-
-Another major dimension and entire sub-field in developmental science is the study of bilingualism or multilingualism McCabe et al. (2013). There is evidence that monolingual and bilingual early language development differs in some aspects, particularly regarding phonological acquisition and word learning. For example, monolingual infants' ability to discriminate non-native sounds declines during the first year of age, whereas infants exposed to one or more languages maintain the discrimination window for a longer period. Also, in terms of input, bilingual linguistic exposure is divided between two or more native languages. It has been shown that the amount of exposure to each native language can affect bilingual infants' speech discrimination abilities (Garcia-Sierra et al., 2011).
+Characterizing the diversity of participant samples in terms of language (Blasi et al., 2022; Kidd \& Garcia, 2022) is an important factor in language acquisition, allowing us to explore how purely linguistic factors shape and influence the development of language skills in children. For example, based on transcriptions of conversations, Pye and colleagues documented that K'iche' Mayan children frequently use and understand passive constructions from a very young age, unlike their English-speaking peers, refuting the idea that passive constructions can only emerge later in development (C. L. Pye, 1980; C. Pye \& Poz, 1988).
+Similarly, many Indo-European languages show a strong noun bias in early vocabularies (a bias for acquiring words for concrete referential objects rather than actions), which has been claimed to be a universal feature of early language acquisition. However, studies have shown that in some Mayan languages, including Tseltal and Tsotsil (Casillas, Foushee, Méndez Girón, Polian, \& Brown, 2024; De León, 1999)), there is little to no evidence for a noun bias, and argue for a verb bias instead. This highlights significant cross-linguistic variation (Casillas et al., 2024).
+Another major dimension and sub-field in developmental science is the study of bilingualism or multilingualism (for an introductory review see Höhle, Bijeljac-Babic, and Nazzi (2020), and McCabe et al. (2013)). There is evidence that monolingual and bilingual early language development differs in some aspects, particularly regarding phonological acquisition and word learning. For example, monolingual infants' ability to discriminate non-native sounds declines during the first year of age, whereas infants exposed to more language(s) maintain the discrimination window for a longer period singh2022diversity. In terms of input, bilingual linguistic exposure is divided between two or more native languages. It has been shown that the amount of exposure to each native language can affect bilingual infants' speech discrimination abilities (Garcia-Sierra et al., 2011).
 
 \hypertarget{the-current-study}{%
 \subsubsection{The current study}\label{the-current-study}}
 
-Here, we provide a systematic analysis of the naturalistic speech corpora of the CHILDES database by quantifying the diversity of each dimension presented above (see Table 1). Though some of these dimensions overlap with each other (See Figure SM1 in the supplementary materials for illustration), we decided to illustrate each as best as possible independently.
-Our systematic analysis follows three steps. First, we screened the CHILDES database, excluding the clinical and task-driven recordings. Second, we extracted information related to the four central factors in language acquisition described in the introduction. Finally, we follow Ghai (2021) recommendation to improve the description of diversity in behavioral sciences by looking at different levels: from a macro-level, with broad country comparisons to a corpus-level, where we delved into individual corpora to gain a more detailed and nuanced understanding of the data.
+Inspired by calls to document the demographic and linguistic diversity of participant samples (Kidd \& Garcia, 2022; Singh, Barokova, et al., 2023), we sought to provide a systematic analysis of the naturalistic speech corpora of the CHILDES database by quantifying the diversity of each dimension introduced above (SES, urbanization, family structure, and languages).
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 {[}wickham2011ggplot2{]}. Data, scripts, and online Supplementary Materials are available on OSF {[}\url{https://osf.io/q9w82/?view_only=a013f1b25b8c4556b8248f12870402c9}{]}.
-
 \hypertarget{inclusion-criteria}{%
 \subsubsection{Inclusion criteria}\label{inclusion-criteria}}
 
-Although valuable insights occur from corpora on clinical populations and elicitation tasks, we deliberately excluded them from our review. This is because they introduce additional sources of variation and biases. For example, the inclusion of clinical populations may highlight differences in the prevalence and access to diagnosis of language disorders in different regions or countries. Additionally, the structure of elicitation tasks may not reflect spontaneous language use in everyday conversations. We thus excluded the following corpora: a) clinical populations or non-typically developing children, b) structured tasks such as toy narratives, personal narratives, frog stories, picture or movie descriptions, structured storytelling, and other elicitation tasks; c) only child or adult speech without a conversational partner; and d) non-naturalistic setups, such as recordings conducted exclusively in a lab environment or in a diary format.
+We extracted information from the online CHILDES database in 2021, at which point there were 430 corpora. We excluded corpora on clinical populations (N = 69), in-lab recordings (N = 26), and elicitation tasks (N = 114), because they would have introduced additional sources of variation and biases. For example, the inclusion of clinical populations may highlight differences in the prevalence and access to diagnosis in different countries. Given our interest in naturalistic input and output represented in CHILDES, we also excluded corpora where only child speech was transcribed (N = 19) and diary studies (N = 11). Finally, we excluded 11 corpora that were not available, resulting in a final sample of 180 corpora containing naturalistic recordings of children's input and output.
 
-\hypertarget{screening}{%
-\subsubsection{Screening}\label{screening}}
+\hypertarget{demographic-data-collection}{%
+\subsubsection{Demographic Data Collection}\label{demographic-data-collection}}
 
-Following a thorough examination of each corpus, which involved reviewing the corpus description available on the CHILDES website, checking for any accompanying references such as articles, book chapters, or dissertations, and conducting spot-checks on associated transcripts, we identified 180 corpora that met our inclusion criteria mentioned above. Please refer to the flowchart in Supplementary Materials (SM2) for a detailed breakdown of the included corpora.
+Data on participant demographics was extracted from the references provided for each corpus in CHILDES such as articles, book chapters, dissertations, and the actual content of transcribed recordings. We contacted corpus curators for missing information, and over a third (103 corpora, 32\%) provided additional data or confirmed missing information. Unfortunately, curators for 50 corpora (15\%) could not be contacted due to unresponsive email addresses (38 corpora), or the curator's passing (12 corpora).
 
-\hypertarget{descriptive-statistics}{%
-\subsubsection{Descriptive-statistics}\label{descriptive-statistics}}
+\hypertarget{analyses}{%
+\subsubsection{Analyses}\label{analyses}}
 
-Descriptive statistics
-Firstly, we show descriptive statistics of the countries represented in the CHILDES database presented in FigureS 1 and 2 of the results. Our goal is to provide insights into the representativeness of our CHILDES sub-sample when compared to global statistics. Figure 2 draws data from official sources: the CWorld Bank, Our World in Data (WDI), and the United Nations (UN). For additional details on Figure 2 and the corresponding variables, please refer to Supplementary Materials (SM3).
+Analyses and visualizations were carried out using R (version 4.1.2, R Core Team, 2020) and ggplot2 (Wickham, 2016). Data, scripts, and Supplementary Materials are available on the OSF (Anonymized, 2024). Following Ghai's (2022) recommendation to enhance the description of diversity in behavioral sciences, we examined different levels, from a macro-level, involving broad country comparisons, to a corpus-level, where we analyzed individual corpora for a more detailed and nuanced understanding of the data.
 
-Secondly, we present corpus-level statistics to assess the representativeness of our sub-sample of CHILDES in a more detailed manner across our four dimensions: SES, urbanization, family structure, and languages (See Table 1 for the complete list of variables and definitions).
+\hypertarget{results}{%
+\section{Results}\label{results}}
 
-Data was extracted from the provided sources mentioned in CHILDES such as articles, book chapters, dissertations, and transcripts to pre-fill the categories. Corpus curators were contacted to request missing or incomplete information, and an online table was provided to facilitate data entry. Over a third of the contacted curators (103 corpora, 32\%) provided additional data or confirmed missing information. Unfortunately, curators for 50 corpora (15\%) could not be contacted due to unresponsive email addresses (38), or the curator's passing (12).
+\hypertarget{do-countries-in-our-childes-sample-represent-the-worlds-countries}{%
+\subsubsection{Do Countries in Our CHILDES Sample Represent the World's Countries?}\label{do-countries-in-our-childes-sample-represent-the-worlds-countries}}
+
+\begin{figure}
+\centering
+\includegraphics{CHILDES_short_files/figure-latex/worldmapecho-1.pdf}
+\caption{\label{fig:worldmapecho}Geographical Distribution of the Corpora in CHILDES. Each circle represents a corpus, and its size is proportional to the number of participants.}
+\end{figure}
+
+The 180 corpora included in this study represent 48 different countries or territories across all populated continents (see Figure 1), although 28 countries, representing 151 corpora (84\%), belong to the OECD (Organisation for Economic Co-operation and Development). Meanwhile, OECD countries represent only 19.5\% of the world's countries. The country with the most corpora is the United States with 30 different corpora, followed by Spain with 24, followed by the United Kingdom and France with 11.
+
+\begin{figure}
+\centering
+\includegraphics{CHILDES_short_files/figure-latex/densityplot-1.pdf}
+\caption{\label{fig:densityplot}Comparison of Country-Level Descriptors Between World Countries and Our CHILDES Sample. Density plots show the distribution of country-level descriptors for all world countries (gray) versus countries represented in our sample of CHILDES (orange). \% complete. LSS is the percentage of the country's population completing lower secondary school. \% urban is the percent of the country's population residing in urban (as opposed to rural) locations. GDP stands for Gross Domestic Product. Avg Household size stands for average household size. Data from the World Bank, Our World in Data, and the United Nations. See SM1 for additional details.}
+\end{figure}
+
+We checked for representativeness given the four key dimensions described in the Introduction (see Figure 2), by using public information on the represented countries (see SM1 for details). Countries in our sample of CHILDES differed significantly from the distribution of countries in the world according to unpaired tests that did not assume equality of variances (Welch's t): a higher proportion of the population completed lower secondary school than the worldwide sample (\% compl. LSS, t(130.41)=-6.19, p \textless{} .001); the countries were more urban (\% urban, t(79.48)=-3.44, p \textless{} .001) and richer (log GDP per capita, t(102.35)=-6.02, p \textless{} .001); and they had smaller households (average household size, t(118.80)=7.12,p \textless{} .001).
+
+\hypertarget{how-representative-and-diverse-are-participant-samples}{%
+\subsubsection{How Representative and Diverse are Participant Samples?}\label{how-representative-and-diverse-are-participant-samples}}
+
+We next investigated variables within each corpus, as far as possible given substantial missing data (see Table 1 and figures below regarding the number of corpora represented in each analysis). The information collected gives us more detail about the characteristics of the individual families that compose our sample of CHILDES.
 
 \begin{table}[tbp]
 
@@ -291,127 +316,86 @@ Language & Lingual status & Whether more than one language is spoken in the corp
 
 \end{table}
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\hypertarget{socio-economic-status-ses-education-and-occupation}{%
+\subsubsection{Socio-economic Status: SES, Education, and Occupation}\label{socio-economic-status-ses-education-and-occupation}}
 
-The 180 corpora included in this study represent 48 different countries or territories across all populated continents. The country with the most corpora is the United States with 30 different corpora, followed by Spain with 24 (including a bilingual corpus), and a tie between the United Kingdom and France with 11 (see SM4 for a full summary by country and continent). The most represented country in terms of individual children recorded is the United Kingdom with 560, followed by the United States with 405 and then Spain with 212. The most represented continent in terms of individual children recorded is Europe with1090. The least represented continent is Oceania with only 5 recorded children (all from Papua New Guinea, Sarvasy, 2017).
-
-Out of the 48 countries or territories,28 belong to the OECD (Organisation for Economic Co-operation and Development). This corresponds to 151 out of 180 corpora or 84\% of this sample of CHILDES. Meanwhile, OECD countries represent only 19.5\% of world countries.
-
-\begin{figure}
-\centering
-\includegraphics{CHILDES_short_files/figure-latex/unnamed-chunk-1-1.pdf}
-\caption{\label{fig:unnamed-chunk-1}Geographical distribution of the different corpora of CHILDES. Each circle represents a corpus, and the size of the circle is proportional to the number of participants.}
-\end{figure}
-
-We assessed the extent to which the countries with data in our sub-sample of CHILDES were a representative sample of countries in the world. Density plots are portrayed in Figure 2.
-
-By comparing our sub-sample of CHILDES to the world statistics using unpaired samples t-tests without assuming equality of variance (Welch's t). Countries in our sub-sample of CHILDES had a higher proportion of the population completing lower secondary school than the world wide sample (\% compl. LSS, t(130.41)=-6.19, p = 0); they were more urban (\% urban, t(79.48)=-3.44, p = 0); richer (log GDP per capita, t(102.35)=-6.02, p = 0) and had smaller households (average household size, t(118.80)=7.12, p = 0).
-
-We then investigated at the corpus level the variables described in Table 1. The information collected gives us more detail about the characteristics of the individual families that compose our sub-sample of CHILDES. However, it is important to acknowledge that this information was missing for a substantial number of the corpora.
-
-\hypertarget{ses}{%
-\subsubsection{SES}\label{ses}}
-
-Our analysis of 102 corpora including SES information reveals that only 5\% (n = 5 corpora) were described as families of low SES, 16 (n = 16) described as a mixed sample spanning between lower and middle or higher SES. The vast majority, 79\% (n = 81), exclusively represented families of middle or higher SES.
-Most countries in our CHILDES sample are members of the OECD. According to a 2016 report, ``Almost two-thirds of people live in middle-income households in OECD countries.'' While less than 66\% of families from OECD countries are considered middle-to-high SES, over 80\% of our sample falls into this category.
-It's important to note that OECD countries generally have higher SES populations compared to the global average. Given this context, it's likely that CHILDES overrepresents middle-to-high SES families to an even greater extent when considered on a global scale.
-
-\hypertarget{education}{%
-\paragraph{Education}\label{education}}
-
-76\% of the corpora (n = 58) include children whose parents had at least a graduate, if not a postgraduate, degree. 4\% (n=3 ) had at least some parents with primary-level education; 12\% (n=9) had parents with secondary school education as the lower bound of the education range, and a further 8\% (n=6) had some college as the lower bound. 4 corpora were described as ``diverse'', without clarifying the range of education covered. These numbers do not accurately represent the demographics of the countries they were obtained from. For instance, while the U.S. Census Bureau reported that only 36\% of the adult population held a bachelor's degree or higher in 2020, our data indicates that 100\% of the corpora of the parents from the United States had a college education or higher. As seen in Figure 3, the same result is seen for corpus from China, Denmark, Egypt, Hong Kong, Hungary, Israel, Italy, Japan, Mexico, The Netherlands, Poland, Russia, Singapore, South Korea, Switzerland and the United States where 100\% of parents with data are college-educated or above. Thus, it seems that our sub-samples of CHILDES are very skewed toward higher-educated parents.
+Most corpora provided global SES information. Among these, the vast majority of families were of middle or higher SES. Although about a fifth of the corpora were described as a mixed sample spanning lower to middle or higher SES, a very small percentage were described as families of low SES. As we show in SM2, this general distribution over-represents higher SES families.
+A smaller proportion of corpora (additionally) reported parental education level (Figure 3). Among them, three-quarters included at least some children whose parents had a graduate or postgraduate degree. In fact, over half of the corpora did not contain data from any children whose parents had not completed a graduate degree. Overall, more educated parents are overrepresented given the source countries, which is reinforced by the observations that parents had professions linked to graduate-level education in over half of corpora (see SM3).
 
 \begin{figure}
 \centering
-\includegraphics{CHILDES_short_files/figure-latex/figure3 -1.pdf}
-\caption{(\#fig:figure3 )Distribution of parental education by country.}
+\includegraphics{CHILDES_short_files/figure-latex/figure3-1.pdf}
+\caption{\label{fig:figure3}Distribution of Minimum Levels of Parental Education by Country. Spain \& Hungary corresponds to a corpus collected in two countries. The same applies for Figures 4-7.}
 \end{figure}
-
-\hypertarget{occupation}{%
-\paragraph{Occupation}\label{occupation}}
-
-Professions were overall varied. The majority, comprising62\% (n=52), was associated with the field of education. Notably, within this category, 56\% (n=47) of the individuals were identified as parents with professions linked to graduate-level education. This included roles such as Master's or Ph.D.~students, professors, linguists, researchers, scientists, and academics. Some of the other occupations reported were psychologists, speech therapist or home makers.
 
 \hypertarget{urbanization-1}{%
 \subsubsection{Urbanization}\label{urbanization-1}}
 
-89\% of the corpora (n=58) were described as industrialized or urban, with one additional corpus described as both rural and urban (Rigol corpus, Lieven \& Stoll, 2013). Only 8\% of the corpora (n = 5) were labeled as farming or rural, representing countries such as Canada, Lesotho, Jamaica, Papua New Guinea, and the United States. While this categorization may be arbitrary, it offers insight into the representation of each country within their corpora. For instance, countries like Lesotho and Papua New Guinea, where approximately 70\% and 86\% of the population resides in rural areas (World Bank estimates based on the United Nations Population Division's World Urbanization Prospects: 2018 Revision), are categorized as rural corpora (Demuth, 2022 ; Sarvasy, 2017). Conversely, the most urbanized countries in our sample, including Kuwait (100\%), Belgium (97.70\%), and the Netherlands (93\%), are represented only by urban corpora.
-Overall, the sample is predominantly composed of urban countries, with more than half of the countries being over 80\% urban (see SM5 for a table of urban indicators by country), and the data reflects this urbanization tendency accordingly (see Figure 4).
+The majority of corpora were urban (Figure 4), with an over-representation of urban households given the source countries (see SM4).
 
 \begin{figure}
 \centering
 \includegraphics{CHILDES_short_files/figure-latex/figure4-1.pdf}
-\caption{\label{fig:figure4}Urbanization by country.}
+\caption{\label{fig:figure4}Distribution of Type of Community by Country.}
 \end{figure}
 
-\hypertarget{family-structure-1}{%
-\subsubsection{Family structure}\label{family-structure-1}}
+\hypertarget{family-structure-household-composition-and-number-of-siblings}{%
+\subsubsection{Family Structure: Household composition and number of siblings}\label{family-structure-household-composition-and-number-of-siblings}}
+
+As Figure 5 shows, the overwhelming majority of corpora contained only nuclear families (i.e., parents and their children), and only a tiny percentage had a mix of nuclear and extended families. We were not able to find a systematic database allowing us to check whether this was representative of the source countries.
+
+About a quarter of the corpora in our CHILDES sample consist exclusively of singletons (children with no siblings), while the remaining include children who have at least one sibling (Figure 6). SM5 argues that this does not necessarily mean that singletons are underrepresented.
 
 \begin{figure}
 \centering
 \includegraphics{CHILDES_short_files/figure-latex/figure5-1.pdf}
-\caption{\label{fig:figure5}Household by country.}
+\caption{\label{fig:figure5}Distribution of Household Arrangement by Country. Sweden \& Portugal corresponds to a corpus collected in two countries. The same applies for Figure 7.}
 \end{figure}
-
-\hypertarget{nuclear-households}{%
-\paragraph{Nuclear households}\label{nuclear-households}}
-
-Regarding household composition, 60 corpora (87\%) were based exclusively on nuclear families (e.g., parents and their children); 7 (10\%) on extended families (e.g., relatives other than parents or siblings); and 2 (3\%) varied (e.g., a mix of nuclear and extended family corpora). Most of our sample---18 countries or territories (see Figure 5)---exclusively have corpora on nuclear families, whereas only 6 have exclusively recordings of extended family households.
-It is important to bear in mind that we have information for only 38\% of the included corpora for this variable, making generalizations difficult. When examining country statistics more closely, we see how this sample may not be representative of the actual situation in these countries. For example in Egypt, according to the UN Database on Household Size and Composition (2022), 65\% of households are comprised of couples with children, and only about 11\% were categorized as extended families. In our sample, the only corpus recorded in Egypt (Salama \& Alansary, 2017) families were classified as extended.
-
-\hypertarget{sibling-presence}{%
-\paragraph{Sibling presence}\label{sibling-presence}}
-
-The majority of corpora in our sub-sample of CHILDES include children who have siblings. Only 28\% (n = 26) of the corpora were constituted exclusively of singletons (children with no siblings), while the remaining had at least one sibling 72\% (n = 67). About a quarter of the corpora with a least one sibling pertain exclusively on first borns (n=17)
-Since 84\% of the countries in CHILDES are in the OECD, we draw a comparison point for such countries: among households with children in the OECD, roughly 46\% of children were singletons according to 2015 data. In the sub-sample of only OECD CHILDES corpora with information about siblings, we see that 29\% (n = 23) corpora pertain exclusively on singletons. In this sense, singletons are slightly underrepresented in CHILDES. Only for Russia and Hong Kong do we have corpora relying exclusively on singletons at the recording date.
-However, it is important to note that even if the recorded child had a reported sibling, it does not mean that the sibling was recorded or transcribe or even present during the recording session (see Loukatou, Scaff, Demuth, Cristia, \& Havron, 2022).
 
 \begin{figure}
 \centering
 \includegraphics{CHILDES_short_files/figure-latex/figure6-1.pdf}
-\caption{\label{fig:figure6}Siblings presence by country.}
+\caption{\label{fig:figure6}Distribution of Singletons by Country.}
 \end{figure}
 
 \hypertarget{languages-1}{%
 \subsubsection{Languages}\label{languages-1}}
 
-We had two variables of interest here: language spoken in the corpus and lingual status. A total of 63 different languages or language combinations (for bilingual and multilingual children) were reportedly spoken in the corpora (see SM6).
-
 \begin{figure}
 \centering
 \includegraphics{CHILDES_short_files/figure-latex/figure7-1.pdf}
-\caption{\label{fig:figure7}Indo-European languages by country.}
+\caption{\label{fig:figure7}Distribution of Indo-European Languages by Country.}
 \end{figure}
 
-About a third (32\%, n=35) of the included corpora were not monolingual. It is difficult to find reliable estimates of the percentage of the global population that grew up in bilingual or multilingual homes. This is partly because estimates rely on adult data, which includes second language learners without considering proficiency. For instance, in Europe in 2016, 65\% of adults reported knowing multiple languages (Eurostat, 2022), but most of them probably did not grow up in bilingual homes. Still, some estimates claim that around half or two-thirds of children are raised bilingual or multilingual (Grosjean, 2024). According to such estimates, it would appear that input data in our sub-sample of CHILDES underrepresents bilingual and multilingual households.
-
-As for linguistic diversity, most of the corpora pertain to Indo-European languages (68\%, n=122). The most represented language in terms of individuals and corpora is English. English appears in 50 corpora (30 exclusively monolingual), representing 28\% of the included corpora and 611 individual children (447 monolinguals). Additionally, it is the language most studied for bilingualism or multilingualism, with language combinations including Cantonese, Danish, Dutch, Farsi, French, Hebrew, Hungarian, Japanese, Mandarin, Portuguese, Russian, Spanish, and Swedish. The next most represented language in terms of different corpora is Spanish, with 25 corpora (14 monolingual) and 169 children (75 monolingual). The following most represented languages in terms of individual children are Welsh (n=475) and Mandarin (total=223; monolinguals=157) (see SM7 for more information).
+We find a total of 63 different languages or language combinations (for bilingual and multilingual children; see SM6). About a third of the included corpora were not monolingual. According to information in SM7, our sample of CHILDES underrepresents bilingual and multilingual households in the world.
+As for linguistic diversity, most of the corpora pertain to Indo-European languages (Figure 7). English is the most prevalent language, both in terms of the number of children and the number of corpora, with 50 corpora (30 exclusively monolingual), comprising 28\% of the included corpora. Additionally, it is the language most studied for bilingualism or multilingualism, with language combinations including Cantonese, Danish, Dutch, Farsi, French, Hebrew, Hungarian, Japanese, Mandarin, Portuguese, Russian, Spanish, and Swedish. The next most represented language in terms of different corpora is Spanish, with 25 corpora (14 monolingual).
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-The current paper provides a systematic review of naturalistic recordings from the CHILDES database. We assessed and characterized sampling bias by examining the database through four macro dimensions: SES, urbanization, family structure, and languages, all representing dimensions believed to influence early language acquisition. We aimed to address the question of how biased the sample was in terms of these four dimensions when compared to the world's population.
+The current paper provides a systematic review of corpora relying on naturalistic recordings in the CHILDES database, a priceless public research resource. We assessed and characterized sampling bias by examining the database through four macro dimensions: SES, urbanization, family structure, and languages, all representing dimensions believed to be relevant for early language acquisition. We aimed to address the question of how biased the sample was in terms of these four dimensions when compared to the world's population, as well as when taking into account the countries in which the data were collected.
 
-The systematic review included 180 corpora from 48 different countries, mainly representing OECD countries (84\% ). OECD countries have higher income on average than non-OECD countries (CITE). Our results revealed several measures where the corpora do not represent the world population across SES, urbanization, family structure, and linguistic dimensions within the CHILDES database. Despite a remarkable diversity in terms of languages and countries, naturalistic recordings seem to encompass quite similar socio-ecological backgrounds.
+Thanks to the collective work of nearly 300 individuals (with deep thanks to the people acknowledged in SM8), we could include 180 corpora from 48 different countries, primarily OECD (84\%). Despite a remarkable diversity in terms of languages and countries, analyses of the demographic characteristics of our CHILDES sample revealed several measures where the corpora do not represent the world population, nor did the corpora faithfully represent the countries in which data were collected, in terms of SES, urbanization, family structure, and linguistic dimensions.
 
-The socioeconomic status (SES) dimension encompassing education, income, and occupation, shows a stark bias of our CHILDES sample from global statistics. Specifically, represented countries demonstrate a higher percentage of individuals completing lower secondary school compared to global averages. A more detailed examination reveals that 78\% of the dataset represents families where parents attained at least a college education. Data for 17 out of 48 countries represented exclusively reported parents with college-level education or above, whereas for some countries such as Greece, Lesotho, Serbia, or Portugal, only parents who attended some primary or secondary school are represented.
-In addition, our CHILDES sample countries exhibit higher Gross Domestic Product (GDP) per capita than the world average, and more than 80\% of the families recorded reported middle or high SES.
+In terms of SES, our macro-level analyses showed that represented countries had a higher percentage of individuals completing lower secondary school, and higher Gross Domestic Product (GDP) per capita, compared to the worldwide distribution. Our focused analyses further suggested that higher SES families with highly educated parents were more common than would have expected given the source countries. Considering the extensive literature linking SES and language acquisition, these are important biases to take into account.
 
-Taken together, it is clear that naturalistic input samples in CHILDES represent higher SES and more educated countries and households. Considering the extensive literature linking SES and language acquisition, these are important biases to take into account.
+The dataset's overrepresentation of highly educated parents extends beyond this educational/income bias. Notably, approximately half of the corpora feature parents engaged in research-related professions, with academics frequently studying their own (grand)children. In comparison, in the US general population, in 2020, only 6\% of American citizens would fall under such definitions. The danger of extrapolating from such a sample goes beyond issues previously discussed in the context of convenience (homogeneous or heterogeneous) samples (Bornstein, Jager, \& Putnick, 2013), and may concern the very fact that parents who pursue a career in academia (and likely in language-related areas) could be particular in their linguistic behavior.
 
-The dataset's overrepresentation of highly educated parents extends beyond this educational/income bias. Notably, approximately half of the corpora feature parents engaged in research-related professions, with academics frequently studying their own (grand)children. In comparison, in the US general population, in 2020, only 6\% of American citizens would fall under such definitions. The danger of extrapolating from such a sample goes beyond issues previously discussed in the context of convenience (homogeneous or heterogeneous) samples (Bornstein, Jager, \& Putnick, 2013), and may concern the very fact that parents who pursue a career in academia (and likely in language-related areas) could be particular in their linguistic behavior. Something to consider when studying parental input from these recordings or transcripts.
+We also uncovered significant biases in the urbanization dimension. Regarding urbanization, 91\% of corpora were urban, compared to 59\% of the world population, with only 5 corpora exclusively rural. The latter seemed to be reasonable given urbanization statistics for the countries where data were collected. Thus, in this case, the bias pertains only to which countries are represented, and not how data are sampled within the country. One challenge for future work will involve teasing apart the myriads of ways in which urbanization may relate to language outcomes, including not only the parental goals mentioned in the Introduction (Keller, 2012) but also factors that may be confounded with urbanization. For example, families in rural conditions may have less access to infrastructure, but they may be protected from certain types of stress. In fact, a study using long-form recordings suggested that infants growing up in formerly rural families that had migrated to urban centers were afforded less spoken input and had smaller vocabularies than infants whose families had remained rural (Ma et al., 2024).
 
-When examining the urbanization dimension, we see that in the countries of this sample of CHILDES the majority of the population resides in urban areas. And that \% of corpora were urban, as opposed to in the world population, and only corpora were exclusively rural. It has been shown that urban and rural families often have different expectations about child development ,and that urban settings have more access to services and amenities such as daycares, libraries, or playgrounds, creating particular early language environments that research has shown affects vocabulary growth, exposure to diverse linguistic input, and overall language acquisition (CITE) . On the other hand, recent research also shows the negative effects of urban areas on health and particularly, related to noise pollution (Simon, Merz, He, \& Noble, 2022) and residential crowding , for which links with early language development have been found - in this respect too, the biased data could be problematic.
+In terms of family structure, the represented countries had smaller households compared to the world average. When comparing household composition in our CHILDES sample with the countries where data had been collected, we found mismatches, with likely a trend for underrepresenting extended families. A bias towards nuclear families limits our understanding of diverse caregiving structures, particularly alloparental involvement, in language acquisition. While multi-child families are well-represented in our CHILDES sample, the absence of siblings' speech in some transcripts (e.g., Loukatou, Scaff, Demuth, Cristia, \& Havron, 2022) hinders insights into typical daily language interactions. In fact, even when recorded children reportedly had siblings, this does not mean that the siblings were recorded, transcribed, or even present during the recording session. Limited data on birth order also restricts robust conclusions on sibling composition in CHILDES and underscores the need for broader exploration of non-parental caregiving roles typically overlooked in studies focusing on predominantly WEIRD households.
 
-Further analysis of CHILDES reveals significant biases in the urbanization dimension. Regarding urbanization, 91\% of corpora were urban, compared to 59\% of the world population, with only 5 corpora exclusively rural. This urban bias is important, as urban and rural families often have different expectations about child development (Keller, 2012). Furthermore, urban settings provide more access to services like daycares and libraries, creating unique early language environments that affect vocabulary growth, exposure to diverse linguistic input, and overall language acquisition (CITATION NEEDED). However, recent research also highlights negative aspects of urban areas, such as noise pollution (Simon et al., 2022) and residential crowding (Havron et al., 2022), which can also impact early language development.
-In terms of family structure, the represented countries had smaller households compared to the world average, with an overrepresentation of nuclear families. This bias limits our understanding of diverse caregiving structures, particularly alloparental involvement, in language acquisition. While multi-child families are well-represented, the absence of siblings' speech in some transcripts (e.g., Loukatou et al., 2022) hinders insights into typical daily language interactions. Limited data on birth order also restricts robusts conclusions on sibling composition in CHILDES. This scenario underscores the need for broader exploration of non-parental caregiving roles and sibling relationships, typically overlooked in studies focusing on predominantly WEIRD households.
-Finally, English and Indo-European languages are overrepresented in CHILDES corpora. This aligns with trends in child development literature (Kidd \& Garcia, 2022) and overall data quantity (Christiansen, Contreras Kallens, \& Trecca, 2022). Moreover, the majority of data comes from monolingual children, likely misrepresenting the world's population (Grosjean, 2024).
+Finally, we found that English and more broadly Indo-European languages were overrepresented in our CHILDES sample, a point already made by others (e.g., Christiansen, Contreras Kallens, \& Trecca, 2022). This aligns with trends in child development literature (Kidd \& Garcia, 2022; Singh, Cristia, et al., 2023). Additionally, although a third of the corpora were not monolingual, this nonetheless underrepresents multilingualism in the world's population (Grosjean, 2024).
 
-We focused on four central dimensions in language acquisition, but others may well be relevant. For example, Hofstede (2001) conceptualized dimensions such as individualism, masculinity, and indulgence. Moreover, given that most samples are nuclear families with well-educated parents living in urban sites, it will be impossible to tease apart these three dimensions, which are in effect confounded in these CHILDES corpora (and probably in the world, see SM1). Even in a case where we do have some variation, namely the presence of siblings, it would be hard to understand the intersectionality of such effects in naturalistic input samples.
+Although our CHILDES sample is more homogeneous than expected given global and national variations, there remains substantial diversity across all the dimensions we studied. Could researchers use this variation to study the association between, e.g., urbanization and language characteristics in such spontaneous, naturalistic samples? While excited at the prospect, we also fear that such an exploration would be fraught in terms of causal reading given how confounded the dimensions are in these CHILDES corpora. Put simply, since most samples are from nuclear families with well-educated parents living in urban sites, it is impossible to tease apart these three dimensions. Additionally, given that few corpora represent some combinations, it will be hard to understand the intersectionality of such factors in naturalistic input samples.
 
-The absence of comprehensive data for certain variables restricted a thorough analysis of representativeness on some dimensions. This should not be seen as the fault of the corpus creator or curator, as these data are not always available to them or were not considered relevant before. However, people re-using the data should try at least to make an effort to inform themselves about the characteristics of the people recorded as they could be of interest to interpret findings. Researchers should acknowledge the database's limitations in representing diverse naturalistic language environments, especially when exploring socioeconomic, urbanization, or family structure influences on language acquisition. In addition, as AI technologies and other types of scraping tools become prevalent, it is important to acknowledge the socio-ecological landscape of this repository in order to keep in mind what are the generalizations that automatic tools might arrive at, and how they represent the overarching mechanisms of language acquisition.
-To conclude, we found that data from many countries and languages are represented in CHILDES, but that these countries did not constitute a representative sample of the world's countries, and that families could not be viewed as representative of their own countries. We also noted low variability along certain dimensions (saliently family structure) and the predominance of Indo-European languages, with English being the language with more recorded participants. Our discussion leads us to argue for the systematic inclusion of certain descriptors in speaker-level and corpus-level metadata, to track and quantify both diversity and representativity (see OSF folder for a list of descriptors).
+While making some strides in documenting the demographic characteristics of the people represented in naturalistic corpora in CHILDES, our work has several limitations we would like to acknowledge. First, we focused on four dimensions (SES, urbanization, family structure, and language), but others may well be relevant for language acquisition research. We hope that our sharing of materials will facilitate others' addition of novel descriptors. In particular, the World Values Survey contains information about several dimensions that could be relevant to language acquisition such as social norms and attitudes towards gender roles (World Values Survey Association, 2020).
+
+Second, the absence of comprehensive data for certain variables restricted a thorough analysis of representativeness on some dimensions. This should not be seen as the fault of the corpus creator or curator, as these data were not always available to them or were not considered relevant at the time of data collection. After all, it is only recently that researchers in our field started sounding the alarm regarding underreporting of relevant demographic characteristics (e.g., Singh, Barokova, et al., 2023; Singh, Cristia, et al., 2023).
+
+In addition, as computational modeling becomes more prevalent, it is important to keep in mind what are the generalizations that modeling based on such data might arrive at, and how they represent the overarching mechanisms of language acquisition. A relevant example is the BabyLM Challenge, created with the aim of fostering consideration of developmental plausibility when developing language-related machine learning tools (Warstadt et al., 2023). We recommend that researchers re-using CHILDES' input and output data inform themselves about the characteristics of the people recorded and acknowledge potential limitations in demographic representation.
+
+To conclude, we found that data from many countries and languages are represented in CHILDES, but that these countries did not constitute a representative sample of the world's countries, and that families were not representative of their own countries. We also noted low variability along certain dimensions (saliently SES and family structure) and the predominance of Indo-European languages, with English having the most recorded participants. Our discussion leads us to argue for the systematic inclusion of certain descriptors in speaker-level and corpus-level metadata, to track and quantify both diversity and representativity.
 
 \newpage
 
@@ -426,9 +410,6 @@ Anderson, J. R., \& Schooler, L. J. (1991). Reflections of the environment in me
 
 \leavevmode\vadjust pre{\hypertarget{ref-bartsch1995children}{}}%
 Bartsch, K., \& Wellman, H. M. (1995). \emph{Children talk about the mind}. Oxford university press.
-
-\leavevmode\vadjust pre{\hypertarget{ref-bergelson2023everyday}{}}%
-Bergelson, E., Soderstrom, M., Schwarz, I.-C., Rowland, C. F., Ramirez-Esparza, N., R. Hamrick, L., et al.others. (2023). Everyday language input and production in 1,001 children from six continents. \emph{Proceedings of the National Academy of Sciences}, \emph{120}(52), e2300671120.
 
 \leavevmode\vadjust pre{\hypertarget{ref-blake1981family}{}}%
 Blake, J. (1981). Family size and the quality of children. \emph{Demography}, \emph{18}(4), 421--442.
@@ -463,9 +444,6 @@ Dailey, S., \& Bergelson, E. (2022). Language input to infants of different soci
 \leavevmode\vadjust pre{\hypertarget{ref-de1999verbs}{}}%
 De León, L. (1999). Verbs in tzotzil (mayan) early syntactic development. \emph{International Journal of Bilingualism}, \emph{3}(2-3), 219--239.
 
-\leavevmode\vadjust pre{\hypertarget{ref-demuth2022acquisition}{}}%
-Demuth, K. (2022). The acquisition of sesotho. In \emph{The crosslinguistic study of language acquisition} (pp. 557--638). Psychology Press.
-
 \leavevmode\vadjust pre{\hypertarget{ref-draper2017parent}{}}%
 Draper, P., \& Harpending, H. (2017). Parent investment and the child's environment. In \emph{Parenting across the life span} (pp. 207--236). Routledge.
 
@@ -477,9 +455,6 @@ Ensminger, M. E., \& Fothergill, K. E. (2014). A decade of measuring SES: What i
 
 \leavevmode\vadjust pre{\hypertarget{ref-garcia2011bilingual}{}}%
 Garcia-Sierra, A., Rivera-Gaxiola, M., Percaccio, C. R., Conboy, B. T., Romo, H., Klarman, L., \ldots{} Kuhl, P. K. (2011). Bilingual language learning: An ERP study relating early brain responses to speech, language input, and later word production. \emph{Journal of Phonetics}, \emph{39}(4), 546--557.
-
-\leavevmode\vadjust pre{\hypertarget{ref-ghai2021s}{}}%
-Ghai, S. (2021). It's time to reimagine sample diversity and retire the WEIRD dichotomy. \emph{Nature Human Behaviour}, \emph{5}(8), 971--972.
 
 \leavevmode\vadjust pre{\hypertarget{ref-golinkoff2019language}{}}%
 Golinkoff, R. M., Hoff, E., Rowe, M. L., Tamis-LeMonda, C. S., \& Hirsh-Pasek, K. (2019). Language matters: Denying the existence of the 30-million-word gap has serious consequences. \emph{Child Development}, \emph{90}(3), 985--992.
@@ -502,20 +477,20 @@ Henrich, J., Heine, S. J., \& Norenzayan, A. (2010). Most people are not WEIRD. 
 \leavevmode\vadjust pre{\hypertarget{ref-hoff2003specificity}{}}%
 Hoff, E. (2003). The specificity of environmental influence: Socioeconomic status affects early vocabulary development via maternal speech. \emph{Child Development}, \emph{74}(5), 1368--1378.
 
-\leavevmode\vadjust pre{\hypertarget{ref-hoff2014causes}{}}%
-Hoff, E. (2014). Causes and consequences of SES-related differences in parent-to-child speech. In \emph{Socioeconomic status, parenting, and child development} (pp. 147--160). Routledge.
-
 \leavevmode\vadjust pre{\hypertarget{ref-hoff1990maternal}{}}%
 Hoff-Ginsberg, E. (1990). Maternal speech and the child's development of syntax: A further look. \emph{Journal of Child Language}, \emph{17}(1), 85--99.
 
 \leavevmode\vadjust pre{\hypertarget{ref-hoff1991older}{}}%
 Hoff-Ginsberg, E., \& Krueger, W. M. (1991). Older siblings as conversational partners. \emph{Merrill-Palmer Quarterly}, \emph{37}(3), 465--482.
 
-\leavevmode\vadjust pre{\hypertarget{ref-hofstede2001culture}{}}%
-Hofstede, G. (2001). \emph{Culture's consequences: Comparing values, behaviors, institutions and organizations across nations}. Sage publications.
-
 \leavevmode\vadjust pre{\hypertarget{ref-hohle2020variability}{}}%
 Höhle, B., Bijeljac-Babic, R., \& Nazzi, T. (2020). Variability and stability in early language acquisition: Comparing monolingual and bilingual infants' speech perception and word recognition. \emph{Bilingualism: Language and Cognition}, \emph{23}(1), 56--71.
+
+\leavevmode\vadjust pre{\hypertarget{ref-hollingshead1975four}{}}%
+Hollingshead, A. B. et al. (1975). \emph{Four factor index of social status}. New Haven, CT.
+
+\leavevmode\vadjust pre{\hypertarget{ref-huttenlocher2002language}{}}%
+Huttenlocher, J., Vasilyeva, M., Cymerman, E., \& Levine, S. (2002). Language input and child syntax. \emph{Cognitive Psychology}, \emph{45}(3), 337--374.
 
 \leavevmode\vadjust pre{\hypertarget{ref-huttenlocher2007varieties}{}}%
 Huttenlocher, J., Vasilyeva, M., Waterfall, H. R., Vevea, J. L., \& Hedges, L. V. (2007). The varieties of speech to young children. \emph{Developmental Psychology}, \emph{43}(5), 1062.
@@ -532,17 +507,14 @@ Kidd, E., \& Garcia, R. (2022). How diverse is child language acquisition resear
 \leavevmode\vadjust pre{\hypertarget{ref-leonardo2022socioeconomic}{}}%
 Leonardo, P., Havron, N., \& Cristia, A. (2022). Socioeconomic status correlates with measures of language environment analysis (LENA) system: A meta-analysis. \emph{Journal of Child Language}, \emph{49}(5), 1037--1051.
 
-\leavevmode\vadjust pre{\hypertarget{ref-lieven2013early}{}}%
-Lieven, E., \& Stoll, S. (2013). Early communicative development in two cultures: A comparison of the communicative environments of children from two cultures. \emph{Human Development}, \emph{56}(3), 178--206.
-
 \leavevmode\vadjust pre{\hypertarget{ref-loukatou2021child}{}}%
 Loukatou, G., Scaff, C., Demuth, K., Cristia, A., \& Havron, N. (2022). Child-directed and overheard input from different speakers in two distinct cultures. \emph{Journal of Child Language}, \emph{49}(6), 1173-\/-1192.
 
+\leavevmode\vadjust pre{\hypertarget{ref-ma2024associations}{}}%
+Ma, Y., Zhang, X., Pappas, L., Rule, A., Gao, Y., Dill, S.-E., et al.others. (2024). Associations between urbanization and the home language environment: Evidence from a LENA study in rural and peri-urban china. \emph{Child Development}, \emph{95}(2), e74--e92. https://doi.org/\url{https://doi.org/10.1111/cdev.14034}
+
 \leavevmode\vadjust pre{\hypertarget{ref-macwhinney2000childes}{}}%
 MacWhinney, B. (2000). \emph{The CHILDES project: Tools for analyzing talk: Volume i: Transcription format and programs, volume II: The database}. MIT Press.
-
-\leavevmode\vadjust pre{\hypertarget{ref-macwhinney2019understanding}{}}%
-MacWhinney, B. (2019). Understanding spoken language through TalkBank. \emph{Behavior Research Methods}, \emph{51}, 1919--1927.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Majid2010}{}}%
 Majid, A., \& Levinson, S. C. (2010). Weird languages have misled us, too. \emph{Behavioral and Brain Sciences}, \emph{33}(2-3), 103--103. \url{https://doi.org/10.1017/s0140525x1000018x}
@@ -574,17 +546,11 @@ Richman, A. L., Miller, P. M., \& LeVine, R. A. (1992). Cultural and educational
 \leavevmode\vadjust pre{\hypertarget{ref-rowe2018understanding}{}}%
 Rowe, M. L. (2018). Understanding socioeconomic differences in parents' speech to children. \emph{Child Development Perspectives}, \emph{12}(2), 122--127.
 
-\leavevmode\vadjust pre{\hypertarget{ref-sarvasy2017grammar}{}}%
-Sarvasy, H. (2017). \emph{A grammar of nungon: A papuan language of northeast new guinea} (Vol. 4). Brill.
-
-\leavevmode\vadjust pre{\hypertarget{ref-scaff2024characterization}{}}%
-Scaff, C., Casillas, M., Stieglitz, J., \& Cristia, A. (2024). Characterization of children's verbal input in a forager-farmer population using long-form audio recordings and diverse input definitions. \emph{Infancy}, \emph{29}(2), 196--215.
-
 \leavevmode\vadjust pre{\hypertarget{ref-sharma1998child}{}}%
 Sharma, D., \& LeVine, R. A. (1998). Child care in india: A comparative developmental view of infant social environments. \emph{New Directions for Child and Adolescent Development}, \emph{81}, 45--67.
 
-\leavevmode\vadjust pre{\hypertarget{ref-simon2022environmental}{}}%
-Simon, K. R., Merz, E. C., He, X., \& Noble, K. G. (2022). Environmental noise, brain structure, and language development in children. \emph{Brain and Language}, \emph{229}, 105112.
+\leavevmode\vadjust pre{\hypertarget{ref-singh2023unified}{}}%
+Singh, L., Barokova, M. D., Baumgartner, H. A., Lopera-Perez, D. C., Omane, P. O., Sheskin, M., et al.others. (2023). A unified approach to demographic data collection for research with young children across diverse cultures. \emph{Developmental Psychology}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-singh2023diversity}{}}%
 Singh, L., Cristia, A., Karasik, L. B., Rajendra, S. J., \& Oakes, L. M. (2023). Diversity and representation in infant research: Barriers and bridges toward a globalized science of infant development. \emph{Infancy}, \emph{28}(4), 708--737.
@@ -597,6 +563,9 @@ Tomasello, M., \& Mannle, S. (1985). Pragmatics of sibling speech to one-year-ol
 
 \leavevmode\vadjust pre{\hypertarget{ref-vogt2020multimodal}{}}%
 Vogt, P., Masson-Carro, I., \& Jong, C. de. (n.d.). \emph{Multimodal interactions among infants in three radically different learning environments}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-warstadt2023call}{}}%
+Warstadt, A., Choshen, L., Mueller, A., Williams, A., Wilcox, E., \& Zhuang, C. (2023). Call for papers--the BabyLM challenge: Sample-efficient pretraining on a developmentally plausible corpus. \emph{arXiv Preprint arXiv:2301.11796}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-zambrana2012impact}{}}%
 Zambrana, I. M., Ystrom, E., \& Pons, F. (2012). Impact of gender, maternal education, and birth order on the development of language comprehension: A longitudinal study from 18 to 36 months of age. \emph{Journal of Developmental \& Behavioral Pediatrics}, \emph{33}(2), 146--155.

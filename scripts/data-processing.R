@@ -267,6 +267,7 @@ annotations_inc$Education.ac[annotations_inc$Education.min==1 & !is.na(annotatio
 annotations_inc$Education.ac[annotations_inc$Education.min==2 & !is.na(annotations_inc$Education.min)]<-"Some secondary"
 annotations_inc$Education.ac[annotations_inc$Education.min==3 & !is.na(annotations_inc$Education.min)]<-"Some college"
 annotations_inc$Education.ac[annotations_inc$Education.min>3 & !is.na(annotations_inc$Education.min)]<-"College and above"
+#4 corpora as diverse not included
 
 #Parental socioeconomic status
 #SES STDZD

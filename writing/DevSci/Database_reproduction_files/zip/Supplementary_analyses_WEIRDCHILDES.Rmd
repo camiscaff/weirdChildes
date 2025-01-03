@@ -1,6 +1,6 @@
 ---
 title: "SM WEIRD CHILDES SHORT"
-author: "Camila Scaff, minor update Alex"
+author: "Anon"
 date: "2024-08-15"
 output:
   word_document: default
@@ -113,7 +113,7 @@ As mentioned in the main text, the vast majority of families were of middle or h
 ## SM3: Caregivers with high levels of education are overrepresented in our sample of CHILDES given source countries
 
 
-```{r}
+```{r edu, message=FALSE, warning=FALSE,echo=F}
 read.csv("../data/share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->college
 college<-subset(college,Year == 2010 & Entity %in% levels(factor(annotations_inc[!is.na(annotations_inc$Education.ac),"country"])))
 
@@ -187,7 +187,7 @@ To check whether the levels of urban sampling were reasonable, we calculated the
 
 Since 84% of the countries in CHILDES are in the OECD, we draw a comparison point for such countries: among households with children in the OECD, roughly 46% of children were singletons (OECD, 2015). In the sub-sample of OECD CHILDES corpora with information about siblings, we see that 29% (n = 23) of corpora focus exclusively on singletons. In this sense, singletons are underrepresented in CHILDES. However, we are not certain of this interpretation, because of the way data were coded: It is not the case that the remaining 71% of corpora contain only children with siblings, but rather that at least some of the children in the other corpora had siblings. Therefore, to be truly certain, one would have to do an analysis based on individual included children, which we were not able to do at present because such information was not always systematically reported for all children in each corpus.
 
-```{r}
+```{r sibss, message=FALSE, warning=FALSE,echo=F, results='hide'}
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings != 0] <- "yes"
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings == 0] <- "no"
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings %in% c("all firstborn (some newborn sibs)", "at least 1 (triplet)")] <- "yes"
@@ -196,7 +196,7 @@ annotations_inc$siblings = factor(annotations_inc$siblings, levels=c("yes", "no"
 with_sib<-subset(annotations_inc,!is.na(siblings))
 with_sib$singleton<-with_sib$siblings=="no"
 
-read.csv("../children-born-per-woman-OWID-20220112.csv")->cpw
+read.csv("../data/children-born-per-woman-OWID-20220112.csv")->cpw
 cpw[cpw$Year==2011,]->cpw
 colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
 cpw=subset(cpw,Entity %in% levels(factor(annotations_inc$country)))
