@@ -191,11 +191,15 @@ Analyses and visualizations were carried out using R (version 4.1.2, R Core Team
 
 ```{r demoinfo, echo = FALSE, eval=T}
 
+#summary of counts by country , Nb.of.participants and region
+
 corpora.ind <- annotations_inc %>%
   select(country, Corpus, Nb.of.participants, region)
 
 corpora.ind$region[corpora.ind$country =="Spain & Hungary"] = "Europe"
 corpora.ind$region[corpora.ind$country =="Sweden & Portugal"] = "Europe"
+
+#summary of counts by country 
 
 summary_corpora_COUNTRY <- corpora.ind %>%
   group_by(country) %>%
@@ -204,6 +208,7 @@ summary_corpora_COUNTRY <- corpora.ind %>%
     TotalParticipants_country = sum(Nb.of.participants)
   )
 
+#summary of counts by continent 
 summary_corpora_CONT <- corpora.ind %>%
   group_by(region) %>%
   summarise(
@@ -211,16 +216,20 @@ summary_corpora_CONT <- corpora.ind %>%
     TotalParticipants_continent = sum(Nb.of.participants)
   )
 
+#categorize siblings - singletons
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings != 0] <- "yes"
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings == 0] <- "no"
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings %in% c("all firstborn (some newborn sibs)", "at least 1 (triplet)")] <- "yes"
 annotations_inc$siblings = factor(annotations_inc$siblings, levels=c("yes", "no"))
 
+
+#some cleaning for OCDE counts
 merge(x=annotations_inc,y=ocde_country,by= "country",all=T) -> ocde_inc
 ocde_inc$ocde[ocde_inc$country =="Spain & Hungary"] <- "yes"
 ocde_inc$ocde[ocde_inc$country =="Sweden & Portugal"] <- "yes"
 ocde_inc$ocde[ocde_inc$country =="Hong Kong"] <- "no"
 
+# changing order for count purposes
 annotations_inc$Language[annotations_inc$Language == "Catalan/Spanish"] <- "Spanish/Catalan"
 
 annotations_inc$Language[annotations_inc$Language == "Spanish/English"] <- "English/Spanish"

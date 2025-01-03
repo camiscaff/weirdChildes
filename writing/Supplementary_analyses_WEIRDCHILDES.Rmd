@@ -99,21 +99,107 @@ excluded <-  subset(annotations, (Inclusion %in% c("exclude")))
 
 ```
 
+## SM1: More information about entering data
 
-## SM1: Sources used for Figure 2
+### SM1.1: Sources used for Figure 2 - Country level data
+
 The purpose of this figure is to illustrate how representative the countries in our CHILDES sample are compared to global distributions. We assessed socioeconomic status (SES) using two key indicators: education and income. For education, we used data from Our World in Data (2022), which compiles information from various official sources. Specifically, we obtained data on the proportion of the population that had completed lower secondary education (from 2007-2015). For income, we utilized the World Bank's World Development Indicators (WDI) via the WDI package in R (Arel-Bundock, 2021), focusing on Gross Domestic Product (GDP) per capita (log-transformed to base 10) in 2017 US dollars adjusted for purchasing power parity, reflecting the relative wealth of countries.
-To measure urbanization, we used the percentage of the population living in urban areas, sourced from the World Bank's WDI. Since this indicator initially represented the rural population proportion, we adjusted it to represent urbanization by calculating the complement to 100%. We used data from 2022, as it offered the most comprehensive information for this variable.
-For family structure, we referred to the average household size, based on data from the UN’s Household Size and Composition database (2000-2022; United Nations, 2022). This measure reflects the average number of individuals per household, providing insight into family structure across different countries.
+To measure urbanization, we used the percentage of the population living in urban areas, sourced from the World Bank's WDI. Since this indicator initially represented the rural population proportion, we adjusted it to represent urbanization by calculating the complement to 100%. We used data from 2022, as it was the year with the most information for this variable.
+For family structure, we referred to the average household size, based on data from the UN’s Household Size and Composition database (2000-2022; United Nations, 2022). This measure shows the average number of individuals per household, a proxy of the family structure variable across different countries.
 
+### SM1.2: Sources used for stacked frequency plots - Corpus level data
+
+#### Data Pre-Fill
+
+We began by extracting relevant information from publicly available sources associated with each corpus, including articles, book chapters, dissertations, and transcripts. These sources were indexed on the CHILDES page for each corpus. The extracted data was used to "pre-fill" a table for each corpus, capturing details about the linguistic environment, socio-economic factors, participant demographics, and other key variables. Missing variables were marked as "NA".
+
+#### Data curators
+
+We directly contacted the authors of the corpora to address these gaps. Authors were provided with a pre-filled table summarizing the existing information for their datasets, alongside clear explanations for each variable. They were requested to verify the information of the rows corresponding to their corpus and provide additional details when possible.
+Authors were given the option to either modify the table directly, add the missing information, or respond via email with the necessary details for incorporation into the dataset. We emphasized that authors should not feel obligated to complete every field if certain details were unavailable or not applicable.
+The response from corpus curators was overwhelmingly positive. Over one-third of the contacted curators replied, and 98% of those who responded provided additional data or confirmed the absence of certain variables. This high level of engagement significantly enriched the dataset, particularly for variables that were previously undocumented. The information gathered from the authors was integrated into the dataset, which then when into cleaning, classifications, and analyses. 
+
+#### SES
+
+##### Parent's socio-economic status (SES)
+
+The socio-economic status (SES) dimension was categorized into three broad categories based on descriptions provided in corpus references: Low SES - Including references to terms such as "low," "working class," or "welfare”; Middle SES-  Descriptions indicating a "middle-class" background.High SES -  References to "upper-class" or "high."
+To ensure consistency across analyses, a standardized SES variable (SES.STDZD) was created. Descriptions explicitly indicating low SES were assigned a value of 1, while references to middle-class or upper/high SES were assigned a value of 2. If both low and middle/high SES were mentioned within the same corpus, the variable was labeled as "1-2".
+
+##### Parent's education level
+
+We examined the educational level of parents as a dimension to understand socio-economic diversity within the corpora. This was determined by identifying the highest level of education completed by parents, as reported in the corpus descriptions or accompanying references. Relevant information was typically found in the ‘data’ or ‘method’ sections of corpus documentation, using keywords such as "education," "degree," or "university."
+To ensure consistency and facilitate comparative analyses, a standardized education variable (Education.STDZD) was created. We established the minimum, maximum, and midpoint education levels for each corpus based on reported data. Parental education levels were recoded into four broad categories based on their minimum level:
+  * 1. Some Primary
+  * 2. Some Secondary school
+  * 3. Some college
+  * 4. College or above
+
+For homogeneous corpora (e.g., the same level reported for all participating families), categorization was straightforward. For corpora with heterogeneous reports we recorded the range of reported levels (e.g., 2–4, indicating "some secondary school" to "college or above" for example) and used the minimum value to represent the corpus (e.g., 2, corresponding to "some secondary school" in this example). This approach ensured that the categorization reflected the lowest educational attainment per family per corpora. 
+
+##### Parent's occupation
+
+We examined the parental profession as a dimension to understand socio-economic diversity within the corpora. Information about the parents' activities or professions was retrieved from corpus descriptions and references, typically located in the ‘data’ or ‘method’ sections, using keywords such as "profession," "work," or "occupation."  
+To ensure consistency, parental professions were standardized and categorized into broad occupational fields. Patterns within the descriptions of professions were used to assign categorical labels:
+* Academic professions: Identified through keywords such as "professor," "researcher," "scientist," "academic," and related terms. These entries were labeled as "yes" in the is.academic variable.
+* Health professions: Identified through keywords such as "doctor," "nurse," "psychologist," "therapist," and similar terms. These were labeled as "yes" in the is.health variable.
+* Teaching professions: Identified through keywords such as "teach" or similar variations. These were labeled as "yes" in the is.teacher variable.
+
+When a profession fell into both the academic and teaching categories, it was additionally flagged in the is.education variable.
+
+#### Urbanization 
+
+Type of community in which families lived was categorized into three main types:
+*Urban: Families residing in cities or metropolitan areas.
+*Rural: Families living in countryside or non-urban areas.
+*Mixed (both): Corpora collected in both urban and rural environments
+
+#### Family structure
+
+##### Household composition
+
+We examined the household composition dimension to better understand family structures represented in the corpora. Information about household composition was retrieved from corpus descriptions and accompanying references and/or completed by data curators. We ask to categorized families based on whether they were composed primarily of caregivers and children (nuclear) or included additional extended family members, such as grandparents, cousins, uncles, and aunts (extended). 
+We later  standardized into three categories: Nuclear - Families composed primarily of caregivers and children, including single-parent households. Extended - Families that included additional family members, such as grandparents, uncles, aunts, or cousins. Varied - Families with a mix of nuclear and extended characteristics.
+
+##### Singletons 
+
+To analyze family structure within the corpora, we asked for the percentage or number of children with siblings and calculated the average number of siblings per child per corpora, including those with zero siblings (singletons). 
+
+Sibling-related data were retrieved from the corpus main pages, associated references and verified by curators. Keywords such as "sibling," "brother," "sister," "older sibling," "older brother," and "older sister" were used to identify relevant information. The following measures were extracted and standardized:
+
+* Number of Children with Siblings: The total count of children who had at least one sibling was recorded for each corpus.
+* Number of Children with Older Siblings: The count of children with older siblings recorded for each corpus. 
+* Average Number of Siblings:For each corpus, the average number of siblings per child was calculated, including children with zero siblings.
+
+We then created a binary variable siblings based on the variable number of children with siblings (Nb.of.children.with.siblings). Children with a non-zero count in Nb.of.children.with.siblings were categorized as having siblings ("yes"). Children with a value of 0 in Nb.of.children.with.siblings were categorized as not having siblings ("no").
+
+#### Language
+
+##### Language(s) spoken
+
+The information about the languages was retrieved from the general description pages of the chosen corpora collections. For example, in the Scandinavian collection, corpora were categorized based on languages such as Danish, Icelandic, Norwegian, and Swedish.
+Once the language(s) for a given corpus were identified, they were further classified as either Indo-European or non-Indo-European.
+
+##### Lingual status
+
+Within each corpus Lingual status was assessed and coded as a binary variable (yes/no). Specifically, it was determined whether more than one language was spoken in the corpus, irrespective of the number of languages spoken within the family or the broader community.
+If explicit mentions of bilingualism or multilingualism were found in the corpus descriptions or accompanying references, the variable was coded as yes. Conversely, if the corpus description indicated a monolingual environment or lacked any mention of additional languages, it was coded as no. 
+
+### Data Visualisation
+
+All data were visualized using stacked bar plots to display country-wise distributions in reverse alphabetical order. 
+The visualization was created using the ggplot2 package in R. A subset of data excluding missing information (!is.na(variable_of_interest)) was used.
 
 ## SM2: Higher SES families are overrepresented in our sample of CHILDES given source countries
+
 As mentioned in the main text, the vast majority of families were of middle or higher SES. Since 84% of corpora were collected in OECD countries, we use OECD data for comparison. While less than 66% of families in OECD countries are middle-to-high SES, over 80% of our sample falls into this category. Moreover, OECD countries generally have higher SES populations compared to the global average, suggesting that our CHILDES sample likely overrepresents middle-to-high SES families even more on a global scale.
+
 
 
 ## SM3: Caregivers with high levels of education are overrepresented in our sample of CHILDES given source countries
 
 
-```{r}
+```{r education}
 read.csv("../data/share-of-the-population-with-completed-tertiary-education-OWID-20220217.csv")->college
 college<-subset(college,Year == 2010 & Entity %in% levels(factor(annotations_inc[!is.na(annotations_inc$Education.ac),"country"])))
 
@@ -187,7 +273,7 @@ To check whether the levels of urban sampling were reasonable, we calculated the
 
 Since 84% of the countries in CHILDES are in the OECD, we draw a comparison point for such countries: among households with children in the OECD, roughly 46% of children were singletons (OECD, 2015). In the sub-sample of OECD CHILDES corpora with information about siblings, we see that 29% (n = 23) of corpora focus exclusively on singletons. In this sense, singletons are underrepresented in CHILDES. However, we are not certain of this interpretation, because of the way data were coded: It is not the case that the remaining 71% of corpora contain only children with siblings, but rather that at least some of the children in the other corpora had siblings. Therefore, to be truly certain, one would have to do an analysis based on individual included children, which we were not able to do at present because such information was not always systematically reported for all children in each corpus.
 
-```{r}
+```{r siblings, echo=FALSE, results="asis"}
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings != 0] <- "yes"
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings == 0] <- "no"
 annotations_inc$siblings[annotations_inc$Nb.of.children.with.siblings %in% c("all firstborn (some newborn sibs)", "at least 1 (triplet)")] <- "yes"
@@ -196,7 +282,7 @@ annotations_inc$siblings = factor(annotations_inc$siblings, levels=c("yes", "no"
 with_sib<-subset(annotations_inc,!is.na(siblings))
 with_sib$singleton<-with_sib$siblings=="no"
 
-read.csv("../children-born-per-woman-OWID-20220112.csv")->cpw
+read.csv("../data/children-born-per-woman-OWID-20220112.csv")->cpw
 cpw[cpw$Year==2011,]->cpw
 colnames(cpw)[colnames(cpw)=="Fertility.rate..Select.Gapminder..v12...2017."]<-"Fertility"
 cpw=subset(cpw,Entity %in% levels(factor(annotations_inc$country)))
@@ -212,6 +298,7 @@ table(sib_tab_joint[,"pc_corpora"])
 range(sib_tab_joint[sib_tab_joint[,"pc_corpora"]==0,"fertility_rate"])
 
 range(urb_tab_joint[urb_tab_joint[,"pc_corpora"]!=1,"pc_population"])
+
 ```
 
 
@@ -230,6 +317,7 @@ The non-monolingual corpora contained data in: Dutch/English, Dutch/French, Dutc
 ```
 
 ## SM7: Monolinguals are over-represented given source countries
+
 It is hard to find reliable estimates of the percentage of the population that grows up in bilingual or multilingual homes in individual countries. This is partly because estimates rely on adult data which include second language learners, not exposed to an additional language in their home environment. For instance, in Europe in 2016, 65% of adults reported knowing multiple languages (Eurostat, 2022), but most of them probably did not grow up in bilingual homes. Still, some estimates claim that around half or two-thirds of children are raised bilingual or multilingual (Grosjean, 2024). 
 
 ## SM8:  Acknowledgments
