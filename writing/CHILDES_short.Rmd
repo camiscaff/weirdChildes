@@ -784,7 +784,7 @@ lang_fam$X <- NULL
 
 lang_fam <- lang_fam[, !(names(lang_fam) %in% c("indo_european", "X"))]
 
-write.csv(lang_fam,"../derived/clean/short_childes.csv",row.names=F)
+write.csv(lang_fam,"../derived/clean/Database_data.csv",row.names=F)
 
 ```
 
