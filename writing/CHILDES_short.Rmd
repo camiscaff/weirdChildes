@@ -62,7 +62,7 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
-output            : papaja::apa6_pdf
+output            : papaja::apa6_doc
 ---
 
 
@@ -391,14 +391,14 @@ summary_corpora_country_utt <- summary_corpora_country_utt[order(summary_corpora
 
 options(scipen = 999)
 ggplot(summary_corpora_country_utt, aes(x = reorder(country, Totalutts_country), y = Totalutts_country)) +
- geom_bar(stat = "identity", fill = "blue") +
- coord_flip() +
- labs(
-  title = "",
+  geom_bar(stat = "identity", fill = "blue",width = 0.8) +
+  scale_y_discrete(expand = expansion(mult = 0.5)) +  # Increase space between bars
+  coord_flip() +
+  scale_y_continuous( breaks = c(500000, 1000000, 1500000, 2000000), labels = c("500k", "1000k", "1500k", "2000k"))+
+  labs(title = "",
   x = "Country",
-  y = "Total Number of Utterances"
- ) +
- theme_minimal()
+  y = "Total Number of Utterances") +
+  theme_minimal()
 
  
 ggsave("../figures/childes_utterancesbycountry_bycorpus.png", width = 6, height = 4, dpi = 300)
@@ -758,7 +758,7 @@ In terms of family structure, the represented countries had smaller households c
 
 While multi-child families are well-represented in our CHILDES sample, the possible absence of other household members' speech in some transcripts [e.g., siblings' speech, @loukatou2021child] could hinder insights into typical daily language interactions. Limited data on birth order also restricts robust conclusions on sibling configuration in CHILDES and underscores the need for broader exploration of non-parental caregiving roles typically overlooked in studies focusing on predominantly WEIRD households.
 
-Finally, we found that English and more broadly Indo-European languages were overrepresented in our CHILDES sample, a point already made by others [e.g., @christiansen2022toward]. This aligns with trends in child development literature [@kidd2022diverse; @singh2023diversity]. Interestingly, out of the 10 countries with the most utterances (Figure 2), 5 were countries or territories where non-Indo-European languages are spoken: China, Israel, Japan, Indonesia, and Hong Kong. Additionally, although a third of the corpora were not monolingual, this nonetheless underrepresents multilingualism in the world's population [@grosjean2024statistics].
+Finally, we found that English and more broadly Indo-European languages were overrepresented in our CHILDES sample, a point already made by others [e.g., @christiansen2022toward]. This aligns with trends in child development literature [@kidd2022diverse; @singh2023diversity]. Interestingly, out of the 10 countries with the most utterances (Figure 2), 4 were countries or territories where non-Indo-European languages are the main language spoken: Japan, Indonesia, China and Taiwan. Additionally, although a third of the corpora were not monolingual, this nonetheless underrepresents multilingualism in the world's population [@grosjean2024statistics].
 
 These biases likely have both proximal and distal consequences for child language. Proximally, studies on typologically diverse languages [e.g., @casillas2024little; @de1999verbs; @demuth2022acquisition; @pye1980acquisition] highlight the limitations of current acquisition theories to the extent they rely on biased samples. For example, theories like syntactic bootstrapping, which assume consistent exposure to specific sentence structures, were developed in the context of Indo-European language. These can struggle to generalize to free word order languages such as Warlpiri, and tend to stress the syntactic rather than morphological side of bootstrapping, as English is relatively morphologically impoverished language [@babineau2023learning].
 
